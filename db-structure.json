@@ -1,0 +1,49 @@
+{
+  "games": {
+    "3BN2": {
+      "gameMode": "INDIVIDUAL",
+      "state": {
+        "type": "QUESTION",
+        "uri": "kj12hkj12h3123",
+        "deviceState": {
+          "type": "ANSWERING_QUESTION",
+          "artistOptions": [
+            {"id": 1, "artist": "KYGO"},
+            {"id": 2, "artist": "SANDRO CAVAZZA"}
+          ],
+          "scoreFactor": 1
+        }
+      },
+      "started": "2019-02-24",
+      "players": [{
+          "uid": "asdhkajshdas82719",
+          "nickname": "simon",
+          "response": {
+            "uri": "asdkjasid8a7s",
+            "timestamp": "129381928369182",
+            "artistOptionID": 3,
+            "track": "PRAY",
+            "trackAC": "PRAY"
+          },
+          "score": 2
+        },
+        {
+          "uid": "asdhkajshdas82719",
+          "nickname": "simon",
+          "response": {
+            "uri": "asdkjasid8a7s",
+            "timestamp": "129381928369182",
+            "artistOptionID": 1,
+            "track": "REMIND TO FORGET",
+            "trackAC": "REMIND ME TO FORGET"
+          },
+          "score": 2
+        }
+      ]
+
+    },
+    "Y6H1": {
+
+    }
+  }
+}
