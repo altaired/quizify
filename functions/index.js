@@ -3,8 +3,14 @@ const admin = require('firebase-admin');
 const express = require('express');
 const cors = require('cors');
 const request = require('request');
+const cookieParser = require('cookie-parser');
+const crypto = require('crypto');
 
 const app = express();
+app.enable('trust proxy');
+app.use(express.static('public'));
+app.use(express.static('node_modules/instafeed.js'));
+app.use(cookieParser());
 
 //Since cloud functions uses Node 6, which don't seem to support async and
 //await
@@ -12,6 +18,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
 const FIREBASE_API_KEY = 'AIzaSyDV0WYoQANoZG-ufHvnAmHVJKJ4AVunoOs';
+const CALLBACK_URL = 'http://localhost:4200';
 
 admin.initializeApp();
 const db = admin.database();
@@ -36,15 +43,33 @@ app.use(cors({
 }));
 
 app.get('/redirect', (req, res) => {
+  const state = req.cookies.state || crypto.randomBytes(20).toString('hex');
+  console.log('Setting state cookie for verification:', state);
+  const secureCookie = req.get('host').indexOf('localhost:') !== 0;
+  console.log('Need a secure cookie (i.e. not on localhost)?', secureCookie);
+  res.cookie('state', state, {
+    maxAge: 3600000,
+    secure: secureCookie,
+    httpOnly: true
+  });
   const redirectUri = oauth2.authorizationCode.authorizeURL({
     redirect_uri: `${req.protocol}://${req.get('host')}/auth/spotify-callback`,
     scope: 'user-modify-playback-state user-read-currently-playing user-read-playback-state streaming',
+    state: state
   });
+  console.log('Redirecting to:', redirectUri);
   // Redirect to Spotify's authorization page
   res.redirect(redirectUri);
 });
 
 app.get('/spotify-callback', (req, res) => {
+  console.log('Received state cookie:', req.cookies.state);
+  console.log('Received state query parameter:', req.query.state);
+  if (!req.cookies.state) {
+    res.status(400).send('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
+  } else if (req.cookies.state !== req.query.state) {
+    res.status(400).send('State validation failed');
+  }
   // Exchange the auth code for an access token.
   console.log('code', req.query.code);
   if (req.query.error) {
@@ -102,18 +127,15 @@ function updateToken(accessToken, refreshToken) {
 }
 
 function signInFirebaseTemplate(token) {
-  // Returns a html template, that also authenticates the user with Firebase
   return `
-    <script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>
     <script>
       var token = '${token}';
-      var config = {
-        apiKey: '${FIREBASE_API_KEY}'
+      var target = '${CALLBACK_URL}';
+      var data = {
+        token: token
       };
-      var app = firebase.initializeApp(config);
-      app.auth().signInWithCustomToken(token).then(function() {
-        window.close();
-      });
+      window.opener.postMessage(JSON.stringify(data), target);
+      window.close();
     </script>`;
 }
 

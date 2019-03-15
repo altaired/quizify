@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-  ≈
   <meta charset="utf-8">
   <title>Quizify</title>
   <base href="/">
@@ -13,6 +12,12 @@
 
 <body>
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
+  <script>
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      console.log("The Web Playback SDK is ready. We have access to Spotify.Player");
+    };
+
+  </script>
   <app-root></app-root>
 </body>
 

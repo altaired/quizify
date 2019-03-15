@@ -3,7 +3,15 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  firebase: {
+    apiKey: 'AIzaSyDV0WYoQANoZG-ufHvnAmHVJKJ4AVunoOs',
+    authDomain: 'quizify-dev.firebaseapp.com',
+    databaseURL: 'https://quizify-dev.firebaseio.com',
+    projectId: 'quizify-dev',
+    storageBucket: 'quizify-dev.appspot.com',
+    messagingSenderId: '678396020660'
+  }
 };
 
 /*
