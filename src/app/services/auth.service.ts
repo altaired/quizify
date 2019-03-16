@@ -40,7 +40,7 @@ export class AuthService {
   private authenticate(): Promise<string> {
     const url = 'https://us-central1-quizify-dev.cloudfunctions.net/auth/redirect';
     return new Promise((resolve, reject) => {
-      const popup = window.open(url, 'Spotify', 'height=600,width=400');
+      window.open(url, 'Spotify', 'height=600,width=400');
       window.addEventListener('message', event => {
         const data = JSON.parse(event.data);
         console.log(data);
