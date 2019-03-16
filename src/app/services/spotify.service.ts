@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, switchMap } from 'rxjs/operators';
+import { CategoryObj, PlaylistObj, TrackObj } from '../models/spotify';
 
 @Injectable({
   providedIn: 'root'
@@ -20,31 +21,31 @@ export class SpotifyService {
     this.token$ = this.auth.token$;
   }
 
-  getTrack(id: string): Observable<Spotify.Track> {
+  getTrack(id: string): Observable<TrackObj> {
     const url = this.SPOTIFY_BASE_URL + '/tracks/' + id;
     return this.authentication.pipe(switchMap(headers => {
-      return this.http.get<Spotify.Track>(url, { headers: headers });
+      return this.http.get<TrackObj>(url, { headers: headers });
     }));
   }
 
-  listCategories(): Observable<any> {
+  listCategories(): Observable<CategoryObj[]> {
     const url = this.SPOTIFY_BASE_URL + '/browse/categories/';
     return this.authentication.pipe(switchMap(headers => {
-      return this.http.get(url, { headers: headers });
+      return this.http.get<CategoryObj[]>(url, { headers: headers });
     }));
   }
 
-  getCategory(id: string): Observable<any> {
+  getCategory(id: string): Observable<CategoryObj> {
     const url = this.SPOTIFY_BASE_URL + '/browse/categories/' + id;
     return this.authentication.pipe(switchMap(headers => {
-      return this.http.get(url, { headers: headers });
+      return this.http.get<CategoryObj>(url, { headers: headers });
     }));
   }
 
-  getCategoryPlaylists(id: string): Observable<any> {
+  getCategoryPlaylists(id: string): Observable<PlaylistObj[]> {
     const url = this.SPOTIFY_BASE_URL + '/browse/categories/' + id + '/playlists';
     return this.authentication.pipe(switchMap(headers => {
-      return this.http.get(url, { headers: headers });
+      return this.http.get<PlaylistObj[]>(url, { headers: headers });
     }));
   }
 
