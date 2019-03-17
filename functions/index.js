@@ -18,7 +18,7 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
 const FIREBASE_API_KEY = 'AIzaSyDV0WYoQANoZG-ufHvnAmHVJKJ4AVunoOs';
-const CALLBACK_URL = 'http://localhost:4200';
+const CALLBACK_URL = functions.config().auth.callback;
 
 admin.initializeApp();
 const db = admin.database();
