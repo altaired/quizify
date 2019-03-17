@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, switchMap } from 'rxjs/operators';
 import { headersToString } from 'selenium-webdriver/http';
+import { CategoryObj, PlaylistObj, TrackObj,ArtistObj, RelatedArtists, Devices } from '../models/spotify';
 
 @Injectable({
   providedIn: 'root'
@@ -21,70 +22,70 @@ export class SpotifyService {
     this.token$ = this.auth.token$;
   }
 
-  getTrack(id: string): Observable<Spotify.Track> {
+  getTrack(id: string): Observable<TrackObj> {
     const url = this.SPOTIFY_BASE_URL + '/tracks/' + id;
     return this.authentication.pipe(switchMap(headers => {
-      return this.http.get<Spotify.Track>(url, { headers: headers });
+      return this.http.get<TrackObj>(url, { headers: headers });
     }));
   }
 
-  listCategories(): Observable<any> {
+  listCategories(): Observable<CategoryObj[]> {
     const url = this.SPOTIFY_BASE_URL + '/browse/categories/';
     return this.authentication.pipe(switchMap(headers => {
-      return this.http.get(url, { headers: headers });
+      return this.http.get<CategoryObj[]>(url, { headers: headers });
     }));
   }
 
-  getCategory(id: string): Observable<any> {
+  getCategory(id: string): Observable<CategoryObj> {
     const url = this.SPOTIFY_BASE_URL + '/browse/categories/' + id;
     return this.authentication.pipe(switchMap(headers => {
-      return this.http.get(url, { headers: headers });
+      return this.http.get<CategoryObj>(url, { headers: headers });
     }));
   }
 
-  getCategoryPlaylists(id: string): Observable<any> {
+  getCategoryPlaylists(id: string): Observable<PlaylistObj[]> {
     const url = this.SPOTIFY_BASE_URL + '/browse/categories/' + id + '/playlists';
     return this.authentication.pipe(switchMap(headers => {
-      return this.http.get(url, { headers: headers });
+      return this.http.get<PlaylistObj[]>(url, { headers: headers });
     }));
   }
 
-  getDevices(): Observable<any> {
+  getDevices(): Observable<Devices> {
     const url = this.SPOTIFY_BASE_URL + '/me/player/devices';
     return this.authentication.pipe(switchMap(headers => {
-      return this.http.get(url, { headers: headers });
+      return this.http.get<Devices>(url, { headers: headers });
     }));
   }
-   Play(): Observable<any> {
+   Play(): Observable<never> {
     const url = this.SPOTIFY_BASE_URL + '/me/player/play';
     return this.putAuthentication.pipe(switchMap(headers => {
-      return this.http.put(url, undefined, { headers: headers });
+      return this.http.put<never>(url, undefined, { headers: headers });
     }));
   } 
-  Pause(): Observable<any> {
+  Pause(): Observable<never> {
     const url = this.SPOTIFY_BASE_URL + '/me/player/pause';
     return this.putAuthentication.pipe(switchMap(headers => {
-      return this.http.put(url, undefined, { headers: headers });
+      return this.http.put<never>(url, undefined, { headers: headers });
     }));
   } 
 
-  Transfer(device_id: string): Observable<any> {
+  Transfer(device_id: string): Observable<never> {
     const url = this.SPOTIFY_BASE_URL + '/me/player';
     return this.putAuthentication.pipe(switchMap(headers => {
-      return this.http.put(url, {"device_ids":[device_id]}, { headers: headers });
+      return this.http.put<never>(url, {"device_ids":[device_id]}, { headers: headers });
     }));
   } 
   
-  getArtist(id: string): Observable<any> {
+  getArtist(id: string): Observable<ArtistObj> {
     const url = this.SPOTIFY_BASE_URL + '/artists/' + id ;
     return this.authentication.pipe(switchMap(headers => {
-      return this.http.get(url, { headers: headers });
+      return this.http.get<ArtistObj>(url, { headers: headers });
     }));
   }
-  getRelatedArtists(id: string): Observable<any> {
+  getRelatedArtists(id: string): Observable<RelatedArtists> {
     const url = this.SPOTIFY_BASE_URL + '/artists/'+ id+ '/related-artists';
     return this.authentication.pipe(switchMap(headers => {
-      return this.http.get(url, { headers: headers });
+      return this.http.get<RelatedArtists>(url, { headers: headers });
     }));
   }
 

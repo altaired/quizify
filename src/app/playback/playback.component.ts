@@ -41,8 +41,8 @@ export class PlaybackComponent implements OnInit {
     });
     this.player.addListener('player_state_changed', state =>{
       this.playerState$.next(state);
-      if (state){
-        console.log(state);
+      if (state){ // hela den här sparar artisten och relevanta artisters namn och bilder i en lista som hamnar i databasen, när låten byts.
+        console.log(state); // den använder state för att hämta låten och därför beror på player ist'llet för att fråga api:n.
         if (this.currentTrack != state.track_window.current_track.name){
           this.artistChoices = [];
           this.currentTrack = state.track_window.current_track.name;
