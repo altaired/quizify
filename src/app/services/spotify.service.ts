@@ -3,8 +3,11 @@ import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, switchMap } from 'rxjs/operators';
-import { headersToString } from 'selenium-webdriver/http';
-import { CategoryObj, PlaylistObj, TrackObj,ArtistObj, RelatedArtists, Devices } from '../models/spotify';
+import { CategoryObj, PlaylistObj, TrackObj, ArtistObj, RelatedArtists, Devices } from '../models/spotify';
+
+/**
+ * Communicates with Spotifys WEB API
+ */
 
 @Injectable({
   providedIn: 'root'
@@ -56,34 +59,34 @@ export class SpotifyService {
       return this.http.get<Devices>(url, { headers: headers });
     }));
   }
-   Play(): Observable<never> {
+  Play(): Observable<never> {
     const url = this.SPOTIFY_BASE_URL + '/me/player/play';
     return this.putAuthentication.pipe(switchMap(headers => {
       return this.http.put<never>(url, undefined, { headers: headers });
     }));
-  } 
+  }
   Pause(): Observable<never> {
     const url = this.SPOTIFY_BASE_URL + '/me/player/pause';
     return this.putAuthentication.pipe(switchMap(headers => {
       return this.http.put<never>(url, undefined, { headers: headers });
     }));
-  } 
+  }
 
   Transfer(device_id: string): Observable<never> {
     const url = this.SPOTIFY_BASE_URL + '/me/player';
     return this.putAuthentication.pipe(switchMap(headers => {
-      return this.http.put<never>(url, {"device_ids":[device_id]}, { headers: headers });
+      return this.http.put<never>(url, { "device_ids": [device_id] }, { headers: headers });
     }));
-  } 
-  
+  }
+
   getArtist(id: string): Observable<ArtistObj> {
-    const url = this.SPOTIFY_BASE_URL + '/artists/' + id ;
+    const url = this.SPOTIFY_BASE_URL + '/artists/' + id;
     return this.authentication.pipe(switchMap(headers => {
       return this.http.get<ArtistObj>(url, { headers: headers });
     }));
   }
   getRelatedArtists(id: string): Observable<RelatedArtists> {
-    const url = this.SPOTIFY_BASE_URL + '/artists/'+ id+ '/related-artists';
+    const url = this.SPOTIFY_BASE_URL + '/artists/' + id + '/related-artists';
     return this.authentication.pipe(switchMap(headers => {
       return this.http.get<RelatedArtists>(url, { headers: headers });
     }));
@@ -101,7 +104,7 @@ export class SpotifyService {
   private get putAuthentication(): Observable<HttpHeaders> {
     return this.token$.pipe(map(token => {
       return new HttpHeaders({
-        'Accept' : 'application/json',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
       });
