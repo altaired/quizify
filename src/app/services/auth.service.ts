@@ -33,6 +33,15 @@ export class AuthService {
       .pipe(map(token => token.accessToken));
   }
 
+  setArtists(data: Object[]){
+    const choiceArtists = this.db.object('choices/');
+    choiceArtists.update({artistChoices:data});
+
+  }
+  getArtists(): Observable<any>{
+    return this.db.object<any>('choices/artistChoices' ).valueChanges();
+  }
+
   loginWithSpotify() {
     this.authenticate().then(token => this.afAuth.auth.signInWithCustomToken(token));
   }
@@ -54,7 +63,9 @@ export class AuthService {
   }
 
   loginAnonymously() {
-    this.afAuth.auth.signInAnonymously();
+    this.afAuth.auth.signInAnonymously().catch(function( error ){
+      console.error(error);
+    });
   }
 
 }
@@ -63,3 +74,4 @@ export interface Token {
   accessToken: string;
   refreshToken: string;
 }
+

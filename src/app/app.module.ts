@@ -9,12 +9,14 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { LoginComponent } from './login/login.component';
 import { PlaybackComponent } from './playback/playback.component';
 import { HttpClientModule } from '@angular/common/http';
+import { GuessArtistComponent } from './guess-artist/guess-artist.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    PlaybackComponent
+    PlaybackComponent,
+    GuessArtistComponent
   ],
   imports: [
     BrowserModule,

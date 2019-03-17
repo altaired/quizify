@@ -1,4 +1,7 @@
+<button (click)="Play()">Play</button>
+<button (click)="Pause()">Pause</button>
 <div *ngIf="playerState$">
+ <!-- {{devices$ | async | json}} -->
   {{playerState$ | async | json}}
   {{categories$ | async | json}}
 </div>
