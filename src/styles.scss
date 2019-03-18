@@ -92,18 +92,7 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-.mat-list-icon {
-  color: mat-color($foreground, icon);
-}
 
-.mat-list-item.list-add {
-  text-transform: uppercase;
-
-  &,
-  .mat-list-icon {
-    color: mat-color($accent);
-  }
-}
 
 .text-right {
   text-align: right;
