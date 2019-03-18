@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth, User } from 'firebase/app';
+import { HttpHeaders } from '@angular/common/http';
 import { switchMap, map, filter, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
@@ -33,13 +34,13 @@ export class AuthService {
       .pipe(map(token => token.accessToken));
   }
 
-  setArtists(data: Object[]){
+  setArtists(data: Object[]) {
     const choiceArtists = this.db.object('choices/');
-    choiceArtists.update({artistChoices:data});
+    choiceArtists.update({ artistChoices: data });
 
   }
-  getArtists(): Observable<any>{
-    return this.db.object<any>('choices/artistChoices' ).valueChanges();
+  getArtists(): Observable<any> {
+    return this.db.object<any>('choices/artistChoices').valueChanges();
   }
 
   loginWithSpotify() {
@@ -63,9 +64,19 @@ export class AuthService {
   }
 
   loginAnonymously() {
-    this.afAuth.auth.signInAnonymously().catch(function( error ){
+    this.afAuth.auth.signInAnonymously().catch(function (error) {
       console.error(error);
     });
+  }
+
+  get authentication(): Observable<HttpHeaders> {
+    return this.token$.pipe(map(token => {
+      return new HttpHeaders({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      });
+    }));
   }
 
 }

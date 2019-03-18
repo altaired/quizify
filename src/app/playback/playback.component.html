@@ -1,7 +1,4 @@
-<button (click)="Play()">Play</button>
-<button (click)="Pause()">Pause</button>
-<div *ngIf="playerState$">
- <!-- {{devices$ | async | json}} -->
-  {{playerState$ | async | json}}
-  {{categories$ | async | json}}
+<div [ngSwitch]="playing$ | async">
+  <mat-icon *ngSwitchCase="true">volume_up</mat-icon>
+  <mat-icon *ngSwitchCase="false">volume_mute</mat-icon>
 </div>

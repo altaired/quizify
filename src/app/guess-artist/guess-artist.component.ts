@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
@@ -8,17 +8,18 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./guess-artist.component.scss']
 })
 export class GuessArtistComponent implements OnInit {
-  choices : Object[];
+
+  @Input() options: Observable<Choice>;
+
   constructor(private auth: AuthService) { }
 
-  getChoices(){
-    this.auth.getArtists().subscribe(choices => this.choices = choices);
-  }
-
-
-
   ngOnInit() {
-    this.getChoices();
+
   }
 
+}
+
+export interface Choice {
+  uri: string;
+  displayValue: string;
 }

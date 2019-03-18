@@ -1,10 +1,10 @@
-  <div *ngIf="choices">
-    <div >
-      <div *ngFor="let choice of choices" class = "wrapper">
-        <div class = "cards">
+<div *ngIf="choices">
+  <div>
+    <div *ngFor="let choice of choices" class="wrapper">
+      <div class="cards">
         <img src={{choice.images[2].url}} alt="Band picture">
         <h4>{{choice.name}}</h4>
       </div>
-        </div>
     </div>
   </div>
+</div>

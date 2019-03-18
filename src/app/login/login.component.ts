@@ -12,13 +12,15 @@ import { User } from 'firebase';
 })
 export class LoginComponent implements OnInit {
 
+  user$: Observable<User>;
+
   constructor(
     private auth: AuthService,
     private router: Router
   ) { }
 
   ngOnInit() {
-
+    this.user$ = this.auth.user$;
   }
 
   loginHost() {

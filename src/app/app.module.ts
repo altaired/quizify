@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
+import { MatIconModule } from '@angular/material';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,7 +32,9 @@ import { DisplayComponent } from './display/display.component';
     AngularFireAuthModule,
     AngularFireDatabaseModule,
     AngularFireModule.initializeApp(environment.firebase, 'quizify-client'),
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatIconModule
   ],
   providers: [AngularFireModule, AngularFireAuthModule, AngularFireDatabaseModule],
   bootstrap: [AppComponent]

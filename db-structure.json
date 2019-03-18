@@ -1,49 +1,71 @@
 {
   "games": {
     "3BN2": {
-      "gameMode": "INDIVIDUAL",
-      "state": {
-        "type": "QUESTION",
-        "uri": "kj12hkj12h3123",
-        "deviceState": {
-          "type": "ANSWERING_QUESTION",
-          "artistOptions": [
-            {"id": 1, "artist": "KYGO"},
-            {"id": 2, "artist": "SANDRO CAVAZZA"}
-          ],
-          "scoreFactor": 1
+      "gameMode": "STANDARD",
+      "state": "QUESTION",
+      "playerDisplay": {
+        "state": "QUESTION",
+        "category": {
+          "playerUID": "perssonsim",
+          "playerResponse": "party",
+          "done": true,
+          "options": [{
+              "id": "party",
+              "name": "Party",
+              "image": "test"
+            },
+            {
+              "id": "party",
+              "name": "Party",
+              "image": "test"
+            },
+            {
+              "id": "party",
+              "name": "Party",
+              "image": "test"
+            },
+            {
+              "id": "party",
+              "name": "Party",
+              "image": "test"
+            }
+          ]
+        },
+        "question": {
+          "id": "",
+          "first": {
+            "type": "OPTIONS",
+            "title": "What's the name of the artist?",
+            "options": [{
+              "id": "A1",
+              "value": "Test1"
+            }, {
+              "id": "A2",
+              "value": "Test2"
+            }]
+          },
+          "secondEnabled": true,
+          "second": {
+            "type": "TEXT",
+            "title": "What's the name of the artist?"
+          }
         }
       },
-      "started": "2019-02-24",
+      "admin": {
+        "playerUID": "",
+        "ready": true
+      },
       "players": [{
-          "uid": "asdhkajshdas82719",
-          "nickname": "simon",
-          "response": {
-            "uri": "asdkjasid8a7s",
-            "timestamp": "129381928369182",
-            "artistOptionID": 3,
-            "track": "PRAY",
-            "trackAC": "PRAY"
-          },
-          "score": 2
-        },
-        {
-          "uid": "asdhkajshdas82719",
-          "nickname": "simon",
-          "response": {
-            "uri": "asdkjasid8a7s",
-            "timestamp": "129381928369182",
-            "artistOptionID": 1,
-            "track": "REMIND TO FORGET",
-            "trackAC": "REMIND ME TO FORGET"
-          },
-          "score": 2
+        "uid": "",
+        "displayName": "",
+        "score": "",
+        "response": {
+          "done": true,
+          "question": "",
+          "first": "",
+          "second": ""
         }
-      ]
-
-    },
-    "Y6H1": {
-
+      }]
     }
   }
 }
