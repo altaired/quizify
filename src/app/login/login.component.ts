@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { filter, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { User } from 'firebase';
+import { GamePlayerService } from '../services/game-player.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private player: GamePlayerService
   ) { }
 
   ngOnInit() {
@@ -29,6 +31,10 @@ export class LoginComponent implements OnInit {
 
   loginPlayer() {
     this.auth.loginAnonymously();
+  }
+
+  joinGame() {
+    this.player.join('AAAA', 'Simon');
   }
 
 }

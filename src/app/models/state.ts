@@ -51,8 +51,8 @@ export interface Response {
 export interface Player {
   uid: string;
   displayName: string;
-  score: number;
-  response: Response;
+  score?: number;
+  response?: Response;
 }
 
 export interface Game {
@@ -60,5 +60,5 @@ export interface Game {
   state: GameState;
   playerDisplay?: PlayerDisplay;
   admin?: Admin;
-  players: Player[];
+  players?: Player[];
 }

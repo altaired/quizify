@@ -22,8 +22,7 @@ export class GameHostService {
   newGame(gameCode: string, gameMode: GameMode) {
     const game: Game = {
       gameMode: gameMode,
-      state: 'WELCOME',
-      players: []
+      state: 'WELCOME'
     };
     this.gameCode$.next(gameCode);
     this.db.object('games/' + gameCode).set(game);
@@ -33,11 +32,13 @@ export class GameHostService {
 
   private welcomeHandler() {
     const playersSubscription = this.state$.pipe(
-      map(state => state.players)
+      filter(state => state.players ? true : false),
+      map(state => Object.values(state.players)),
     ).subscribe(players => {
       if (players.length === 1) {
         this.setGameAdmin(players[0].uid);
       }
+      console.log('Players', players);
     });
   }
 
@@ -49,6 +50,7 @@ export class GameHostService {
           ready: false
         }
       });
+      console.log('Admin set', uid);
       this.activateReadyObserver();
     });
   }
@@ -61,6 +63,11 @@ export class GameHostService {
       take(1)
     ).subscribe(ready => {
       console.log('Admin is ready, starting game');
+      this.startGame();
     });
+  }
+
+  private startGame() {
+
   }
 }
