@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GameHostService } from 'src/app/services/game-host.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-game-creation',
@@ -7,13 +8,15 @@ import { GameHostService } from 'src/app/services/game-host.service';
   styleUrls: ['./game-creation.component.scss']
 })
 export class GameCreationComponent implements OnInit {
-
-  constructor(private game: GameHostService) { }
+  
+  constructor(private game: GameHostService,private router: Router) { }
 
   ngOnInit() {
   }
   createStandard(){
-    this.game.newGame('AAAB', 'STANDARD');
+    this.router.navigate(['/display'])
+    //this.game.newGame('AAAB', 'STANDARD');
+
   }
   createPassive(){
     console.log("sorry not done yet")

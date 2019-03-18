@@ -11,7 +11,7 @@ export class DisplayComponent implements OnInit {
   constructor(private game: GameHostService) { }
 
   ngOnInit() {
-   // this.game.newGame('AAAA', 'STANDARD');
+    this.game.newGame('AAAB', 'STANDARD');
   }
 
 }

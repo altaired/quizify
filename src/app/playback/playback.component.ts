@@ -55,7 +55,7 @@ export class PlaybackComponent implements OnInit {
       this.player = new Spotify.Player({
         name: 'Quizify',
         getOAuthToken: cb => { cb(token); },
-        volume: 0.3
+        volume: 0.1
       });
       console.log('Playback SDK Ready');
       this.connectPlayer();

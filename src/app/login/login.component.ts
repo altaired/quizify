@@ -5,6 +5,8 @@ import { filter, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { User } from 'firebase';
 import { GamePlayerService } from '../services/game-player.service';
+import { MatDialog,MatDialogConfig } from '@angular/material';
+import { JoinDiagComponent} from '../player/join-diag/join-diag.component';
 
 @Component({
   selector: 'app-login',
@@ -14,8 +16,9 @@ import { GamePlayerService } from '../services/game-player.service';
 export class LoginComponent implements OnInit {
 
   user$: Observable<User>;
-
+  name :string;
   constructor(
+    public dialog: MatDialog, 
     private auth: AuthService,
     private router: Router,
     private player: GamePlayerService
@@ -26,15 +29,25 @@ export class LoginComponent implements OnInit {
   }
 
   loginHost() {
-  this.auth.loginWithSpotify().then((thing)=> {console.log(thing); this.router.navigate(['/welcome'])});
+  this.auth.loginWithSpotify().then((thing)=> {console.log(thing); this.router.navigate(['/create-game'])});
   }
 
-  loginPlayer() {
-    this.auth.loginAnonymously();
+  async loginPlayer() {
+  await this.auth.loginAnonymously();
+  const dialogConfig = new MatDialogConfig();
+  dialogConfig.autoFocus = true;
+  const dialogRef = this.dialog.open(JoinDiagComponent,dialogConfig);
+  dialogRef.afterClosed().subscribe(result => {
+    console.log('The dialog was closed');
+    if (result && result.gameCode && result.name){
+    this.player.join(result.gameCode, result.name);
+    this.router.navigate(['/game'])
+    }
+  });
   }
 
   joinGame() {
-    this.player.join('AAAA', 'Simon');
+    this.player.join('AAAC', 'inte Simon');
   }
 
 }
