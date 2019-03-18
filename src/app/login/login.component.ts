@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { filter, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { User } from 'firebase';
@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
   }
 
   loginHost() {
-    this.auth.loginWithSpotify();
+  this.auth.loginWithSpotify().then((thing)=> {console.log(thing); this.router.navigate(['/welcome'])});
   }
 
   loginPlayer() {

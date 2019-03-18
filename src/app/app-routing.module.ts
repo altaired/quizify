@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: 'display', component: DisplayComponent, canActivate: [HostGuard] },
   { path: 'playback', component: PlaybackComponent, canActivate: [HostGuard] },
   { path: 'game', component: GameboardComponent },
-  { path: '', component: WelcomeComponent, canActivate: [HostGuard] }
+  { path: '', component: LoginComponent, canActivate: [HostGuard] }
 ];
 
 @NgModule({

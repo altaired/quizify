@@ -1,4 +1,13 @@
 {{user$ | async | json}}
-
-<button (click)="loginHost()">Login Host</button>
-<button (click)="loginPlayer()">Login Player</button>
+<div class = "container d-flex align-items-center justify-content-center"><div class="row justify-content-around">
+    <div (click)="loginHost()" class = "col-4 example-ripple-container mat-elevation-z4 links"
+       matRipple>
+        Create new Game +
+    </div>
+  <div (click)="loginPlayer()" class = "col-4 example-ripple-container mat-elevation-z4 links"
+    matRipple>
+    Join Game
+    </div>
+  </div>
+  </div>
+  

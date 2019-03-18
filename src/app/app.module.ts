@@ -16,6 +16,7 @@ import { GuessTrackComponent } from './guess-track/guess-track.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { DisplayComponent } from './display/display.component';
 import { GameboardComponent } from './player/gameboard/gameboard.component';
+import { GameCreationComponent } from './host/game-creation/game-creation.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { GameboardComponent } from './player/gameboard/gameboard.component';
     WelcomeComponent,
     DisplayComponent,
     GameboardComponent,
+    GameCreationComponent,
   ],
   imports: [
     BrowserModule,

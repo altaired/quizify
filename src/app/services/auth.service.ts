@@ -43,8 +43,8 @@ export class AuthService {
     return this.db.object<any>('choices/artistChoices').valueChanges();
   }
 
-  loginWithSpotify() {
-    this.authenticate().then(token => this.afAuth.auth.signInWithCustomToken(token));
+  loginWithSpotify(): Promise<any>{
+    return (this.authenticate().then(token => this.afAuth.auth.signInWithCustomToken(token)));
   }
 
   private authenticate(): Promise<string> {
