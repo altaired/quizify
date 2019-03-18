@@ -50,4 +50,6 @@ export class LoginComponent implements OnInit {
     this.player.join('AAAC', 'inte Simon');
   }
 
+
+
 }
