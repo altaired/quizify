@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GameHostService } from '../services/game-host.service';
 
 @Component({
   selector: 'app-display',
@@ -7,9 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DisplayComponent implements OnInit {
 
-  constructor() { }
+  constructor(private game: GameHostService) { }
 
   ngOnInit() {
+    this.game.newGame('AAAA', 'STANDARD');
   }
 
 }

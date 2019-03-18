@@ -4,7 +4,6 @@
       "gameMode": "STANDARD",
       "state": "QUESTION",
       "playerDisplay": {
-        "state": "QUESTION",
         "category": {
           "playerUID": "perssonsim",
           "playerResponse": "party",
@@ -34,7 +33,6 @@
         "question": {
           "id": "",
           "first": {
-            "type": "OPTIONS",
             "title": "What's the name of the artist?",
             "options": [{
               "id": "A1",
@@ -45,10 +43,7 @@
             }]
           },
           "secondEnabled": true,
-          "second": {
-            "type": "TEXT",
-            "title": "What's the name of the artist?"
-          }
+          "second": "What's the name of the artist?"
         }
       },
       "admin": {
@@ -58,7 +53,7 @@
       "players": [{
         "uid": "",
         "displayName": "",
-        "score": "",
+        "score": 100,
         "response": {
           "done": true,
           "question": "",
