@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
-import { MatIconModule } from '@angular/material';
+import { MatIconModule,MatButtonModule,MatRippleModule } from '@angular/material';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,6 +15,7 @@ import { GuessArtistComponent } from './guess-artist/guess-artist.component';
 import { GuessTrackComponent } from './guess-track/guess-track.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { DisplayComponent } from './display/display.component';
+import { GameboardComponent } from './player/gameboard/gameboard.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { DisplayComponent } from './display/display.component';
     GuessArtistComponent,
     GuessTrackComponent,
     WelcomeComponent,
-    DisplayComponent
+    DisplayComponent,
+    GameboardComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,7 +36,9 @@ import { DisplayComponent } from './display/display.component';
     AngularFireModule.initializeApp(environment.firebase, 'quizify-client'),
     HttpClientModule,
     BrowserAnimationsModule,
-    MatIconModule
+    MatIconModule,
+    MatButtonModule,
+    MatRippleModule
   ],
   providers: [AngularFireModule, AngularFireAuthModule, AngularFireDatabaseModule],
   bootstrap: [AppComponent]
