@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth, User } from 'firebase/app';
+import { environment } from '../../environments/environment';
 import { HttpHeaders } from '@angular/common/http';
 import { switchMap, map, filter, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -34,21 +35,12 @@ export class AuthService {
       .pipe(map(token => token.accessToken));
   }
 
-  setArtists(data: Object[]) {
-    const choiceArtists = this.db.object('choices/');
-    choiceArtists.update({ artistChoices: data });
-
-  }
-  getArtists(): Observable<any> {
-    return this.db.object<any>('choices/artistChoices').valueChanges();
-  }
-
-  loginWithSpotify(): Promise<any>{
+  loginWithSpotify(): Promise<any> {
     return (this.authenticate().then(token => this.afAuth.auth.signInWithCustomToken(token)));
   }
 
   private authenticate(): Promise<string> {
-    const url = 'https://us-central1-quizify-dev.cloudfunctions.net/auth/redirect';
+    const url = environment.authentication.authDomain;
     return new Promise((resolve, reject) => {
       window.open(url, 'Spotify', 'height=600,width=400');
       window.addEventListener('message', event => {

@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "quizify-dev"
+    "default": "quizify-dev",
+    "production": "quizify-pro"
   }
 }

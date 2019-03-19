@@ -11,6 +11,9 @@ export const environment = {
     projectId: 'quizify-dev',
     storageBucket: 'quizify-dev.appspot.com',
     messagingSenderId: '678396020660'
+  },
+  authentication: {
+    authDomain: 'https://us-central1-quizify-dev.cloudfunctions.net/auth/redirect'
   }
 };
 
