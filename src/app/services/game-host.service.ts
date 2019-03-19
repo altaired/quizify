@@ -24,7 +24,7 @@ export class GameHostService {
       state: 'WELCOME'
     };
     this.gameCode$.next(gameCode);
-    this.db.object('games/').remove();
+    //this.db.object('games/').remove();
     this.db.object('games/' + gameCode).set(game);
     this.state$ = this.db.object<Game>('games/' + gameCode).valueChanges();
     this.welcomeHandler();
