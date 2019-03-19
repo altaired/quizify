@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GameHostService } from 'src/app/services/game-host.service';
 import { Router } from '@angular/router';
+import { Hash } from 'src/app/utils/hash';
 
 @Component({
   selector: 'app-game-creation',
@@ -8,17 +9,23 @@ import { Router } from '@angular/router';
   styleUrls: ['./game-creation.component.scss']
 })
 export class GameCreationComponent implements OnInit {
-  
-  constructor(private game: GameHostService,private router: Router) { }
+
+  private hash = new Hash('quizify is the best', 4, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
+
+  constructor(private game: GameHostService, private router: Router) { }
 
   ngOnInit() {
   }
-  createStandard(){
-    this.router.navigate(['/display'])
-    //this.game.newGame('AAAB', 'STANDARD');
+  createStandard() {
+    const date = new Date().getTime();
+    const res = this.hash.encode(date);
+    console.log(res);
+    this.game.newGame(res, 'STANDARD');
+    this.router.navigate(['/display']);
+
 
   }
-  createPassive(){
+  createPassive() {
     console.log("sorry not done yet")
   }
 }

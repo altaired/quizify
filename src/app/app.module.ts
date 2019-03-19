@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
-import { MatIconModule,MatButtonModule,MatRippleModule,MatDialogModule,MatFormFieldModule,MatInputModule } from '@angular/material';
+import { MatIconModule, MatButtonModule, MatRippleModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatCardModule } from '@angular/material';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -18,7 +18,7 @@ import { DisplayComponent } from './display/display.component';
 import { GameboardComponent } from './player/gameboard/gameboard.component';
 import { GameCreationComponent } from './host/game-creation/game-creation.component';
 import { JoinDiagComponent } from './player/join-diag/join-diag.component';
-import { FormsModule,ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -32,8 +32,7 @@ import { FormsModule,ReactiveFormsModule } from '@angular/forms';
     DisplayComponent,
     GameboardComponent,
     GameCreationComponent,
-    JoinDiagComponent,
-    
+    JoinDiagComponent
   ],
   imports: [
     BrowserModule,
@@ -50,11 +49,12 @@ import { FormsModule,ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatCardModule
   ],
   providers: [AngularFireModule, AngularFireAuthModule, AngularFireDatabaseModule],
   bootstrap: [AppComponent],
-  entryComponents:[JoinDiagComponent],
-  exports:[ReactiveFormsModule,MatFormFieldModule]
+  entryComponents: [JoinDiagComponent],
+  exports: [ReactiveFormsModule, MatFormFieldModule]
 })
 export class AppModule { }

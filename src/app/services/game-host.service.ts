@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Game, GameMode, Admin } from '../models/state';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map, take, filter } from 'rxjs/operators';
+import { map, take, filter, takeUntil } from 'rxjs/operators';
 
 /**
  * Takes care of the hosts state which is
@@ -57,10 +57,10 @@ export class GameHostService {
 
   private activateReadyObserver() {
     this.state$.pipe(
+      takeUntil(this.state$.pipe(filter(state => state.state !== 'WELCOME'))),
       filter(state => state.admin ? true : false),
       map(state => state.admin.ready),
       filter(ready => ready),
-      take(1)
     ).subscribe(ready => {
       console.log('Admin is ready, starting game');
       this.startGame();
