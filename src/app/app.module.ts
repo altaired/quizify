@@ -9,7 +9,9 @@ import {
   MatDialogModule,
   MatFormFieldModule,
   MatInputModule,
-  MatCardModule
+  MatCardModule,
+  MatListModule,
+  MatGridListModule
 } from '@angular/material';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -27,6 +29,7 @@ import { GameboardComponent } from './player/gameboard/gameboard.component';
 import { GameCreationComponent } from './host/game-creation/game-creation.component';
 import { JoinDiagComponent } from './player/join-diag/join-diag.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CategoryPickComponent } from './host/category-pick/category-pick.component';
 
 
 @NgModule({
@@ -40,7 +43,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     DisplayComponent,
     GameboardComponent,
     GameCreationComponent,
-    JoinDiagComponent
+    JoinDiagComponent,
+    CategoryPickComponent
   ],
   imports: [
     BrowserModule,
@@ -59,7 +63,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    MatListModule,
+    MatGridListModule
   ],
   providers: [AngularFireModule, AngularFireAuthModule, AngularFireDatabaseModule],
   bootstrap: [AppComponent],

@@ -44,11 +44,14 @@ export class AuthService {
     return new Promise((resolve, reject) => {
       window.open(url, 'Spotify', 'height=600,width=400');
       window.addEventListener('message', event => {
+        if (typeof event.data == typeof "a string"){ // det här tar bort error när man går från game-creation till display och playback också körs, för event.data är här ett object och kan inte parsas, men jag fattar inte varför playback får den här koden att köra.
         const data = JSON.parse(event.data);
+        
         console.log(data);
         if (data.token) {
           resolve(data.token);
         }
+      }
       }, false);
       // Show spotify auth popup
 
