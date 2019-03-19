@@ -2,7 +2,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
-import { MatIconModule, MatButtonModule, MatRippleModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatCardModule } from '@angular/material';
+import {
+  MatIconModule,
+  MatButtonModule,
+  MatRippleModule,
+  MatDialogModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatCardModule
+} from '@angular/material';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
