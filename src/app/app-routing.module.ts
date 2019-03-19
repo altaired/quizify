@@ -10,7 +10,6 @@ import { DisplayComponent } from './display/display.component';
 import { GameCreationComponent } from './host/game-creation/game-creation.component';
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent },
   { path: 'display', component: DisplayComponent, canActivate: [HostGuard] },
   { path: 'playback', component: PlaybackComponent, canActivate: [HostGuard] },
   { path: 'game', component: GameboardComponent },
