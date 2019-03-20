@@ -6,8 +6,6 @@ import { take, map, filter, switchMap, share, finalize } from 'rxjs/operators';
 import { Player, Game } from '../models/state';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { userInfo } from 'os';
-import { stringify } from '@angular/core/src/render3/util';
 
 /**
  * Handles the players state during the game
