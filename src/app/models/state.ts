@@ -59,7 +59,7 @@ export interface Player {
   displayName: string;
   score?: number;
   response?: Response;
-  avatarURL?: string;
+  avatar?: string;
 }
 
 export interface Game {

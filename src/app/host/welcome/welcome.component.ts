@@ -18,6 +18,7 @@ export class WelcomeComponent implements OnInit {
   playerDetails$: Observable<PlayerDetails[]>;
 
   constructor() { }
+
   ngOnInit() {
     this.playerDetails$ = combineLatest(this.players$, this.adminUID$)
       .pipe(map(([players, admin]) => {
@@ -29,6 +30,8 @@ export class WelcomeComponent implements OnInit {
         });
       }));
   }
+
+
 
 
 

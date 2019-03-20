@@ -1,5 +1,8 @@
 <div class="container-fluid">
   <div class="row">
+    <div class="col-12">
+      <app-draw-avatar></app-draw-avatar>
+    </div>
     <div class="col-12" [ngSwitch]="isAdmin$ | async">
       <mat-card *ngSwitchCase="true">
         <button mat-raised-button (click)="start()">Start Game</button>

@@ -19,7 +19,7 @@ import { SpotifyService } from './spotify.service';
 })
 export class GameHostService {
 
-  private hasher = new Hash('INTERACTIONPROGRAMMING', 4, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789');
+  private hasher = new Hash('QUIZIFY', 6, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789');
 
   gameCode$ = new BehaviorSubject<string>(null);
   state$: Observable<Game>;

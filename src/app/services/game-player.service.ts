@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AuthService } from './auth.service';
-import { combineLatest, of } from 'rxjs';
-import { take, map, filter, switchMap, share } from 'rxjs/operators';
+import { combineLatest, of, from } from 'rxjs';
+import { take, map, filter, switchMap, share, finalize } from 'rxjs/operators';
 import { Player, Game } from '../models/state';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/storage';
@@ -74,28 +74,33 @@ export class GamePlayerService {
   }
 
   setAvatar(dataURL: string) {
-    
-    combineLatest(this.auth.user$, this.gameCode$).pipe(
-      take(1), 
-      switchMap(([user, code]) => {
-        const filePath = `avatars/${code}/${user.uid}/avatar`;
-        const refPath = this.storage.ref(filePath);
-        const task = refPath.putString(dataURL);
-      
-        return combineLatest(
-          of(code),
-          this.db.list(
-            'games/' + code + '/players', 
-            ref => ref.orderByChild('uid').equalTo(user.uid)).snapshotChanges(), 
-          refPath.getDownloadURL());
-      })
-    ).pipe(take(1)).subscribe(([code, snapshot, url]) => {
-      if (snapshot.length > 0) {
-        const key = snapshot[0].key;
-        this.db.object('games/' + code + '/players/' + key).update({avatarURL: url});
-        console.log('Updated avatar');
-      }
-    });
+    console.log('Uploading avatar...');
+    // combineLatest(this.auth.user$, this.gameCode$).pipe(
+    //   take(1),
+    //   switchMap(([user, code]) => {
+    //     const filePath = `avatars/${code}/${user.uid}/avatar.jpg`;
+    //     const refPath = this.storage.ref(filePath);
+    //     const task = refPath.putString(dataURL, 'data_url', { contentType: 'image/jpeg' });
+
+
+    //     const downloadURL = task.snapshotChanges().pipe(
+    //       finalize(() => refPath.getDownloadURL())
+    //     );
+    //     return combineLatest(
+    //       of(code),
+    //       this.db.list(
+    //         'games/' + code + '/players',
+    //         ref => ref.orderByChild('uid').equalTo(user.uid)).snapshotChanges(),
+    //       downloadURL);
+    //   })
+    // ).pipe(take(1)).subscribe(([code, snapshot, url]) => {
+    //   if (snapshot.length > 0) {
+    //     const key = snapshot[0].key;
+    //     console.log('URL', url);
+    //     this.db.object('games/' + code + '/players/' + key).update({ avatar: url });
+    //     console.log('Updated avatar');
+    //   }
+    // });
   }
 
 }
