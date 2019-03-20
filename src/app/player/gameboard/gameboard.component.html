@@ -1,1 +1,8 @@
-<app-guess-artist></app-guess-artist>
+<!-- <app-guess-artist></app-guess-artist> -->
+
+<div class=container-fluid [ngSwitch]="gameState$ | async">
+  <div *ngSwitchCase="'WELCOME'">
+    WELCOME ACTIVE
+  </div>
+  <div *ngSwitchDefault>Hejsan</div>
+</div>

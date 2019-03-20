@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Game, GameMode, Player } from '../models/state';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map, take, filter, takeUntil, share } from 'rxjs/operators';
+import { map, switchMap, filter, takeUntil, share } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 /**
@@ -28,9 +28,12 @@ export class GameHostService {
       gameMode: gameMode,
       state: 'WELCOME'
     };
-    this.gameCode$.next(gameCode);
     this.db.object('games/' + gameCode).set(game);
-    this.state$ = this.db.object<Game>('games/' + gameCode).valueChanges().pipe(share());
+    this.gameCode$.next(gameCode);
+    this.state$ = this.gameCode$
+      .pipe(
+        switchMap(code => this.db.object<Game>('games/' + code).valueChanges().pipe(share()))
+      );
     this.welcomeHandler();
   }
 
