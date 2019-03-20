@@ -1,1 +1,15 @@
-<app-draw-avatar></app-draw-avatar>
+<div class="container-fluid">
+  <div class="col-12 margin-bottom margin-top">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{displayName$ | async}}</mat-card-title>
+      </mat-card-header>
+    </mat-card>
+  </div>
+  <div [ngSwitch]="gameState$ | async" class="col-12">
+    <div *ngSwitchCase="'WELCOME'">
+      <app-draw-avatar></app-draw-avatar>
+    </div>
+    <div *ngSwitchDefault>Hejsan</div>
+  </div>
+</div>

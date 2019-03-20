@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AuthService } from './auth.service';
 import { combineLatest } from 'rxjs';
-import { take, map, filter, switchMap } from 'rxjs/operators';
+import { take, map, filter, switchMap, share } from 'rxjs/operators';
 import { Player, Game } from '../models/state';
-import { unescapeIdentifier } from '@angular/compiler';
-import { reject } from 'q';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 /**
  * Handles the players state during the game
@@ -16,6 +15,10 @@ import { reject } from 'q';
   providedIn: 'root'
 })
 export class GamePlayerService {
+
+  gameCode$ = new BehaviorSubject<string>(null);
+  state$: Observable<Game>;
+  displayName$: Observable<string>;
 
   constructor(
     private auth: AuthService,
@@ -31,10 +34,10 @@ export class GamePlayerService {
         if (game && game.state === 'WELCOME') {
           console.log(game.players);
           if (!game.players) {
-            this.addPlayerToGame({ displayName: name, uid: uid }, gameCode);
+            this.initGame({ displayName: name, uid: uid }, gameCode);
             resolve(true);
           } else if (Object.values(game.players).every(player => player.uid !== uid)) {
-            this.addPlayerToGame({ displayName: name, uid: uid }, gameCode);
+            this.initGame({ displayName: name, uid: uid }, gameCode);
             resolve(true);
           } else {
             console.error('Player already in game');
@@ -49,8 +52,16 @@ export class GamePlayerService {
 
   }
 
-  private addPlayerToGame(player: Player, gameCode: string) {
+  private initGame(player: Player, gameCode: string) {
     this.db.list('games/' + gameCode + '/players').push(player);
+    this.gameCode$.next(gameCode);
+    this.state$ = this.gameCode$
+      .pipe(
+        switchMap(code => this.db.object<Game>('games/' + code).valueChanges().pipe(share()))
+      );
+    this.displayName$ = combineLatest(this.auth.user$, this.state$).pipe(map(([user, state]) => {
+      return Object.values(state.players).find(p => p.uid === user.uid).displayName;
+    }));
   }
 
 }

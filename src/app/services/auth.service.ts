@@ -24,6 +24,7 @@ export class AuthService {
     this.user$ = afAuth.authState;
     this.token$ = this.user$
       .pipe(
+        tap(console.log),
         filter(user => user ? true : false),
         switchMap(user => this.getToken(user.uid)));
 
