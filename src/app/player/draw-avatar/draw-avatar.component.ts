@@ -50,7 +50,8 @@ export class DrawAvatarComponent implements OnInit , AfterViewInit {
     this.context.lineWidth=change.value;
   }
   saveImg(){
-      let dataURL = this.element.toDataURL('image/png');
+      let dataURL = this.element.toDataURL('image/jpg');
+      console.log(dataURL);
   }
   clearCanvas(){
     this.context.clearRect(0, 0, this.element.width, this.element.height);
