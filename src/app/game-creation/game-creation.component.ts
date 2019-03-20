@@ -11,7 +11,7 @@ import { GameMode } from 'src/app/models/state';
 })
 export class GameCreationComponent implements OnInit {
 
-  private hash = new Hash('quizify is the best', 4, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
+  private hash = new Hash('INTERACTIONPROGRAMMING', 4, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 
 
   constructor(private game: GameHostService, private router: Router) { }
@@ -19,8 +19,9 @@ export class GameCreationComponent implements OnInit {
   ngOnInit() {
   }
   createStandard() {
-    const date = new Date().getTime();
-    const res = this.hash.encode(date);
+    const date = new Date();
+    const val = `${date.getMinutes()}${date.getHours()}${date.getUTCMilliseconds()}`;
+    const res = this.hash.encode(val);
     this.game.newGame(res, 'STANDARD');
   }
   createPassive() {

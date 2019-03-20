@@ -12,6 +12,7 @@ import { Game, GameState } from '../../models/state';
 })
 export class GameboardComponent implements OnInit {
 
+  displayName$: Observable<string>;
   gameCode$: Observable<string>;
   gameState$: Observable<GameState>;
   state$: Observable<Game>;
@@ -25,6 +26,7 @@ export class GameboardComponent implements OnInit {
     this.gameCode$ = this.game.gameCode$;
     this.state$ = this.game.state$;
     this.gameState$ = this.state$.pipe(map(state => state.state));
+    this.displayName$ = this.game.displayName$;
   }
 
 }

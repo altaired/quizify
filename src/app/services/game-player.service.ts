@@ -18,6 +18,7 @@ export class GamePlayerService {
 
   gameCode$ = new BehaviorSubject<string>(null);
   state$: Observable<Game>;
+  displayName$: Observable<string>;
 
   constructor(
     private auth: AuthService,
@@ -58,6 +59,9 @@ export class GamePlayerService {
       .pipe(
         switchMap(code => this.db.object<Game>('games/' + code).valueChanges().pipe(share()))
       );
+    this.displayName$ = combineLatest(this.auth.user$, this.state$).pipe(map(([user, state]) => {
+      return Object.values(state.players).find(p => p.uid === user.uid).displayName;
+    }));
   }
 
 }
