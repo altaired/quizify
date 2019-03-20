@@ -6,11 +6,11 @@ import { map } from 'rxjs/operators';
 import { Game, GameState } from '../../models/state';
 
 @Component({
-  selector: 'app-gameboard',
-  templateUrl: './gameboard.component.html',
-  styleUrls: ['./gameboard.component.scss']
+  selector: 'app-player-display',
+  templateUrl: './player-display.component.html',
+  styleUrls: ['./player-display.component.scss']
 })
-export class GameboardComponent implements OnInit {
+export class PlayerDisplayComponent implements OnInit {
 
   displayName$: Observable<string>;
   gameCode$: Observable<string>;

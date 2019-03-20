@@ -3,17 +3,17 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-join-diag',
-  templateUrl: './join-diag.component.html',
-  styleUrls: ['./join-diag.component.scss']
+  selector: 'app-join-dialog',
+  templateUrl: './join-dialog.component.html',
+  styleUrls: ['./join-dialog.component.scss']
 })
-export class JoinDiagComponent implements OnInit {
+export class JoinDialogComponent implements OnInit {
 
   form: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    public dialogRef: MatDialogRef<JoinDiagComponent>,
+    public dialogRef: MatDialogRef<JoinDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data
   ) { }
 

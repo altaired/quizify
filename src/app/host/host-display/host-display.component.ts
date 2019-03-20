@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { GameHostService } from '../services/game-host.service';
+import { GameHostService } from '../../services/game-host.service';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { Game, Player, GameState } from '../models/state';
+import { Game, Player, GameState } from '../../models/state';
 
 @Component({
-  selector: 'app-display',
-  templateUrl: './display.component.html',
-  styleUrls: ['./display.component.scss']
+  selector: 'app-host-display',
+  templateUrl: './host-display.component.html',
+  styleUrls: ['./host-display.component.scss']
 })
-export class DisplayComponent implements OnInit {
+export class HostDisplayComponent implements OnInit {
   state$: Observable<Game>;
   players$: Observable<Player[]>;
   gameCode$: Observable<string>;

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GameboardComponent } from './gameboard.component';
+import { JoinDialogComponent } from './join-dialog.component';
 
-describe('GameboardComponent', () => {
-  let component: GameboardComponent;
-  let fixture: ComponentFixture<GameboardComponent>;
+describe('JoinDialogComponent', () => {
+  let component: JoinDialogComponent;
+  let fixture: ComponentFixture<JoinDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GameboardComponent ]
+      declarations: [JoinDialogComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GameboardComponent);
+    fixture = TestBed.createComponent(JoinDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

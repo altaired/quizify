@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { JoinDiagComponent } from './join-diag.component';
+import { GuessOptionComponent } from './guess-option.component';
 
-describe('JoinDiagComponent', () => {
-  let component: JoinDiagComponent;
-  let fixture: ComponentFixture<JoinDiagComponent>;
+describe('GuessOptionComponent', () => {
+  let component: GuessOptionComponent;
+  let fixture: ComponentFixture<GuessOptionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ JoinDiagComponent ]
+      declarations: [ GuessOptionComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(JoinDiagComponent);
+    fixture = TestBed.createComponent(GuessOptionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './core/login/login.component';
 import { PlaybackComponent } from './playback/playback.component';
-import { GuessArtistComponent } from './guess-artist/guess-artist.component';
 import { GameboardComponent } from './player/gameboard/gameboard.component';
-import { WelcomeComponent } from './welcome/welcome.component';
+import { WelcomeComponent } from './host/welcome/welcome.component';
 import { HostGuard } from './core/host.guard';
 import { DisplayComponent } from './display/display.component';
-import { GameCreationComponent } from './game-creation/game-creation.component';
+import { GameCreationComponent } from './host/game-creation/game-creation.component';
 
 const routes: Routes = [
   { path: 'display', component: DisplayComponent, canActivate: [HostGuard] },

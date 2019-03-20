@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { filter, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { User } from 'firebase';
-import { GamePlayerService } from '../services/game-player.service';
+import { GamePlayerService } from '../../services/game-player.service';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-import { JoinDiagComponent } from '../player/join-diag/join-diag.component';
+import { JoinDialogComponent } from '../../player/join-dialog/join-dialog.component';
 
 @Component({
   selector: 'app-login',
@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
     await this.auth.loginAnonymously();
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
-    const dialogRef = this.dialog.open(JoinDiagComponent, dialogConfig);
+    const dialogRef = this.dialog.open(JoinDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       if (result && result.gameCode && result.name) {

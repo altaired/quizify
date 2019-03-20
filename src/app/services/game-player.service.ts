@@ -5,6 +5,7 @@ import { combineLatest } from 'rxjs';
 import { take, map, filter, switchMap, share } from 'rxjs/operators';
 import { Player, Game } from '../models/state';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 /**
  * Handles the players state during the game
@@ -22,7 +23,8 @@ export class GamePlayerService {
 
   constructor(
     private auth: AuthService,
-    private db: AngularFireDatabase
+    private db: AngularFireDatabase,
+    private storage: AngularFireStorage
   ) { }
 
   join(gameCode: string, name: string) {
@@ -62,6 +64,10 @@ export class GamePlayerService {
     this.displayName$ = combineLatest(this.auth.user$, this.state$).pipe(map(([user, state]) => {
       return Object.values(state.players).find(p => p.uid === user.uid).displayName;
     }));
+  }
+
+  setAvatar(dataURL: string) {
+    // TODO: Upload images
   }
 
 }

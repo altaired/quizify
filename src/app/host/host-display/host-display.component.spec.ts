@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GuessTrackComponent } from './guess-track.component';
+import { HostDisplayComponent } from './host-display.component';
 
-describe('GuessTrackComponent', () => {
-  let component: GuessTrackComponent;
-  let fixture: ComponentFixture<GuessTrackComponent>;
+describe('DisplayComponent', () => {
+  let component: HostDisplayComponent;
+  let fixture: ComponentFixture<HostDisplayComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GuessTrackComponent ]
+      declarations: [HostDisplayComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GuessTrackComponent);
+    fixture = TestBed.createComponent(HostDisplayComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

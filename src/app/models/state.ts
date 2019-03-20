@@ -53,6 +53,7 @@ export interface Player {
   displayName: string;
   score?: number;
   response?: Response;
+  avatarURL?: string;
 }
 
 export interface Game {
