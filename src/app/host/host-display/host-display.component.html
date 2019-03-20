@@ -3,5 +3,5 @@
 <div class=container-fluid [ngSwitch]="gameState$ | async">
   <app-welcome *ngSwitchCase="'WELCOME'" [adminUID$]="adminUID$" [gameCode$]="gameCode$" [players$]="players$">
   </app-welcome>
-  <app-category-pick *ngSwitchCase="'CATEGORY'"></app-category-pick>
+  <app-category-list *ngSwitchCase="'CATEGORY'"></app-category-list>
 </div>
