@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { GameHostService } from '../services/game-host.service';
+import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+import { Game, Player } from '../models/state';
 
 @Component({
   selector: 'app-display',
@@ -8,10 +11,19 @@ import { GameHostService } from '../services/game-host.service';
 })
 export class DisplayComponent implements OnInit {
 
+  state$: Observable<Game>;
+  players$: Observable<Player[]>;
+  gameCode$: Observable<string>;
+
   constructor(private game: GameHostService) { }
 
   ngOnInit() {
-    this.game.newGame('AAAB', 'STANDARD');
+    this.state$ = this.game.state$;
+    this.players$ = this.state$.pipe(
+      filter(state => state.players ? true : false),
+      map(state => Object.values(state.players))
+    );
+    this.gameCode$ = this.game.gameCode$;
   }
 
 }

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Game, GameMode, Admin } from '../models/state';
+import { Game, GameMode, Admin, Player } from '../models/state';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map, take, filter, takeUntil } from 'rxjs/operators';
+import { map, take, filter, takeUntil, share } from 'rxjs/operators';
 
 /**
  * Takes care of the hosts state which is
@@ -14,8 +14,8 @@ import { map, take, filter, takeUntil } from 'rxjs/operators';
 })
 export class GameHostService {
 
-  private gameCode$ = new BehaviorSubject<string>(null);
-  private state$: Observable<Game>;
+  gameCode$ = new BehaviorSubject<string>(null);
+  state$: Observable<Game>;
 
   constructor(private db: AngularFireDatabase) { }
 
@@ -26,7 +26,7 @@ export class GameHostService {
     };
     this.gameCode$.next(gameCode);
     this.db.object('games/' + gameCode).set(game);
-    this.state$ = this.db.object<Game>('games/' + gameCode).valueChanges();
+    this.state$ = this.db.object<Game>('games/' + gameCode).valueChanges().pipe(share());
     this.welcomeHandler();
   }
 
