@@ -13,9 +13,9 @@ const routes: Routes = [
   { path: 'display', component: DisplayComponent, canActivate: [HostGuard] },
   { path: 'playback', component: PlaybackComponent, canActivate: [HostGuard] },
   { path: 'game', component: GameboardComponent },
-  { path: '', component: LoginComponent },
-  { path: 'create-game', component: GameCreationComponent, canActivate: [HostGuard] },
+ // { path: 'create-game', component: GameCreationComponent, canActivate: [HostGuard] },
   { path: 'welcome', component: WelcomeComponent, canActivate: [HostGuard] },
+  { path: '', component: LoginComponent },
 ];
 
 @NgModule({

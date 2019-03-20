@@ -1,16 +1,6 @@
 <app-playback></app-playback>
 
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <h2>{{gameCode$ | async}}</h2>
-    </div>
-    <div class="col-sm-6 col-md-3" *ngIf="players$ | async as players">
-      <mat-card *ngFor="let player of players">
-        <mat-card-header>
-          <mat-card-title>{{player.displayName}}</mat-card-title>
-        </mat-card-header>
-      </mat-card>
-    </div>
-  </div>
-</div>
+<button (click)="category()">testa categories</button>
+<app-game-creation *ngIf="gameState$ == undefined" (newGame)="newGame($event)"></app-game-creation>
+<app-welcome *ngIf="gameState$ == 'WELCOME'" [gameHost]="gameHost"></app-welcome>
+<app-category-pick *ngIf="gameState$ == 'WELCOME' && show"></app-category-pick>

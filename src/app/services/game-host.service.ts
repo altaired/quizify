@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Game, GameMode, Admin, Player } from '../models/state';
+import { Game, GameMode, Player } from '../models/state';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, take, filter, takeUntil, share } from 'rxjs/operators';
@@ -29,6 +29,14 @@ export class GameHostService {
     this.state$ = this.db.object<Game>('games/' + gameCode).valueChanges().pipe(share());
     this.welcomeHandler();
   }
+
+  getPlayers(): Observable<Player[]> {
+    return this.state$.pipe(
+      filter(state => state.players ? true : false),
+      map(state => Object.values(state.players)),
+    );
+  }
+
 
   private welcomeHandler() {
     const playersSubscription = this.state$.pipe(
@@ -70,4 +78,5 @@ export class GameHostService {
   private startGame() {
 
   }
+
 }

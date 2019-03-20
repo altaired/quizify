@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Game, Player } from '../models/state';
+import { take } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+
 
 @Component({
   selector: 'app-welcome',
@@ -7,9 +11,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WelcomeComponent implements OnInit {
 
-  constructor() { }
+  @Input() players$: Observable<Player[]>;
+  @Input() gameCode$: Observable<string>;
 
+  constructor() { }
   ngOnInit() {
+
   }
+
+
 
 }

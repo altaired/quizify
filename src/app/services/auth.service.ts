@@ -56,8 +56,6 @@ export class AuthService {
           reject('Invalid token');
         }
       }, false);
-      // Show spotify auth popup
-
     });
   }
 

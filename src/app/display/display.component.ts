@@ -3,6 +3,7 @@ import { GameHostService } from '../services/game-host.service';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Game, Player } from '../models/state';
+import { GameCreateRequest } from '../host/game-creation/game-creation.component';
 
 @Component({
   selector: 'app-display',
@@ -10,10 +11,11 @@ import { Game, Player } from '../models/state';
   styleUrls: ['./display.component.scss']
 })
 export class DisplayComponent implements OnInit {
-
   state$: Observable<Game>;
   players$: Observable<Player[]>;
   gameCode$: Observable<string>;
+
+  show: boolean;
 
   constructor(private game: GameHostService) { }
 
@@ -24,6 +26,14 @@ export class DisplayComponent implements OnInit {
       map(state => Object.values(state.players))
     );
     this.gameCode$ = this.game.gameCode$;
+  }
+
+  newGame(req: GameCreateRequest) {
+    this.game.newGame(req.code, req.mode);
+  }
+
+  category() {
+    this.show = true;
   }
 
 }

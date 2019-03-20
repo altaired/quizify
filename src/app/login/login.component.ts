@@ -28,8 +28,9 @@ export class LoginComponent implements OnInit {
     this.user$ = this.auth.user$;
   }
 
-  loginHost() {
-    this.auth.loginWithSpotify().then(() => this.router.navigate(['/create-game']));
+  async loginHost() {
+    await this.auth.loginWithSpotify();
+    this.router.navigate(['/display']);
   }
 
   async loginPlayer() {
