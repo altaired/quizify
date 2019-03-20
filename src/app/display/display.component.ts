@@ -3,7 +3,6 @@ import { GameHostService } from '../services/game-host.service';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Game, Player, GameState } from '../models/state';
-import { GameCreateRequest } from '../host/game-creation/game-creation.component';
 
 @Component({
   selector: 'app-display',
@@ -26,10 +25,6 @@ export class DisplayComponent implements OnInit {
     );
     this.gameCode$ = this.game.gameCode$;
     this.gameState$ = this.state$.pipe(map(state => state.state));
-  }
-
-  newGame(req: GameCreateRequest) {
-    this.game.newGame(req.code, req.mode);
   }
 
 }
