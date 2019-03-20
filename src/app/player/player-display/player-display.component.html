@@ -8,7 +8,10 @@
   </div>
   <div [ngSwitch]="gameState$ | async" class="col-12">
     <div *ngSwitchCase="'WELCOME'">
-      <app-draw-avatar></app-draw-avatar>
+      <app-ready [adminUID$]="adminUID$" (ready)="startGame()"></app-ready>
+    </div>
+    <div *ngSwitchCase="'PICK_CATEGORY'">
+      ADMIN IS PICKING A CATEGORY
     </div>
     <div *ngSwitchDefault>Hejsan</div>
   </div>

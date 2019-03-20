@@ -4,12 +4,18 @@ export type GameState = 'WELCOME' | 'PICK_CATEGORY' | 'ANSWER' | 'RESULT' | 'END
 export interface CategoryOption {
   id: string;
   name: string;
-  image: string;
+  image: Image;
+}
+
+export interface Image {
+  height: string;
+  width: string;
+  url: string;
 }
 
 export interface CategoryState {
   playerUID: string;
-  playerResponse: string;
+  playerResponse?: string;
   done: boolean;
   options: CategoryOption[];
 }

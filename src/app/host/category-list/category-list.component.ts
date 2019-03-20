@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { SpotifyService } from 'src/app/services/spotify.service';
+import { GameHostService } from 'src/app/services/game-host.service';
+import { Observable } from 'rxjs';
+import { filter, map, tap } from 'rxjs/operators';
+import { CategoryObj } from 'src/app/models/spotify';
+import { CategoryState, CategoryOption } from 'src/app/models/state';
 
 @Component({
   selector: 'app-category-list',
@@ -8,14 +13,19 @@ import { SpotifyService } from 'src/app/services/spotify.service';
 })
 export class CategoryListComponent implements OnInit {
 
-  constructor(private spotify: SpotifyService) { }
-  categoryList: any[];
+  categoryState$: Observable<CategoryState>;
+  options$: Observable<CategoryOption[]>;
+
+  constructor(private game: GameHostService) { }
+
   ngOnInit() {
-    //this.spot.listCategories().pipe(take(1)).subscribe(cats => {
-    //console.log(cats.categories);
-    //  this.categoryList = new GetRandom().randomPicks(4,cats.categories.items);
-    //console.log(this.categoryList);
-    //})
+    this.categoryState$ = this.game.state$.pipe(
+      filter(state => state.playerDisplay ? true : false),
+      map(state => state.playerDisplay.category),
+      tap(console.log)
+    );
+    this.options$ = this.categoryState$.pipe(map(state => Object.values(state.options)));
+
   }
 
 }

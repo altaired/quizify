@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Game, GameMode, Player } from '../models/state';
+import { Game, GameMode, Player, GameState, CategoryOption, CategoryState } from '../models/state';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map, switchMap, filter, takeUntil, share, take, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Hash } from 'src/app/utils/hash';
 import { AuthService } from './auth.service';
-import { st } from '@angular/core/src/render3';
+import { History } from '../models/history';
+import { SpotifyService } from './spotify.service';
 
 /**
  * Takes care of the hosts state which is
@@ -22,20 +23,27 @@ export class GameHostService {
 
   gameCode$ = new BehaviorSubject<string>(null);
   state$: Observable<Game>;
+  private history: History;
 
   constructor(
     private db: AngularFireDatabase,
     private auth: AuthService,
+    private spotify: SpotifyService,
     private router: Router
-  ) { }
+  ) {
+    this.history = {
+      tracks: [],
+      categories: [],
+      pickers: []
+    };
+  }
 
   private get hash(): Observable<string> {
     return this.auth.user$.pipe(
       take(1),
       map(user => {
-        const uidHash = this.toCharIndex(user.uid.slice(0, 2));
-        const dateHash = new Date().getUTCMilliseconds();
-        return this.hasher.encode(uidHash, dateHash);
+        const dateHash = new Date().valueOf();
+        return this.hasher.encode(dateHash);
       })
     );
   }
@@ -58,15 +66,7 @@ export class GameHostService {
 
   }
 
-  private toCharIndex(str: string): number[] {
-    const res = [];
-    for (let i = 0; i < str.length; i++) {
-      res.push(str.charCodeAt(i));
-    }
-    return res;
-  }
-
-  get players(): Observable<Player[]> {
+  get players$(): Observable<Player[]> {
     return this.state$.pipe(
       filter(state => state.players ? true : false),
       map(state => Object.values(state.players)),
@@ -76,12 +76,13 @@ export class GameHostService {
 
   private welcomeHandler() {
     this.router.navigate(['display']);
-    const playersSubscription = this.state$.pipe(
+    const subscription = this.state$.pipe(
       filter(state => state.players ? true : false),
       map(state => Object.values(state.players)),
     ).subscribe(players => {
       if (players.length === 1) {
         this.setGameAdmin(players[0].uid);
+        subscription.unsubscribe();
       }
       console.log('Players', players);
     });
@@ -113,7 +114,40 @@ export class GameHostService {
   }
 
   private startGame() {
+    combineLatest(this.spotify.listCategories().pipe(
+      map(res => {
+        const categories = res.categories.items;
+        const shuffled = categories.sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, 6);
+        return selected;
+      })
+    ), this.players$).subscribe(([categories, players]) => {
+      const code = this.gameCode$.getValue();
+      const options = categories.map(category => {
+        const categoryObj: CategoryOption = {
+          id: category.id,
+          name: category.name,
+          image: category.icons[0]
+        };
+        return categoryObj;
+      });
+      const selectedPlayer = players.find(player =>
+        !this.history.pickers.some(picker => picker === player.uid)
+      );
+      const categoryState: CategoryState = {
+        playerUID: selectedPlayer.uid,
+        done: false,
+        options: options
+      };
+      this.db.object('games/' + code + '/playerDisplay/category').set(categoryState);
+      this.setState('PICK_CATEGORY');
+    });
+  }
 
+  private setState(state: GameState) {
+    this.gameCode$.pipe(take(1)).subscribe(code => {
+      this.db.object('games/' + code).update({ state: state });
+    });
   }
 
 }

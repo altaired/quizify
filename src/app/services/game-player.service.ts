@@ -68,6 +68,11 @@ export class GamePlayerService {
     }));
   }
 
+  startGame() {
+    const code = this.gameCode$.getValue();
+    this.db.object('games/' + code + '/admin').update({ ready: true });
+  }
+
   setAvatar(dataURL: string) {
     
     combineLatest(this.auth.user$, this.gameCode$).pipe(
