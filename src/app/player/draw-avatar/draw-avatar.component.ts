@@ -8,6 +8,7 @@ export class DrawAvatarComponent implements OnInit , AfterViewInit {
   @ViewChild('canvas') canvas: ElementRef;
   private mouseIsDown : boolean = false;
   private context: CanvasRenderingContext2D;
+  element: HTMLCanvasElement
 
 
   constructor() { }
@@ -18,24 +19,24 @@ export class DrawAvatarComponent implements OnInit , AfterViewInit {
 
   ngAfterViewInit(){
     
-    const element: HTMLCanvasElement = this.canvas.nativeElement;
-    this.context = element.getContext('2d');
+    this.element = this.canvas.nativeElement;
+    this.context = this.element.getContext('2d');
     this.context.strokeStyle = 'black';
     this.context.lineWidth = 10;
-    element.onmousedown = (cord) =>{
-      console.log('mousedown');
+    this.element.onpointerdown = (cord) =>{
+      //console.log('mousedown');
       this.mouseIsDown = true;
       this.context.beginPath();
       this.context.moveTo(cord.clientX,cord.clientY);
     }
-    element.onmousemove = (cord) =>{
+    this.element.onpointermove = (cord) =>{
       if(this.mouseIsDown){
         this.context.lineTo(cord.clientX,cord.clientY);
         this.context.stroke();
       }
     }
-    element.onmouseup = (cord) =>{
-      console.log('mouseup');
+    this.element.onpointerup = (cord) =>{
+      //console.log('mouseup');
       this.context.closePath();
       this.mouseIsDown = false;
     }
@@ -44,5 +45,14 @@ export class DrawAvatarComponent implements OnInit , AfterViewInit {
 
   changeColor(change){
     this.context.strokeStyle= change.value;
+  }
+  changeSize(change){
+    this.context.lineWidth=change.value;
+  }
+  saveImg(){
+      let dataURL = this.element.toDataURL('image/png');
+  }
+  clearCanvas(){
+    this.context.clearRect(0, 0, this.element.width, this.element.height);
   }
 }
