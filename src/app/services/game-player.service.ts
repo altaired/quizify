@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AuthService } from './auth.service';
-import { combineLatest } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
 import { take, map, filter, switchMap, share } from 'rxjs/operators';
 import { Player, Game } from '../models/state';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { userInfo } from 'os';
+import { stringify } from '@angular/core/src/render3/util';
 
 /**
  * Handles the players state during the game
@@ -67,7 +69,28 @@ export class GamePlayerService {
   }
 
   setAvatar(dataURL: string) {
-    // TODO: Upload images
+    
+    combineLatest(this.auth.user$, this.gameCode$).pipe(
+      take(1), 
+      switchMap(([user, code]) => {
+        const filePath = `avatars/${code}/${user.uid}/avatar`;
+        const refPath = this.storage.ref(filePath);
+        const task = refPath.putString(dataURL);
+      
+        return combineLatest(
+          of(code),
+          this.db.list(
+            'games/' + code + '/players', 
+            ref => ref.orderByChild('uid').equalTo(user.uid)).snapshotChanges(), 
+          refPath.getDownloadURL());
+      })
+    ).pipe(take(1)).subscribe(([code, snapshot, url]) => {
+      if (snapshot.length > 0) {
+        const key = snapshot[0].key;
+        this.db.object('games/' + code + '/players/' + key).update({avatarURL: url});
+        console.log('Updated avatar');
+      }
+    });
   }
 
 }
