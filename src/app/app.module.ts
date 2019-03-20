@@ -34,6 +34,7 @@ import { CategoryListComponent } from './host/category-list/category-list.compon
 import { GuessOptionComponent } from './player/guess-option/guess-option.component';
 import { GuessTextComponent } from './player/guess-text/guess-text.component';
 import { ReadyComponent } from './player/ready/ready.component';
+import { CategoryPickComponent } from './player/category-pick/category-pick.component';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import { ReadyComponent } from './player/ready/ready.component';
     CategoryListComponent,
     GuessOptionComponent,
     GuessTextComponent,
-    ReadyComponent
+    ReadyComponent,
+    CategoryPickComponent
   ],
   imports: [
     BrowserModule,
