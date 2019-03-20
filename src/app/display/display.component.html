@@ -1,6 +1,6 @@
 <app-playback></app-playback>
 
 <div class=container-fluid [ngSwitch]="gameState$ | async">
-  <app-welcome *ngSwitchCase="WELCOME" [gameCode$]="gameCode$" [players$]="players$"></app-welcome>
-  <app-category-pick *ngSwitchCase="CATEGORY"></app-category-pick>
+  <app-welcome *ngSwitchCase="'WELCOME'" [gameCode$]="gameCode$" [players$]="players$"></app-welcome>
+  <app-category-pick *ngSwitchCase="'CATEGORY'"></app-category-pick>
 </div>

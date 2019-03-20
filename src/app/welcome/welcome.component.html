@@ -1,9 +1,11 @@
 <p>mer kommer!</p>
-<p>Join: {{gameCode}}</p>
+<p>Join: {{gameCode$ | async}}</p>
 <mat-list>
   <h3 mat-subheader>Current Players</h3>
-  <mat-list-item *ngFor="let player of players">
-    <mat-icon mat-list-icon>face</mat-icon>
-    <h4 mat-line>{{player.displayName}}</h4>
-  </mat-list-item>
+  <div *ngIf="players$ | async as players">
+    <mat-list-item *ngFor="let player of players">
+      <mat-icon mat-list-icon>face</mat-icon>
+      <h4 mat-line>{{player.displayName}}</h4>
+    </mat-list-item>
+  </div>
 </mat-list>
