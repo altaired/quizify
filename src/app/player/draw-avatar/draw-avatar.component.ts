@@ -1,4 +1,5 @@
 import { Component, OnInit,ViewChild, ElementRef, AfterViewInit  } from '@angular/core';
+import { GamePlayerService } from 'src/app/services/game-player.service';
 @Component({
   selector: 'app-draw-avatar',
   templateUrl: './draw-avatar.component.html',
@@ -11,7 +12,7 @@ export class DrawAvatarComponent implements OnInit , AfterViewInit {
   element: HTMLCanvasElement
 
 
-  constructor() { }
+  constructor(private player: GamePlayerService) { }
 
   ngOnInit() {
 
@@ -51,7 +52,7 @@ export class DrawAvatarComponent implements OnInit , AfterViewInit {
   }
   saveImg(){
       let dataURL = this.element.toDataURL('image/jpg');
-      console.log(dataURL);
+      this.player.setAvatar(dataURL);
   }
   clearCanvas(){
     this.context.clearRect(0, 0, this.element.width, this.element.height);
