@@ -11,7 +11,8 @@ import {
   MatInputModule,
   MatCardModule,
   MatListModule,
-  MatGridListModule
+  MatGridListModule,
+  MatButtonToggleModule
 } from '@angular/material';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -30,6 +31,7 @@ import { GameCreationComponent } from './game-creation/game-creation.component';
 import { JoinDiagComponent } from './player/join-diag/join-diag.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CategoryPickComponent } from './host/category-pick/category-pick.component';
+import { DrawAvatarComponent } from './player/draw-avatar/draw-avatar.component';
 
 
 @NgModule({
@@ -44,7 +46,8 @@ import { CategoryPickComponent } from './host/category-pick/category-pick.compon
     GameboardComponent,
     GameCreationComponent,
     JoinDiagComponent,
-    CategoryPickComponent
+    CategoryPickComponent,
+    DrawAvatarComponent
   ],
   imports: [
     BrowserModule,
@@ -65,7 +68,8 @@ import { CategoryPickComponent } from './host/category-pick/category-pick.compon
     MatCardModule,
     MatButtonModule,
     MatListModule,
-    MatGridListModule
+    MatGridListModule,
+    MatButtonToggleModule
   ],
   providers: [AngularFireModule, AngularFireAuthModule, AngularFireDatabaseModule],
   bootstrap: [AppComponent],
