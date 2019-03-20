@@ -19,19 +19,22 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
-import { LoginComponent } from './login/login.component';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+import { LoginComponent } from './core/login/login.component';
 import { PlaybackComponent } from './playback/playback.component';
 import { HttpClientModule } from '@angular/common/http';
-import { GuessArtistComponent } from './guess-artist/guess-artist.component';
-import { GuessTrackComponent } from './guess-track/guess-track.component';
-import { WelcomeComponent } from './welcome/welcome.component';
-import { DisplayComponent } from './display/display.component';
-import { GameboardComponent } from './player/gameboard/gameboard.component';
-import { GameCreationComponent } from './game-creation/game-creation.component';
-import { JoinDiagComponent } from './player/join-diag/join-diag.component';
+import { WelcomeComponent } from './host/welcome/welcome.component';
+import { HostDisplayComponent } from './host/host-display/host-display.component';
+import { PlayerDisplayComponent } from './player/player-display/player-display.component';
+import { GameCreationComponent } from './host/game-creation/game-creation.component';
+import { JoinDialogComponent } from './player/join-dialog/join-dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CategoryPickComponent } from './host/category-pick/category-pick.component';
-import { DrawAvatarComponent } from './player/draw-avatar/draw-avatar.component';
+import { DrawAvatarComponent } from './player/ready/draw-avatar/draw-avatar.component';
+import { CategoryListComponent } from './host/category-list/category-list.component';
+import { GuessOptionComponent } from './player/guess-option/guess-option.component';
+import { GuessTextComponent } from './player/guess-text/guess-text.component';
+import { ReadyComponent } from './player/ready/ready.component';
+import { CategoryPickComponent } from './player/category-pick/category-pick.component';
 
 
 @NgModule({
@@ -39,21 +42,24 @@ import { DrawAvatarComponent } from './player/draw-avatar/draw-avatar.component'
     AppComponent,
     LoginComponent,
     PlaybackComponent,
-    GuessArtistComponent,
-    GuessTrackComponent,
     WelcomeComponent,
-    DisplayComponent,
-    GameboardComponent,
+    HostDisplayComponent,
+    PlayerDisplayComponent,
     GameCreationComponent,
-    JoinDiagComponent,
-    CategoryPickComponent,
-    DrawAvatarComponent
+    JoinDialogComponent,
+    DrawAvatarComponent,
+    CategoryListComponent,
+    GuessOptionComponent,
+    GuessTextComponent,
+    ReadyComponent,
+    CategoryPickComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     AngularFireAuthModule,
     AngularFireDatabaseModule,
+    AngularFireStorageModule,
     AngularFireModule.initializeApp(environment.firebase, 'quizify-client'),
     HttpClientModule,
     BrowserAnimationsModule,
@@ -73,7 +79,7 @@ import { DrawAvatarComponent } from './player/draw-avatar/draw-avatar.component'
   ],
   providers: [AngularFireModule, AngularFireAuthModule, AngularFireDatabaseModule],
   bootstrap: [AppComponent],
-  entryComponents: [JoinDiagComponent],
+  entryComponents: [JoinDialogComponent],
   exports: [ReactiveFormsModule, MatFormFieldModule]
 })
 export class AppModule { }

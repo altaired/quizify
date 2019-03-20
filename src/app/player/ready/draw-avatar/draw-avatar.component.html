@@ -1,0 +1,31 @@
+<canvas #canvas height="400px" width="400px"></canvas>
+<mat-button-toggle-group #groupColor="matButtonToggleGroup" (change)="changeColor($event)" vertical="true">
+  <mat-button-toggle value="black">
+    <mat-icon>color_lens</mat-icon>
+  </mat-button-toggle>
+  <mat-button-toggle value="red">
+    <mat-icon class="red">color_lens</mat-icon>
+  </mat-button-toggle>
+  <mat-button-toggle value="green">
+    <mat-icon class="green">color_lens</mat-icon>
+  </mat-button-toggle>
+  <mat-button-toggle value="blue">
+    <mat-icon class="blue">color_lens</mat-icon>
+  </mat-button-toggle>
+</mat-button-toggle-group>
+<mat-button-toggle-group #groupSize="matButtonToggleGroup" (change)="changeSize($event)" vertical="true">
+  <mat-button-toggle value=2>
+    <mat-icon>lens</mat-icon>
+  </mat-button-toggle>
+  <mat-button-toggle value=4>
+    <mat-icon>lens</mat-icon>
+  </mat-button-toggle>
+  <mat-button-toggle value=7>
+    <mat-icon>lens</mat-icon>
+  </mat-button-toggle>
+  <mat-button-toggle value=10>
+    <mat-icon>lens</mat-icon>
+  </mat-button-toggle>
+</mat-button-toggle-group >
+<button mat-button color="warn" (click)="saveImg()">Save</button>
+<button mat-button (click)="clearCanvas()">Clear</button>
