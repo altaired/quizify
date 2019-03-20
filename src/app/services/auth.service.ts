@@ -32,11 +32,16 @@ export class AuthService {
   private getToken(uid: string): Observable<string> {
     return this.db.object<Token>('users/' + uid)
       .valueChanges()
-      .pipe(map(token => token.accessToken));
+      .pipe(
+        filter(token => token.accessToken ? true : false),
+        map(token => token.accessToken)
+      );
   }
 
   loginWithSpotify(): Promise<any> {
-    return (this.authenticate().then(token => this.afAuth.auth.signInWithCustomToken(token)));
+    return this.authenticate()
+      .then(token => this.afAuth.auth.signInWithCustomToken(token))
+      .catch(error => console.error(error));
   }
 
   private authenticate(): Promise<string> {
@@ -44,10 +49,11 @@ export class AuthService {
     return new Promise((resolve, reject) => {
       window.open(url, 'Spotify', 'height=600,width=400');
       window.addEventListener('message', event => {
-        const data = JSON.parse(event.data);
-        console.log(data);
-        if (data.token) {
-          resolve(data.token);
+        const token = JSON.parse(event.data).token;
+        if (token) {
+          resolve(token);
+        } else {
+          reject('Invalid token');
         }
       }, false);
       // Show spotify auth popup
