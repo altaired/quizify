@@ -1,9 +1,13 @@
-<mat-grid-list cols="2">
-  <mat-grid-tile *ngFor="let category of categoryList">
-    <div>
-      <img src={{category.icons[0].url}} alt="Band picture">
-      <h4>{{category.name}}</h4>
+<mat-grid-list cols="3" rowHeight="350px" *ngIf="options$ | async as options">
+  <mat-grid-tile *ngFor="let category of options">
+    <div class="margin-bottom">
+      <mat-card>
+        <mat-card-header>
+          <div mat-card-avatar></div>
+          <mat-card-title>{{category.name}}</mat-card-title>
+        </mat-card-header>
+        <img mat-card-image src={{category.image.url}} alt="Category picture">
+      </mat-card>
     </div>
   </mat-grid-tile>
-
 </mat-grid-list>

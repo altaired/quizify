@@ -21,44 +21,51 @@ export class SpotifyService {
     private http: HttpClient
   ) { }
 
-  getTrack(id: string): Observable<TrackObj> {
+  getTrack(id: string): Observable<any> {
     const url = this.SPOTIFY_BASE_URL + '/tracks/' + id;
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<TrackObj>(url, { headers: headers });
+      return this.http.get<any>(url, { headers: headers });
     }));
   }
 
-  listCategories(): Observable<CategoryObj[]> {
+  listCategories(): Observable<any> {
     const url = this.SPOTIFY_BASE_URL + '/browse/categories/';
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<CategoryObj[]>(url, { headers: headers });
+      return this.http.get<any[]>(url, { headers: headers });
     }));
   }
 
-  getCategory(id: string): Observable<CategoryObj> {
+  getCategory(id: string): Observable<any> {
     const url = this.SPOTIFY_BASE_URL + '/browse/categories/' + id;
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<CategoryObj>(url, { headers: headers });
+      return this.http.get<any>(url, { headers: headers });
     }));
   }
 
-  getCategoryPlaylists(id: string): Observable<PlaylistObj[]> {
+  getCategoryPlaylists(id: string): Observable<any> {
     const url = this.SPOTIFY_BASE_URL + '/browse/categories/' + id + '/playlists';
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<PlaylistObj[]>(url, { headers: headers });
+      return this.http.get<any>(url, { headers: headers });
     }));
   }
 
-  getArtist(id: string): Observable<ArtistObj> {
+  getArtist(id: string): Observable<any> {
     const url = this.SPOTIFY_BASE_URL + '/artists/' + id;
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<ArtistObj>(url, { headers: headers });
+      return this.http.get<any>(url, { headers: headers });
     }));
   }
-  getRelatedArtists(id: string): Observable<RelatedArtists> {
+  getRelatedArtists(id: string): Observable<any> {
     const url = this.SPOTIFY_BASE_URL + '/artists/' + id + '/related-artists';
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<RelatedArtists>(url, { headers: headers });
+      return this.http.get<any>(url, { headers: headers });
+    }));
+  }
+
+  getPlaylitsTracks(playlist: string) {
+    const url = this.SPOTIFY_BASE_URL + '/playlists/' + playlist + '/tracks';
+    return this.auth.authentication.pipe(switchMap(headers => {
+      return this.http.get<any>(url, { headers: headers });
     }));
   }
 

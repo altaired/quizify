@@ -1,3 +1,12 @@
-<p>
-  ready works!
-</p>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12" [ngSwitch]="isAdmin$ | async">
+      <mat-card *ngSwitchCase="true">
+        <button mat-raised-button (click)="start()">Start Game</button>
+      </mat-card>
+      <mat-card *ngSwitchCase="false">
+        <p>Waiting for admin to start game</p>
+      </mat-card>
+    </div>
+  </div>
+</div>
