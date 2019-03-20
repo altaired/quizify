@@ -155,9 +155,10 @@ function signInFirebaseTemplate(token) {
       var token = '${token}';
       var target = '${CALLBACK_URL}';
       var data = {
-        token: token
+        token: token,
+        type: 'auth'
       };
-      window.opener.postMessage(JSON.stringify(data), target);
+      window.opener.postMessage(data, target);
       window.close();
     </script>`;
 }

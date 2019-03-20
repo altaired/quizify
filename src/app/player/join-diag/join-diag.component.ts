@@ -1,6 +1,6 @@
-import { Component, OnInit,Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import {  FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-join-diag',
@@ -10,27 +10,28 @@ import {  FormBuilder, FormGroup } from '@angular/forms';
 export class JoinDiagComponent implements OnInit {
 
   form: FormGroup;
-  name:string = "";
-  gameCode:string = "";
+
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<JoinDiagComponent>,
     @Inject(MAT_DIALOG_DATA) data
-    ) {  }
+  ) { }
 
-    ngOnInit() {
-      this.form = this.fb.group({
-          name: this.name,
-          gameCode: this.gameCode
-      });
+  ngOnInit() {
+    this.form = this.fb.group({
+      name: ['', Validators.required],
+      gameCode: ['', Validators.required],
+    });
   }
   onNoClick(): void {
     this.dialogRef.close();
   }
   save() {
-    this.dialogRef.close(this.form.value);
-}
-close() {
-  this.dialogRef.close();
-}
+    if (this.form.valid) {
+      this.dialogRef.close(this.form.value);
+    }
+  }
+  close() {
+    this.dialogRef.close();
+  }
 }

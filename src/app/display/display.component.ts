@@ -14,6 +14,7 @@ export class DisplayComponent implements OnInit {
   players$: Observable<Player[]>;
   gameCode$: Observable<string>;
   gameState$: Observable<GameState>;
+  adminUID$: Observable<string>;
 
   constructor(private game: GameHostService) { }
 
@@ -25,6 +26,7 @@ export class DisplayComponent implements OnInit {
     );
     this.gameCode$ = this.game.gameCode$;
     this.gameState$ = this.state$.pipe(map(state => state.state));
+    this.adminUID$ = this.state$.pipe(filter(state => state.admin ? true : false), map(state => state.admin.playerUID));
   }
 
 }
