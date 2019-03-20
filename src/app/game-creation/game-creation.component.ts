@@ -19,10 +19,7 @@ export class GameCreationComponent implements OnInit {
   ngOnInit() {
   }
   createStandard() {
-    const date = new Date();
-    const val = `${date.getMinutes()}${date.getHours()}${date.getUTCMilliseconds()}`;
-    const res = this.hash.encode(val);
-    this.game.newGame(res, 'STANDARD');
+    this.game.newGame('STANDARD');
   }
   createPassive() {
     console.log("sorry not done yet")
