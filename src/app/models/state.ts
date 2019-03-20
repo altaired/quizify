@@ -37,7 +37,7 @@ export interface PlayerDisplay {
 }
 
 export interface Admin {
-  playedUID: string;
+  playerUID: string;
   ready: boolean;
 }
 

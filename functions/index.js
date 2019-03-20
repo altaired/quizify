@@ -54,12 +54,33 @@ app.get('/redirect', (req, res) => {
   });
   const redirectUri = oauth2.authorizationCode.authorizeURL({
     redirect_uri: `${req.protocol}://${req.get('host')}/auth/spotify-callback`,
-    scope: 'user-modify-playback-state user-read-currently-playing user-read-playback-state streaming',
+    scope: 'user-modify-playback-state user-read-currently-playing user-read-playback-state streaming user-read-private user-read-birthdate',
     state: state
   });
   console.log('Redirecting to:', redirectUri);
   // Redirect to Spotify's authorization page
   res.redirect(redirectUri);
+});
+
+app.get('/refresh/:uid', (req, res) => {
+  const uid = req.params.uid;
+  console.log('Refreshing ' + uid + '...');
+  return db.ref('users/' + uid).once('value')
+    .then(snapshot => {
+      return snapshot.val();
+    }).then(tokens => {
+      const accessToken = oauth2.accessToken.create({
+        access_token: tokens.accessToken,
+        refresh_token: tokens.refreshToken
+      });
+      return accessToken.refresh();
+    }).then(newToken => {
+      console.log('Refreshed token', newToken)
+      const temp = {
+        accessToken: newToken.token.access_token
+      }
+      return db.ref('users/' + uid).update(temp);
+    }).then(() => res.send(200))
 });
 
 app.get('/spotify-callback', (req, res) => {
@@ -82,20 +103,21 @@ app.get('/spotify-callback', (req, res) => {
   }).then(results => {
     console.log('results', results);
     // Update the token information in the database
-    return updateToken(results.access_token, results.refresh_token);
+    return updateToken(results);
   }).then(token => {
     // Send a response to the user
     return res.send(signInFirebaseTemplate(token));
   });
 });
 
-function updateToken(accessToken, refreshToken) {
+function updateToken(results) {
   // Fetch the user profile from Spotify, to create a Firebase User
+  console.log(results);
   const options = {
     url: 'https://api.spotify.com/v1/me',
     json: true,
     headers: {
-      'Authorization': 'Bearer ' + accessToken,
+      'Authorization': 'Bearer ' + results.access_token,
     }
   }
   let token;
@@ -119,10 +141,11 @@ function updateToken(accessToken, refreshToken) {
     token = customToken;
 
     // Update the access and refresh token in the database
-    return db.ref(`/users/${spotifyUser.id}`).set({
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-    });
+    const userTokens = {
+      accessToken: results.access_token,
+      refreshToken: results.refresh_token
+    }
+    return db.ref(`/users/${spotifyUser.id}`).set(userTokens);
   }).then(() => token)
 }
 
@@ -132,9 +155,10 @@ function signInFirebaseTemplate(token) {
       var token = '${token}';
       var target = '${CALLBACK_URL}';
       var data = {
-        token: token
+        token: token,
+        type: 'auth'
       };
-      window.opener.postMessage(JSON.stringify(data), target);
+      window.opener.postMessage(data, target);
       window.close();
     </script>`;
 }

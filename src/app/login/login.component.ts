@@ -41,8 +41,12 @@ export class LoginComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       if (result && result.gameCode && result.name) {
-        this.player.join(result.gameCode, result.name);
-        this.router.navigate(['/game']);
+        this.player.join(result.gameCode, result.name).then(success => {
+          this.router.navigate(['/game']);
+        }).catch(error => {
+          console.error(error);
+        });
+
       }
     });
   }
