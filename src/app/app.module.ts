@@ -26,7 +26,7 @@ import { GuessTrackComponent } from './guess-track/guess-track.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { DisplayComponent } from './display/display.component';
 import { GameboardComponent } from './player/gameboard/gameboard.component';
-import { GameCreationComponent } from './host/game-creation/game-creation.component';
+import { GameCreationComponent } from './game-creation/game-creation.component';
 import { JoinDiagComponent } from './player/join-diag/join-diag.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CategoryPickComponent } from './host/category-pick/category-pick.component';

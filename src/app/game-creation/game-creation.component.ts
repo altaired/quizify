@@ -11,8 +11,6 @@ import { GameMode } from 'src/app/models/state';
 })
 export class GameCreationComponent implements OnInit {
 
-  @Output() newGame = new EventEmitter<GameCreateRequest>();
-
   private hash = new Hash('quizify is the best', 4, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
 
 
@@ -23,14 +21,9 @@ export class GameCreationComponent implements OnInit {
   createStandard() {
     const date = new Date().getTime();
     const res = this.hash.encode(date);
-    this.newGame.emit({ code: res, mode: 'STANDARD' });
+    this.game.newGame(res, 'STANDARD');
   }
   createPassive() {
     console.log("sorry not done yet")
   }
-}
-
-export interface GameCreateRequest {
-  code: string;
-  mode: GameMode;
 }

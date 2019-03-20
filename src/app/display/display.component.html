@@ -1,6 +1,6 @@
 <app-playback></app-playback>
 
-<button (click)="category()">testa categories</button>
-<app-game-creation *ngIf="gameState$ == undefined" (newGame)="newGame($event)"></app-game-creation>
-<app-welcome *ngIf="gameState$ == 'WELCOME'" [gameHost]="gameHost"></app-welcome>
-<app-category-pick *ngIf="gameState$ == 'WELCOME' && show"></app-category-pick>
+<div class=container-fluid [ngSwitch]="gameState$ | async">
+  <app-welcome *ngSwitchCase="WELCOME" [gameCode$]="gameCode$" [players$]="players$"></app-welcome>
+  <app-category-pick *ngSwitchCase="CATEGORY"></app-category-pick>
+</div>

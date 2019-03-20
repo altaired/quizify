@@ -3,6 +3,7 @@ import { Game, GameMode, Player } from '../models/state';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, take, filter, takeUntil, share } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 /**
  * Takes care of the hosts state which is
@@ -17,7 +18,10 @@ export class GameHostService {
   gameCode$ = new BehaviorSubject<string>(null);
   state$: Observable<Game>;
 
-  constructor(private db: AngularFireDatabase) { }
+  constructor(
+    private db: AngularFireDatabase,
+    private router: Router
+  ) { }
 
   newGame(gameCode: string, gameMode: GameMode) {
     const game: Game = {
@@ -30,7 +34,7 @@ export class GameHostService {
     this.welcomeHandler();
   }
 
-  getPlayers(): Observable<Player[]> {
+  get players(): Observable<Player[]> {
     return this.state$.pipe(
       filter(state => state.players ? true : false),
       map(state => Object.values(state.players)),
@@ -39,6 +43,7 @@ export class GameHostService {
 
 
   private welcomeHandler() {
+    this.router.navigate(['display']);
     const playersSubscription = this.state$.pipe(
       filter(state => state.players ? true : false),
       map(state => Object.values(state.players)),

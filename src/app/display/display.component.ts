@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GameHostService } from '../services/game-host.service';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { Game, Player } from '../models/state';
+import { Game, Player, GameState } from '../models/state';
 import { GameCreateRequest } from '../host/game-creation/game-creation.component';
 
 @Component({
@@ -14,8 +14,7 @@ export class DisplayComponent implements OnInit {
   state$: Observable<Game>;
   players$: Observable<Player[]>;
   gameCode$: Observable<string>;
-
-  show: boolean;
+  gameState$: Observable<GameState>;
 
   constructor(private game: GameHostService) { }
 
@@ -26,14 +25,11 @@ export class DisplayComponent implements OnInit {
       map(state => Object.values(state.players))
     );
     this.gameCode$ = this.game.gameCode$;
+    this.gameState$ = this.state$.pipe(map(state => state.state));
   }
 
   newGame(req: GameCreateRequest) {
     this.game.newGame(req.code, req.mode);
-  }
-
-  category() {
-    this.show = true;
   }
 
 }

@@ -7,13 +7,13 @@ import { GameboardComponent } from './player/gameboard/gameboard.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { HostGuard } from './core/host.guard';
 import { DisplayComponent } from './display/display.component';
-import { GameCreationComponent } from './host/game-creation/game-creation.component';
+import { GameCreationComponent } from './game-creation/game-creation.component';
 
 const routes: Routes = [
   { path: 'display', component: DisplayComponent, canActivate: [HostGuard] },
   { path: 'playback', component: PlaybackComponent, canActivate: [HostGuard] },
   { path: 'game', component: GameboardComponent },
- // { path: 'create-game', component: GameCreationComponent, canActivate: [HostGuard] },
+  { path: 'create-game', component: GameCreationComponent, canActivate: [HostGuard] },
   { path: 'welcome', component: WelcomeComponent, canActivate: [HostGuard] },
   { path: '', component: LoginComponent },
 ];

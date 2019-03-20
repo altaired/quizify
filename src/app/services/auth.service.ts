@@ -49,12 +49,17 @@ export class AuthService {
     return new Promise((resolve, reject) => {
       window.open(url, 'Spotify', 'height=600,width=400');
       window.addEventListener('message', event => {
-        const token = JSON.parse(event.data).token;
-        if (token) {
-          resolve(token);
+        // TODO: Remove listener when auth token received
+        if (event.data.type) {
+          console.log('Spotify Event');
         } else {
-          reject('Invalid token');
+          const token = JSON.parse(event.data).token;
+          if (token) {
+            resolve(token);
+          }
         }
+        reject('Invalid token');
+
       }, false);
     });
   }
