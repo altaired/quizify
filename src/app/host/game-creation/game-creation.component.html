@@ -1,2 +1,20 @@
-<button (click)="createStandard()">Standard</button>
-<button (click)="createPassive()">Passive</button>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-6 margin-bottom">
+      <mat-card (click)="createStandard()" matRipple>
+        <mat-card-header>
+          <mat-card-title>Standard</mat-card-title>
+          <mat-card-subtitle>Game will decide both music and questions</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-6">
+      <mat-card (click)="createPassive()" matRipple>
+        <mat-card-header>
+          <mat-card-title>Passive</mat-card-title>
+          <mat-card-subtitle>Questions based on the currently played music</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+    </div>
+  </div>
+</div>
