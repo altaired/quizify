@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" *ngIf="state$ | async as state">
   <div class="col-12 margin-bottom margin-top">
     <mat-card>
       <mat-card-header>
@@ -6,12 +6,15 @@
       </mat-card-header>
     </mat-card>
   </div>
-  <div [ngSwitch]="gameState$ | async" class="col-12">
+  <div [ngSwitch]="state.state" class="col-12">
     <div *ngSwitchCase="'WELCOME'">
       <app-ready [adminUID$]="adminUID$" (ready)="startGame()"></app-ready>
     </div>
     <div *ngSwitchCase="'PICK_CATEGORY'">
-      ADMIN IS PICKING A CATEGORY
+      <app-category-pick *ngIf="isCategoryPicker$ | async; else waiting" [state]="state"
+        (selected)="selectCategory($event)">
+      </app-category-pick>
+      <ng-template #waiting>Please wait for user to pick a category</ng-template>
     </div>
     <div *ngSwitchDefault>Hejsan</div>
   </div>

@@ -51,7 +51,6 @@ export class GamePlayerService {
         }
       });
     });
-
   }
 
   private initGame(player: Player, gameCode: string) {
@@ -64,6 +63,10 @@ export class GamePlayerService {
     this.displayName$ = combineLatest(this.auth.user$, this.state$).pipe(map(([user, state]) => {
       return Object.values(state.players).find(p => p.uid === user.uid).displayName;
     }));
+  }
+
+  private pickCategory(player: string, option: string) {
+
   }
 
   startGame() {

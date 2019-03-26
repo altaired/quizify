@@ -144,6 +144,10 @@ export class GameHostService {
     });
   }
 
+  private initPickCategory() {
+
+  }
+
   private setState(state: GameState) {
     this.gameCode$.pipe(take(1)).subscribe(code => {
       this.db.object('games/' + code).update({ state: state });
