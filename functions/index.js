@@ -118,6 +118,8 @@ function updateToken(results) {
     json: true,
     headers: {
       'Authorization': 'Bearer ' + results.access_token,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
     }
   }
   let token;
