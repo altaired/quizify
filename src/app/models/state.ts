@@ -1,5 +1,5 @@
 export type GameMode = 'STANDARD';
-export type GameState = 'WELCOME' | 'PICK_CATEGORY' | 'ANSWER' | 'RESULT' | 'END';
+export type GameState = 'WELCOME' | 'PICK_CATEGORY' | 'ANSWER' | 'RESULT' | 'END' | 'LOADING' | 'INTRO';
 
 export interface CategoryOption {
   id: string;

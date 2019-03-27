@@ -29,4 +29,8 @@ export class HostDisplayComponent implements OnInit {
     this.adminUID$ = this.state$.pipe(filter(state => state.admin ? true : false), map(state => state.admin.playerUID));
   }
 
+  introCallback() {
+    this.game.introComplete();
+  }
+
 }
