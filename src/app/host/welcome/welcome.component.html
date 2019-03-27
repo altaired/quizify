@@ -13,7 +13,7 @@
         <mat-list *ngIf="playerDetails$ | async as players">
           <h3 mat-subheader>Current Players</h3>
           <mat-list-item *ngFor="let p of players">
-            <!-- <img mat-card-avatar src="p.player.avatar"> -->
+            <img *ngIf="p.player.avatar" mat-card-avatar src={{p.player.avatar}}>
             <h4 mat-line>{{p.player.displayName}}</h4>
             <p *ngIf="p.isAdmin">Admin</p>
           </mat-list-item>

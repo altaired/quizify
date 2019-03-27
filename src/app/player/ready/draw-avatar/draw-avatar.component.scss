@@ -4,4 +4,23 @@
 .canvas {
     border: 1px solid;
     border-color: black;
+    touch-action: none;
+}
+.canvas-div{
+    min-width: 300px;
+}
+.toggles-div{
+    min-width: 50px;
+}
+.buttons-div{
+    min-width: 65px;
+}
+.size-2{
+    transform:scale(0.2)
+}
+.size-4{
+    transform:scale(0.4)
+}
+.size-7{
+    transform:scale(0.7)
 }

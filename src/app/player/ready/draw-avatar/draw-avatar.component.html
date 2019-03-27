@@ -1,5 +1,8 @@
-<canvas class="canvas" #canvas height="400px" width="400px"></canvas>
-<mat-button-toggle-group #groupColor="matButtonToggleGroup" (change)="changeColor($event)" vertical="true">
+<div class="row justify-content-center">
+<div class="col-12 row canvas-div justify-content-center"><canvas class="canvas" #canvas height="300px" width="300px"></canvas></div>
+<div class="row col-sm-12 justify-content-center">
+<div class="col-12 toggles-div justify-content-center">
+  <mat-button-toggle-group #groupColor="matButtonToggleGroup" (change)="changeColor($event)" >
   <mat-button-toggle value="black">
     <mat-icon>color_lens</mat-icon>
   </mat-button-toggle>
@@ -13,19 +16,21 @@
     <mat-icon class="blue">color_lens</mat-icon>
   </mat-button-toggle>
 </mat-button-toggle-group>
-<mat-button-toggle-group #groupSize="matButtonToggleGroup" (change)="changeSize($event)" vertical="true">
+</div>
+<div class="col-12 toggles-div"><mat-button-toggle-group #groupSize="matButtonToggleGroup" (change)="changeSize($event)">
   <mat-button-toggle value=2>
-    <mat-icon>lens</mat-icon>
+    <mat-icon class="size-2">lens</mat-icon>
   </mat-button-toggle>
   <mat-button-toggle value=4>
-    <mat-icon>lens</mat-icon>
+    <mat-icon class="size-4">lens</mat-icon>
   </mat-button-toggle>
   <mat-button-toggle value=7>
+    <mat-icon class="size-7">lens</mat-icon>
+  </mat-button-toggle>
+  <mat-button-toggle class="size-10" value=10>
     <mat-icon>lens</mat-icon>
   </mat-button-toggle>
-  <mat-button-toggle value=10>
-    <mat-icon>lens</mat-icon>
-  </mat-button-toggle>
-</mat-button-toggle-group >
-<button mat-button color="warn" (click)="saveImg()">Save</button>
-<button mat-button (click)="clearCanvas()">Clear</button>
+</mat-button-toggle-group ></div></div>
+<div class="col-2 buttons-div"><button mat-button color="warn" (click)="saveImg()">Save</button></div>
+<div class="col-2 buttons-div"><button mat-button (click)="clearCanvas()">Clear</button></div>
+</div>
