@@ -31,6 +31,7 @@ export class SpotifyService {
   listCategories(): Observable<any> {
     const url = this.SPOTIFY_BASE_URL + '/browse/categories/';
     return this.auth.authentication.pipe(switchMap(headers => {
+      console.log('[SpotifyService] Fetching categories...');
       return this.http.get<any[]>(url, { headers: headers });
     }));
   }

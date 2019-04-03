@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
 import {
   MatIconModule,
+  MatProgressBarModule,
   MatButtonModule,
   MatRippleModule,
   MatDialogModule,
@@ -67,6 +68,7 @@ import { CategoryPickComponent } from './player/category-pick/category-pick.comp
     MatButtonModule,
     MatRippleModule,
     MatDialogModule,
+    MatProgressBarModule,
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
