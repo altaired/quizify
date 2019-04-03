@@ -43,5 +43,16 @@ export class PlayerDisplayComponent implements OnInit {
     console.log('Category picked', option);
     this.game.pickCategory(option);
   }
+  selectFirstAnswer(option: string) {
+    console.log('First answer picked', option);
+    this.game.respond(option,'kommer');
+  }
+
+  convertCategories(state: Game) {
+    return Object.values(state.playerDisplay.category.options);
+  }
+  convertOptions(state: Game) {
+    return Object.values(state.playerDisplay.question.first.options);
+  }
 
 }

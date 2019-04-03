@@ -11,15 +11,16 @@
       <app-ready [adminUID$]="adminUID$" (ready)="startGame()"></app-ready>
     </div>
     <div *ngSwitchCase="'PICK_CATEGORY'">
-      <app-category-pick *ngIf="isCategoryPicker$ | async; else waiting" [state]="state"
+      <app-options *ngIf="isCategoryPicker$ | async; else waiting" [options]="convertCategories(state)"
         (selected)="selectCategory($event)">
-      </app-category-pick>
+      </app-options>
       <ng-template #waiting>Please wait for user to pick a category</ng-template>
     </div>
     <div *ngSwitchCase="'ANSWER'">
       <div *ngIf="state$ | async as state">
-        <button mat-raised-button (click)="respond(state)">Start Game</button>
-        {{state | json}}
+        <app-options [options]="convertOptions(state)"
+        (selected)="selectFirstAnswer($event)">
+      </app-options>
       </div>
     </div>
     <div *ngSwitchDefault>Hejsan</div>

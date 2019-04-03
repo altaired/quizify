@@ -35,10 +35,10 @@ import { CategoryListComponent } from './host/category-list/category-list.compon
 import { GuessOptionComponent } from './player/guess-option/guess-option.component';
 import { GuessTextComponent } from './player/guess-text/guess-text.component';
 import { ReadyComponent } from './player/ready/ready.component';
-import { CategoryPickComponent } from './player/category-pick/category-pick.component';
 import { PlayerCardComponent } from './host/player-card/player-card.component';
 import { QuickJoinComponent } from './core/quick-join/quick-join.component';
 import { QRCodeModule } from 'angularx-qrcode';
+import { OptionsComponent } from './player/options/options.component';
 
 
 @NgModule({
@@ -56,9 +56,9 @@ import { QRCodeModule } from 'angularx-qrcode';
     GuessOptionComponent,
     GuessTextComponent,
     ReadyComponent,
-    CategoryPickComponent,
     PlayerCardComponent,
     QuickJoinComponent,
+    OptionsComponent,
 
   ],
   imports: [

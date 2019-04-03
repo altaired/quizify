@@ -4,13 +4,13 @@ import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-category-pick',
-  templateUrl: './category-pick.component.html',
-  styleUrls: ['./category-pick.component.scss']
+  selector: 'app-options',
+  templateUrl: './options.component.html',
+  styleUrls: ['./options.component.scss']
 })
-export class CategoryPickComponent implements OnInit {
+export class OptionsComponent implements OnInit {
 
-  @Input() state: Game;
+  @Input() options: any[];
   @Output() selected: EventEmitter<string> = new EventEmitter();
 
   categoryOptions$: Observable<CategoryOption[]>;
@@ -21,12 +21,9 @@ export class CategoryPickComponent implements OnInit {
   ngOnInit() {
   }
 
-  get options(): CategoryOption[] {
-    return Object.values(this.state.playerDisplay.category.options)
-  }
 
-  select(option: CategoryOption) {
-    this.selected.next(option.id);
+  select(option: string) {
+    this.selected.next(option);
   }
 
 }

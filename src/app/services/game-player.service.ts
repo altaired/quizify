@@ -96,6 +96,9 @@ export class GamePlayerService {
       }
     });
   }
+  respond(first: string,second: string){
+    console.log(first,second);
+  }
 
   startGame() {
     // Starts the game by letting the host know that we're ready
