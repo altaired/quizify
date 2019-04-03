@@ -28,7 +28,7 @@ export class GameHostService {
 
   gameCode$ = new BehaviorSubject<string>(null);
   category$ = new BehaviorSubject<string>(null);
-  track$ = new BehaviorSubject<string>(null);
+  track$ = new BehaviorSubject<any>(null);
   timer$ = new BehaviorSubject<Observable<number>>(null);
   state$: Observable<Game>;
   private history: History;
@@ -125,26 +125,35 @@ export class GameHostService {
 
   private startGame() {
     console.log('[GameHost] Starting game...');
-    combineLatest(this.spotify.listCategories().pipe(
-      map(res => {
-        const categories = res.categories.items;
-        const shuffled = categories.sort(() => 0.5 - Math.random());
-        const selected = shuffled.slice(0, 6);
-        return selected;
-      })
-    ), this.players$).pipe(take(1))
-      .subscribe(([categories, players]) => {
-        console.log('[GameHost] Initializing category picking...');
-        this.initPickCategory(categories, players);
-      });
+    this.initPickCategory();
   }
 
-  private initPickCategory(categories, players: Player[]) {
+  private initPickCategory() {
+    if (!this.history.introduced) {
+      // Players not introduced yet
+      this.startIntro();
+    } else {
+      combineLatest(this.spotify.listCategories().pipe(
+        map(res => {
+          const categories = res.categories.items;
+          const shuffled = categories.sort(() => 0.5 - Math.random());
+          const selected = shuffled.slice(0, 6);
+          return selected;
+        })
+      ), this.players$).pipe(take(1))
+        .subscribe(([categories, players]) => {
+          console.log('[GameHost] Initializing category picking...');
+          this.startPickCategory(categories, players);
+        });
+    }
+  }
+
+  private startPickCategory(categories, players: Player[]) {
     const code = this.gameCode$.getValue();
     const options = categories.map(category => {
       const categoryObj: CategoryOption = {
         id: category.id,
-        name: category.name,
+        value: category.name,
         image: category.icons[0]
       };
       return categoryObj;
@@ -186,13 +195,6 @@ export class GameHostService {
 
   private initQuestion() {
     this.askQuestion();
-    // if (!this.history.introduced) {
-    //   // Players not introduced yet
-    //   this.startIntro();
-    // } else {
-    //   this.askQuestion();
-    // }
-
   }
 
   private startIntro() {
@@ -200,7 +202,8 @@ export class GameHostService {
   }
 
   introComplete() {
-
+    this.history.introduced = true;
+    this.initPickCategory();
   }
 
   private askQuestion() {
@@ -249,16 +252,16 @@ export class GameHostService {
         const options = filteredArtists.slice(0, 3);
         options.push(trackArtists[0]);
         this.history.tracks.push(t.track.id);
-        this.sendQuestion(t.track, options);
+        this.sendQuestion(t, options);
       });
   }
 
-  private sendQuestion(track: any, options: any[]) {
-    this.track$.next(track);
+  private sendQuestion(t: any, options: any[]) {
+    this.track$.next(t);
     const code = this.gameCode$.getValue();
-    console.log('[GameHost] Received track', track);
+    console.log('[GameHost] Received track', t.track);
     this.db.object('games/' + code + '/playerDisplay/question').set({
-      id: track.id,
+      id: t.track.id,
       first: {
         title: 'Name the artist',
         options: options.map(option => {
@@ -272,7 +275,7 @@ export class GameHostService {
       second: 'Name the track'
     });
     this.setState('ANSWER');
-    this.playback.play(track.uri).pipe(
+    this.playback.play(t.track.uri).pipe(
       switchMap(response => interval(1000)),
       switchMap(trigger => this.playback.state()),
       tap((state: any) => {
@@ -298,11 +301,13 @@ export class GameHostService {
 
   private activateQuestionObserver() {
     console.log('[GameHost] Activating response observation');
-    const trackID = this.track$.getValue();
+    const trackID = this.track$.getValue().track.id;
     const allPlayersDone = this.players$.pipe(
       filter(players => players.every(p => {
-        if (p.response) {
+        if (p.response ? true : false) {
+          console.log('[GameHost] Checking response for track ' + trackID, p);
           if (p.response.done && p.response.question === trackID) {
+            console.log('[GameHost] Player responded ' + p.uid);
             return true;
           }
         }
@@ -316,8 +321,11 @@ export class GameHostService {
       filter(time => time === QUESTION_MAX_TIMER)
     );
 
-    this.players$.pipe(takeUntil(combineLatest(allPlayersDone, timesUP)))
-      .subscribe(players => console.log(players));
+    this.players$.pipe(takeUntil(merge(allPlayersDone, timesUP)))
+      .subscribe(players =>
+        // Check if answer is correct
+        console.log('[GameHost] Checking answers...')
+      );
 
     merge(allPlayersDone, timesUP).pipe(
       take(1),

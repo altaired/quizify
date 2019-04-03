@@ -39,6 +39,7 @@ import { PlayerCardComponent } from './host/player-card/player-card.component';
 import { QuickJoinComponent } from './core/quick-join/quick-join.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { OptionsComponent } from './player/options/options.component';
+import { IntroComponent } from './host/intro/intro.component';
 
 
 @NgModule({
@@ -59,6 +60,7 @@ import { OptionsComponent } from './player/options/options.component';
     PlayerCardComponent,
     QuickJoinComponent,
     OptionsComponent,
+    IntroComponent,
 
   ],
   imports: [
