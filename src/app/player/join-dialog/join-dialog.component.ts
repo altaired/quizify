@@ -10,17 +10,27 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class JoinDialogComponent implements OnInit {
 
   form: FormGroup;
+  code : string;
 
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<JoinDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) data
-  ) { }
+    @Inject(MAT_DIALOG_DATA) public data :any
+  ) {
+    console.log(this.data);
+    if (this.data){
+      this.code = this.data;
+      
+    }else{
+      this.code = '';
+    }
+   }
 
   ngOnInit() {
+
     this.form = this.fb.group({
       name: ['', Validators.required],
-      gameCode: ['', Validators.required],
+      gameCode: [this.code, Validators.required],
     });
   }
   onNoClick(): void {

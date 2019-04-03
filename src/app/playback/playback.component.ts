@@ -36,7 +36,8 @@ export class PlaybackComponent implements OnInit {
     });
 
     this.player.addListener('player_state_changed', state => {
-      this.playerState$.next(state);
+      this.playerState$.next(state)
+      console.log(state);
     });
 
   }
