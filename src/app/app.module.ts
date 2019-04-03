@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
 import {
   MatIconModule,
+  MatProgressBarModule,
   MatButtonModule,
   MatRippleModule,
   MatDialogModule,
@@ -72,6 +73,7 @@ import { QuickJoinComponent } from './core/quick-join/quick-join.component';
     MatButtonModule,
     MatRippleModule,
     MatDialogModule,
+    MatProgressBarModule,
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,

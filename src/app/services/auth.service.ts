@@ -5,7 +5,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { auth, User } from 'firebase/app';
 import { environment } from '../../environments/environment';
 import { HttpHeaders } from '@angular/common/http';
-import { switchMap, map, filter, tap } from 'rxjs/operators';
+import { switchMap, map, filter, share } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -24,7 +24,6 @@ export class AuthService {
     this.user$ = afAuth.authState;
     this.token$ = this.user$
       .pipe(
-        tap(console.log),
         filter(user => user ? true : false),
         switchMap(user => this.getToken(user.uid)));
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { switchMap, take, tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { HttpClient } from '@angular/common/http';
 
@@ -31,15 +31,28 @@ export class PlaybackService {
 
   updateDeviceID(id: string) {
     this.deviceID.next(id);
-    this.transfer(id).pipe(take(1)).subscribe(() => console.log('transfer'));
   }
 
-  play(id: string): Observable<any> {
-    const url = this.SPOTIFY_BASE_URL + '/me/player/play';
+  state() {
+    const url = this.SPOTIFY_BASE_URL + '/me/player';
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.put(url, undefined, { headers: headers });
+      return this.http.get(url, { headers: headers });
     }));
   }
+
+  play(uri: string): Observable<any> {
+    const url = this.SPOTIFY_BASE_URL + '/me/player/play';
+    return combineLatest(this.auth.authentication, this.deviceID).pipe(
+      switchMap(([headers, id]) => this.http.put(url, { uris: [uri] }, {
+        headers: headers, params: {
+          device_id: id
+        }
+      })),
+      tap(console.log)
+    );
+  }
+
+
   pause(): Observable<any> {
     const url = this.SPOTIFY_BASE_URL + '/me/player/pause';
     return this.auth.authentication.pipe(switchMap(headers => {
@@ -47,10 +60,12 @@ export class PlaybackService {
     }));
   }
 
-  transfer(device_id: string): Observable<any> {
-    const url = this.SPOTIFY_BASE_URL + '/me/player';
-    return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.put(url, { 'device_ids': [device_id] }, { headers: headers });
+  transfer(): Observable<any> {
+    return this.deviceID.pipe(take(1), switchMap(id => {
+      const url = this.SPOTIFY_BASE_URL + '/me/player';
+      return this.auth.authentication.pipe(switchMap(headers => {
+        return this.http.put(url, { 'device_ids': [id] }, { headers: headers });
+      }));
     }));
   }
 

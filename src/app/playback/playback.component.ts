@@ -42,14 +42,6 @@ export class PlaybackComponent implements OnInit {
 
   }
 
-  play() {
-    this.playback.play('').pipe(take(1))
-      .subscribe(res => console.log('play', res));
-  }
-  pause() {
-    this.playback.pause().pipe(take(1))
-      .subscribe(res => console.log('play', res));
-  }
 
   ngOnInit() {
     this.auth.token$.subscribe(token => {

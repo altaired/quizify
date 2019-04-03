@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { GameHostService } from '../../services/game-host.service';
+import { GameHostService, QUESTION_MAX_TIMER } from '../../services/game-host.service';
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { Game, Player, GameState } from '../../models/state';
 
 @Component({
@@ -15,6 +15,9 @@ export class HostDisplayComponent implements OnInit {
   gameCode$: Observable<string>;
   gameState$: Observable<GameState>;
   adminUID$: Observable<string>;
+  timer$: Observable<number>;
+
+  QUESTION_MAX_TIMER = QUESTION_MAX_TIMER;
 
   constructor(private game: GameHostService) { }
 
@@ -27,6 +30,11 @@ export class HostDisplayComponent implements OnInit {
     this.gameCode$ = this.game.gameCode$;
     this.gameState$ = this.state$.pipe(map(state => state.state));
     this.adminUID$ = this.state$.pipe(filter(state => state.admin ? true : false), map(state => state.admin.playerUID));
+    this.timer$ = this.game.timer$.pipe(
+      filter(t => t ? true : false),
+      switchMap(t => t),
+      map(val => 100 - (val / QUESTION_MAX_TIMER) * 100)
+    );
   }
 
   introCallback() {

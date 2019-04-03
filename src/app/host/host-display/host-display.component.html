@@ -4,5 +4,9 @@
   <app-welcome *ngSwitchCase="'WELCOME'" [adminUID$]="adminUID$" [gameCode$]="gameCode$" [players$]="players$">
   </app-welcome>
   <app-category-list *ngSwitchCase="'PICK_CATEGORY'"></app-category-list>
+  <div *ngSwitchCase="'ANSWER'">
+    <mat-progress-bar *ngIf="timer$ | async as timer" mode="determinate" [value]="timer">
+    </mat-progress-bar>
+  </div>
 
 </div>
