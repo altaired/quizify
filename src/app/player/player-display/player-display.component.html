@@ -16,6 +16,12 @@
       </app-category-pick>
       <ng-template #waiting>Please wait for user to pick a category</ng-template>
     </div>
+    <div *ngSwitchCase="'ANSWER'">
+      <div *ngIf="state$ | async as state">
+        <button mat-raised-button (click)="respond(state)">Start Game</button>
+        {{state | json}}
+      </div>
+    </div>
     <div *ngSwitchDefault>Hejsan</div>
   </div>
 </div>

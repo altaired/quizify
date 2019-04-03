@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Game, GameMode, Player, GameState, CategoryOption, CategoryState } from '../models/state';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { BehaviorSubject, Observable, combineLatest, of, timer, interval } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, of, timer, interval, merge } from 'rxjs';
 import { map, switchMap, filter, takeUntil, share, take, takeWhile, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Hash } from 'src/app/utils/hash';
@@ -10,7 +10,6 @@ import { PlaybackService } from './playback.service';
 import { History } from '../models/history';
 import { SpotifyService } from './spotify.service';
 import { maxBy } from 'lodash';
-import { stat } from 'fs';
 
 /**
  * Takes care of the hosts state which is
@@ -293,12 +292,12 @@ export class GameHostService {
   private get questionTimer(): Observable<number> {
     return timer(1000, 1000).pipe(
       takeWhile(time => time <= QUESTION_MAX_TIMER),
-      share(),
-      tap(time => console.log('[GameHost][TIMER] ' + (QUESTION_MAX_TIMER - time)))
+      share()
     );
   }
 
   private activateQuestionObserver() {
+    console.log('[GameHost] Activating response observation');
     const trackID = this.track$.getValue();
     const allPlayersDone = this.players$.pipe(
       filter(players => players.every(p => {
@@ -319,6 +318,13 @@ export class GameHostService {
 
     this.players$.pipe(takeUntil(combineLatest(allPlayersDone, timesUP)))
       .subscribe(players => console.log(players));
+
+    merge(allPlayersDone, timesUP).pipe(
+      take(1),
+      tap(() => console.log('[GameHost] Times up')),
+      switchMap(() => this.playback.pause())).subscribe(done => {
+        this.setState('RESULT');
+      });
   }
 
   private setState(state: GameState) {
