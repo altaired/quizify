@@ -268,6 +268,7 @@ export class GameHostService {
           console.log(option);
           return {
             id: option.id,
+            image: option.images[0],
             value: option.name
           };
         })
