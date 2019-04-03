@@ -254,7 +254,7 @@ export class GameHostService {
   }
 
   private sendQuestion(track: any, options: any[]) {
-    this.track$.next(track);
+    this.track$.next(track.id);
     const code = this.gameCode$.getValue();
     console.log('[GameHost] Received track', track);
     this.db.object('games/' + code + '/playerDisplay/question').set({
@@ -301,8 +301,10 @@ export class GameHostService {
     const trackID = this.track$.getValue();
     const allPlayersDone = this.players$.pipe(
       filter(players => players.every(p => {
-        if (p.response) {
+        if (p.response ? true : false) {
+          console.log('[GameHost] Checking response for track ' + trackID, p);
           if (p.response.done && p.response.question === trackID) {
+            console.log('[GameHost] Player responded ' + p.uid);
             return true;
           }
         }
@@ -316,7 +318,7 @@ export class GameHostService {
       filter(time => time === QUESTION_MAX_TIMER)
     );
 
-    this.players$.pipe(takeUntil(combineLatest(allPlayersDone, timesUP)))
+    this.players$.pipe(takeUntil(merge(allPlayersDone, timesUP)))
       .subscribe(players => console.log(players));
 
     merge(allPlayersDone, timesUP).pipe(

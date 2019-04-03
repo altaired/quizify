@@ -18,10 +18,10 @@ export class WelcomeComponent implements OnInit {
 
   playerDetails$: Observable<PlayerDetails[]>;
 
-  constructor(private route: ActivatedRoute,) { }
+  constructor(private route: ActivatedRoute, ) { }
 
   ngOnInit() {
-    this.joinPath$ = this.gameCode$.pipe(map(code => `${window.location.host}/?code=${code}`));
+    this.joinPath$ = this.gameCode$.pipe(map(code => `${window.location.host}/join?code=${code}`));
     this.playerDetails$ = combineLatest(this.players$, this.adminUID$)
       .pipe(map(([players, admin]) => {
         return players.map(player => {
