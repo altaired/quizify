@@ -1,10 +1,10 @@
 export type GameMode = 'STANDARD';
 export type GameState = 'WELCOME' | 'PICK_CATEGORY' | 'ANSWER' | 'RESULT' | 'END' | 'LOADING' | 'INTRO';
 
-export interface CategoryOption {
+export interface Option {
   id: string;
-  name: string;
-  image: Image;
+  value: string;
+  image?: Image;
 }
 
 export interface Image {
@@ -17,7 +17,7 @@ export interface CategoryState {
   playerUID: string;
   playerResponse?: string;
   done: boolean;
-  options: CategoryOption[];
+  options: Option[];
 }
 
 export interface QuestionState {
@@ -30,11 +30,6 @@ export interface QuestionState {
 export interface OptionQuestion {
   title: string;
   options: Option[];
-}
-
-export interface Option {
-  id: string;
-  value: string;
 }
 
 export interface PlayerDisplay {

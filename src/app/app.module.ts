@@ -39,6 +39,7 @@ import { CategoryPickComponent } from './player/category-pick/category-pick.comp
 import { PlayerCardComponent } from './host/player-card/player-card.component';
 import { QuickJoinComponent } from './core/quick-join/quick-join.component';
 import { QRCodeModule } from 'angularx-qrcode';
+import { IntroComponent } from './host/intro/intro.component';
 
 
 @NgModule({
@@ -59,6 +60,7 @@ import { QRCodeModule } from 'angularx-qrcode';
     CategoryPickComponent,
     PlayerCardComponent,
     QuickJoinComponent,
+    IntroComponent,
 
   ],
   imports: [
