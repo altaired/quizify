@@ -66,7 +66,7 @@ export class GameHostService {
         .pipe(
           switchMap(code => this.db.object<Game>('games/' + code).valueChanges().pipe(share()))
         );
-      this.welcomeHandler();
+      this.startWelcome();
     });
 
   }
@@ -79,7 +79,7 @@ export class GameHostService {
   }
 
 
-  private welcomeHandler() {
+  private startWelcome() {
     this.router.navigate(['display']);
     const subscription = this.state$.pipe(
       filter(state => state.players ? true : false),
@@ -102,11 +102,11 @@ export class GameHostService {
         }
       });
       console.log('Admin set', uid);
-      this.activateReadyObserver();
+      this.activateWelcomeObserver();
     });
   }
 
-  private activateReadyObserver() {
+  private activateWelcomeObserver() {
     this.state$.pipe(
       takeUntil(this.state$.pipe(filter(state => state.state !== 'WELCOME'))),
       filter(state => state.admin ? true : false),
