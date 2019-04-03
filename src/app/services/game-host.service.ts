@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Game, GameMode, Player, GameState, CategoryOption, CategoryState } from '../models/state';
+import { Game, GameMode, Player, GameState, Option, CategoryState } from '../models/state';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { BehaviorSubject, Observable, combineLatest, of, timer, interval, merge } from 'rxjs';
 import { map, switchMap, filter, takeUntil, share, take, takeWhile, tap } from 'rxjs/operators';
@@ -151,7 +151,7 @@ export class GameHostService {
   private startPickCategory(categories, players: Player[]) {
     const code = this.gameCode$.getValue();
     const options = categories.map(category => {
-      const categoryObj: CategoryOption = {
+      const categoryObj: Option = {
         id: category.id,
         value: category.name,
         image: category.icons[0]
@@ -265,8 +265,8 @@ export class GameHostService {
       first: {
         title: 'Name the artist',
         options: options.map(option => {
+          console.log(option);
           return {
-            image: option.images[0],
             id: option.id,
             value: option.name
           };

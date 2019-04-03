@@ -4,7 +4,7 @@ import { GameHostService } from 'src/app/services/game-host.service';
 import { Observable } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { CategoryObj } from 'src/app/models/spotify';
-import { CategoryState, CategoryOption } from 'src/app/models/state';
+import { CategoryState, Option } from 'src/app/models/state';
 
 @Component({
   selector: 'app-category-list',
@@ -14,7 +14,7 @@ import { CategoryState, CategoryOption } from 'src/app/models/state';
 export class CategoryListComponent implements OnInit {
 
   categoryState$: Observable<CategoryState>;
-  options$: Observable<CategoryOption[]>;
+  options$: Observable<Option[]>;
 
   constructor(private game: GameHostService) { }
 
