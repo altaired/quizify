@@ -266,6 +266,7 @@ export class GameHostService {
         title: 'Name the artist',
         options: options.map(option => {
           return {
+            image: option.images[0],
             id: option.id,
             value: option.name
           };
