@@ -241,16 +241,16 @@ export class GameHostService {
         }),
         filter(track => track ? true : false),
         switchMap(t => {
-          return combineLatest(of(t), this.spotify.getRelatedArtists(t.track.artists[0].id));
+          return combineLatest(of(t), this.spotify.getRelatedArtists(t.track.artists[0].id), this.spotify.getArtist(t.track.artists[0].id));
         }),
         take(1)
-      ).subscribe(([t, relatedArtists]) => {
+      ).subscribe(([t, relatedArtists, artist]) => {
         // Add the track to history
         const artists: any[] = relatedArtists.artists;
         const trackArtists: any[] = t.track.artists;
         const filteredArtists = artists.filter(rArtist => trackArtists.every(tArtist => rArtist.id !== tArtist.id));
         const options = filteredArtists.slice(0, 3);
-        options.push(trackArtists[0]);
+        options.push(artist);
         this.history.tracks.push(t.track.id);
         this.sendQuestion(t, options);
       });
