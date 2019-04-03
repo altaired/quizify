@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AuthService } from './auth.service';
 import { combineLatest, of, from } from 'rxjs';
-import { take, map, filter, switchMap, share, finalize, last,tap } from 'rxjs/operators';
+import { take, map, filter, switchMap, share, finalize, last, tap } from 'rxjs/operators';
 import { Player, Game, CategoryState } from '../models/state';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/storage';
@@ -115,11 +115,11 @@ export class GamePlayerService {
         const downloadURL = task.snapshotChanges().pipe(
           last(),
           switchMap(() => {
-              const url = refPath.getDownloadURL();
-              console.log('download url is ',url);
-              return url;
+            const url = refPath.getDownloadURL();
+            console.log('download url is ', url);
+            return url;
           })
-      )
+        )
         return combineLatest(
           of(code),
           this.db.list(

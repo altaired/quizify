@@ -5,8 +5,24 @@
   </app-welcome>
   <app-category-list *ngSwitchCase="'PICK_CATEGORY'"></app-category-list>
   <div *ngSwitchCase="'ANSWER'">
-    <mat-progress-bar *ngIf="timer$ | async as timer" mode="determinate" [value]="timer">
-    </mat-progress-bar>
-  </div>
+    <div class="col-12 margin-bottom">
+      <mat-card>
+        <mat-progress-bar *ngIf="timer$ | async as timer" mode="determinate" [value]="timer">
+        </mat-progress-bar>
+      </mat-card>
+    </div>
 
+    <div class="col-12">
+      <mat-card>
+        <div *ngIf="players$ | async as players" class="row">
+          <div class="col-12">
+            <h3 mat-subheader>Current Players</h3>
+          </div>
+          <div *ngFor="let p of players" class="p-2">
+            <app-player-card [player]="p" [isDone]="p.response?.done"></app-player-card>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
 </div>
