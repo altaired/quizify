@@ -24,6 +24,7 @@
     "@angular/platform-browser-dynamic": "^7.2.11",
     "@angular/router": "^7.2.11",
     "@types/spotify-web-playback-sdk": "^0.1.4",
+    "angularx-qrcode": "^1.5.3",
     "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
     "firebase": "^5.9.2",

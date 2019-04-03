@@ -38,6 +38,7 @@ import { ReadyComponent } from './player/ready/ready.component';
 import { CategoryPickComponent } from './player/category-pick/category-pick.component';
 import { PlayerCardComponent } from './host/player-card/player-card.component';
 import { QuickJoinComponent } from './core/quick-join/quick-join.component';
+import { QRCodeModule } from 'angularx-qrcode';
 
 
 @NgModule({
@@ -82,7 +83,8 @@ import { QuickJoinComponent } from './core/quick-join/quick-join.component';
     MatButtonModule,
     MatListModule,
     MatGridListModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    QRCodeModule,
   ],
   providers: [AngularFireModule, AngularFireAuthModule, AngularFireDatabaseModule],
   bootstrap: [AppComponent],

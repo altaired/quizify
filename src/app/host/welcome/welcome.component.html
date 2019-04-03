@@ -5,7 +5,11 @@
         <mat-card-header>
           <mat-card-title>{{gameCode$ | async}}</mat-card-title>
           <mat-card-subtitle>Use this code to join game</mat-card-subtitle>
-        </mat-card-header>
+        </mat-card-header><mat-card-content>
+          <div *ngIf= "joinPath$ | async as joinPath" >
+        <qrcode [qrdata]="joinPath" size="256" level="M"></qrcode>
+      </div>
+      </mat-card-content>
       </mat-card>
     </div>
     <div class="col-12">
