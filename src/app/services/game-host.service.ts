@@ -314,7 +314,7 @@ export class GameHostService {
     const timesUP = this.timer$.pipe(
       take(1),
       switchMap(t => t),
-      filter(time => time === this.QUESTION_MAX_TIMER)
+      filter(time => time === QUESTION_MAX_TIMER)
     );
 
     this.players$.pipe(takeUntil(combineLatest(allPlayersDone, timesUP)))
