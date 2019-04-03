@@ -319,7 +319,7 @@ export class GameHostService {
     );
 
     this.players$.pipe(takeUntil(merge(allPlayersDone, timesUP)))
-      .subscribe(players => console.log(players));
+      .subscribe();
 
     merge(allPlayersDone, timesUP).pipe(
       take(1),
