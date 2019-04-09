@@ -10,7 +10,7 @@ import { PlaybackService } from './playback.service';
 import { History } from '../models/history';
 import { SpotifyService } from './spotify.service';
 import { maxBy } from 'lodash';
-import { platform } from 'os';
+import { CATEGORY_WHITELIST } from '../utils/whitelist';
 
 /**
  * Takes care of the hosts state which is
@@ -137,7 +137,8 @@ export class GameHostService {
       combineLatest(this.spotify.listCategories().pipe(
         map(res => {
           const categories = res.categories.items;
-          const shuffled = categories.sort(() => 0.5 - Math.random());
+          const allowed = categories.filter(c => CATEGORY_WHITELIST.some(id => c.id === id));
+          const shuffled = allowed.sort(() => 0.5 - Math.random());
           const selected = shuffled.slice(0, 6);
           return selected;
         })

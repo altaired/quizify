@@ -1,0 +1,23 @@
+export const CATEGORY_WHITELIST = [
+  'toplists',
+  'pop',
+  'hiphop',
+  'chill',
+  'party',
+  'workout',
+  'decades',
+  'edm_dance',
+  'rnb',
+  'kids',
+  'rock',
+  'indie_alt',
+  'jazz',
+  'metal',
+  'country',
+  'soul',
+  'reggae',
+  'classical',
+  'blues',
+  'punk',
+  'kpop'
+];
