@@ -32,7 +32,6 @@ import { JoinDialogComponent } from './player/join-dialog/join-dialog.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DrawAvatarComponent } from './player/ready/draw-avatar/draw-avatar.component';
 import { CategoryListComponent } from './host/category-list/category-list.component';
-import { GuessOptionComponent } from './player/guess-option/guess-option.component';
 import { GuessTextComponent } from './player/guess-text/guess-text.component';
 import { ReadyComponent } from './player/ready/ready.component';
 import { PlayerCardComponent } from './host/player-card/player-card.component';
@@ -54,7 +53,6 @@ import { IntroComponent } from './host/intro/intro.component';
     JoinDialogComponent,
     DrawAvatarComponent,
     CategoryListComponent,
-    GuessOptionComponent,
     GuessTextComponent,
     ReadyComponent,
     PlayerCardComponent,
