@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Game, GameMode, Player, GameState, Option, CategoryState } from '../models/state';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { BehaviorSubject, Observable, combineLatest, of, timer, interval, merge } from 'rxjs';
-import { map, switchMap, filter, takeUntil, share, take, takeWhile, tap } from 'rxjs/operators';
+import { map, switchMap, filter, takeUntil, share, take, takeWhile, tap, delay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Hash } from 'src/app/utils/hash';
 import { AuthService } from './auth.service';
@@ -10,6 +10,7 @@ import { PlaybackService } from './playback.service';
 import { History } from '../models/history';
 import { SpotifyService } from './spotify.service';
 import { maxBy } from 'lodash';
+import { platform } from 'os';
 
 /**
  * Takes care of the hosts state which is
@@ -309,7 +310,7 @@ export class GameHostService {
         if (p.response ? true : false) {
           console.log('[GameHost] Checking response for track ' + trackID, p);
           if (p.response.done && p.response.question === trackID) {
-            console.log('[GameHost] Player responded ' + p.uid);
+            console.log('[GameHost] All players responded');
             return true;
           }
         }
@@ -323,15 +324,14 @@ export class GameHostService {
       filter(time => time === QUESTION_MAX_TIMER)
     );
 
-    this.players$.pipe(takeUntil(merge(allPlayersDone, timesUP)))
+    this.players$.pipe(takeUntil(merge(allPlayersDone, timesUP.pipe(delay(2500)))))
       .subscribe(players =>
-        // Check if answer is correct
         console.log('[GameHost] Checking answers...')
       );
 
     merge(allPlayersDone, timesUP).pipe(
       take(1),
-      tap(() => console.log('[GameHost] Times up')),
+      tap(() => console.log('[GameHost] Times up or all done')),
       switchMap(() => this.playback.pause())).subscribe(done => {
         this.setState('RESULT');
       });

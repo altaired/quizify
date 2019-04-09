@@ -96,8 +96,31 @@ export class GamePlayerService {
       }
     });
   }
-  respond(first: string,second: string){
-    console.log(first,second);
+  respond(first: string, second: string, question: string) {
+    combineLatest(this.auth.user$, this.gameCode$).pipe(
+      take(1),
+      switchMap(([user, code]) => {
+        return combineLatest(
+          of(code),
+          this.db.list(
+            'games/' + code + '/players',
+            ref => ref.orderByChild('uid').equalTo(user.uid)).snapshotChanges()
+        );
+      })
+    ).subscribe(([code, snapshot]) => {
+      if (snapshot.length > 0) {
+        const key = snapshot[0].key;
+        this.db.object('games/' + code + '/players/' + key).update({
+          response: {
+            done: true,
+            first: first,
+            second: second,
+            question: question
+          }
+        });
+        console.log('Answer sent');
+      }
+    });
   }
 
   startGame() {
@@ -114,7 +137,6 @@ export class GamePlayerService {
         const filePath = `avatars/${code}/${user.uid}/avatar.jpg`;
         const refPath = this.storage.ref(filePath);
         const task = refPath.putString(dataURL, 'data_url', { contentType: 'image/jpeg' });
-        let temp: Observable<any>;
         const downloadURL = task.snapshotChanges().pipe(
           last(),
           switchMap(() => {
@@ -122,15 +144,16 @@ export class GamePlayerService {
             console.log('download url is ', url);
             return url;
           })
-        )
+        );
         return combineLatest(
           of(code),
           this.db.list(
             'games/' + code + '/players',
             ref => ref.orderByChild('uid').equalTo(user.uid)).snapshotChanges(),
           downloadURL);
-      })
-    ).pipe(take(1)).subscribe(([code, snapshot, url]) => {
+      }),
+      take(1)
+    ).subscribe(([code, snapshot, url]) => {
       if (snapshot.length > 0) {
         const key = snapshot[0].key;
         console.log('URL', url);

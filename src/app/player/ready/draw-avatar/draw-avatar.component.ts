@@ -7,7 +7,7 @@ import { GamePlayerService } from 'src/app/services/game-player.service';
 })
 export class DrawAvatarComponent implements OnInit, AfterViewInit {
   @ViewChild('canvas') canvas: ElementRef;
-  private mouseIsDown: boolean = false;
+  private mouseIsDown = false;
   private context: CanvasRenderingContext2D;
   element: HTMLCanvasElement
 
@@ -24,39 +24,34 @@ export class DrawAvatarComponent implements OnInit, AfterViewInit {
     this.context = this.element.getContext('2d');
     this.context.strokeStyle = 'black';
     this.context.lineWidth = 2;
+
     this.element.onpointerdown = (cord) => {
-      //console.log('mousedown');
       this.mouseIsDown = true;
       this.context.beginPath();
       this.context.moveTo(this.getPointerPos(this.element, cord).x, this.getPointerPos(this.element, cord).y);
-      console.log('down');
-    }
+    };
+
     this.element.onpointermove = (cord) => {
       if (this.mouseIsDown) {
         this.context.lineTo(this.getPointerPos(this.element, cord).x, this.getPointerPos(this.element, cord).y);
         this.context.stroke();
-        console.log('move');
       }
-    }
-
-    
+    };
 
     this.element.onpointerup = (cord) => {
-      //console.log('mouseup');
       this.context.closePath();
       this.mouseIsDown = false;
-      console.log('up');
-    }
+    };
     console.log(this.canvas);
   }
 
   getPointerPos(canvas, evt) {
-    var rect = canvas.getBoundingClientRect();
+    const rect = canvas.getBoundingClientRect();
     return {
       x: evt.clientX - rect.left,
       y: evt.clientY - rect.top
     };
-}
+  }
 
   changeColor(change) {
     this.context.strokeStyle = change.value;

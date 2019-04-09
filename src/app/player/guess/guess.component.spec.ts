@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GuessTextComponent } from './guess-text.component';
+import { GuessComponent } from './guess.component';
 
 describe('GuessTextComponent', () => {
-  let component: GuessTextComponent;
-  let fixture: ComponentFixture<GuessTextComponent>;
+  let component: GuessComponent;
+  let fixture: ComponentFixture<GuessComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GuessTextComponent ]
+      declarations: [GuessComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GuessTextComponent);
+    fixture = TestBed.createComponent(GuessComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

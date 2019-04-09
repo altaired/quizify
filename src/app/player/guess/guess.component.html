@@ -1,0 +1,21 @@
+<mat-horizontal-stepper linear="true" #stepper *ngIf="!done; else waiting">
+  <mat-step>
+    <ng-template matStepLabel>Artist</ng-template>
+    <div>
+      <app-options [options]="convertOptions(state)" (selected)="selectFirstAnswer($event); stepper.next()">
+      </app-options>
+    </div>
+  </mat-step>
+  <mat-step>
+    <form [formGroup]="formGroup">
+      <ng-template matStepLabel>Track</ng-template>
+      <mat-form-field>
+        <input matInput placeholder="Track" formControlName="answer">
+      </mat-form-field>
+      <div>
+        <button mat-button (click)="send()" type="submit">Send answers</button>
+      </div>
+    </form>
+  </mat-step>
+</mat-horizontal-stepper>
+<ng-template #waiting>Waiting for other players</ng-template>
