@@ -17,8 +17,6 @@ import { StateHostService } from './state-host.service';
  * observed by the players.
  */
 
-export const QUESTION_MAX_TIMER = 120;
-
 @Injectable({
   providedIn: 'root'
 })
@@ -38,9 +36,9 @@ export class GameHostService {
     private state: StateHostService
   ) {
 
-    this.welcome.complete$.pipe(tap(console.log)).subscribe(res => this.welcomeComplete());
-    this.category.complete$.pipe(tap(console.log)).subscribe(res => this.categoryComplete(res));
-    this.question.complete$.pipe(tap(console.log)).subscribe(res => this.questionComplete());
+    this.welcome.complete$.subscribe(res => this.welcomeComplete());
+    this.category.complete$.subscribe(res => this.categoryComplete(res));
+    this.question.complete$.subscribe(res => this.questionComplete());
   }
 
   private get hash(): Observable<string> {
@@ -55,7 +53,7 @@ export class GameHostService {
 
   newGame(gameMode: GameMode) {
     this.hash.pipe(take(1)).subscribe(gameCode => {
-      console.log('[GameHost] Game code ' + gameCode);
+      this.log('Game created with code ' + gameCode);
       const game: Game = {
         gameMode: gameMode,
         state: 'WELCOME'
@@ -73,36 +71,34 @@ export class GameHostService {
   }
 
   private welcomeComplete() {
-    console.log('[GameHost] Starting game...');
-    if (this.history.introduced) {
-      console.log('[GameHost] Starting category picking...');
-      this.category.start();
-    } else {
-      console.log('[GameHost] Starting intro...');
-      this.state.changeState('INTRO');
-    }
+    this.log('Starting intro...');
+    this.state.changeState('INTRO');
   }
 
   introComplete() {
-    console.log('[GameHost] Intro complete');
+    this.log('Intro complete');
     this.history.introduced = true;
-    console.log('[GameHost] Starting category picking...');
     this.category.start();
   }
 
   private categoryComplete(category: string) {
-    console.log('[GameHost] Category picking complete');
+    this.log('Category picking complete');
     this.question.start(category);
   }
 
   private questionComplete() {
-    console.log('[GameHost] Category picking complete');
+    this.log('Question complete');
+    this.history.addGame();
     if (!this.history.finished) {
-      console.log('[GameHost] Stating a new game sequence...')
-      this.welcomeComplete();
+      this.log('Stating a new game sequence...');
+      this.category.start();
     } else {
-      console.log('[GameHost] Game finished');
+      this.log('Game finished');
     }
+  }
+
+  private log(msg: string) {
+    console.log('[Host][Game] ' + msg);
   }
 
 
