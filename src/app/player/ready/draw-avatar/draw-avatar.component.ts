@@ -24,30 +24,72 @@ export class DrawAvatarComponent implements OnInit, AfterViewInit {
     this.context = this.element.getContext('2d');
     this.context.strokeStyle = 'black';
     this.context.lineWidth = 2;
-    this.element.onpointerdown = (cord) => {
+    this.element.onmousedown = (cord) => {
       //console.log('mousedown');
       this.mouseIsDown = true;
       this.context.beginPath();
       this.context.moveTo(this.getPointerPos(this.element, cord).x, this.getPointerPos(this.element, cord).y);
-      console.log('down');
+      //console.log('down');
     }
-    this.element.onpointermove = (cord) => {
+    this.element.onmousemove = (cord) => {
       if (this.mouseIsDown) {
         this.context.lineTo(this.getPointerPos(this.element, cord).x, this.getPointerPos(this.element, cord).y);
         this.context.stroke();
-        console.log('move');
+        //console.log('move');
       }
     }
 
     
 
-    this.element.onpointerup = (cord) => {
+    this.element.onmouseup = (cord) => {
       //console.log('mouseup');
       this.context.closePath();
       this.mouseIsDown = false;
-      console.log('up');
+      //console.log('up');
     }
-    console.log(this.canvas);
+    //console.log(this.canvas);
+
+
+
+    this.element.ontouchstart = (cord) => {
+      var touch = cord.touches[0];
+      var mouseEvent = new MouseEvent("mousedown", {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      });
+      this.element.dispatchEvent(mouseEvent);
+      }
+
+  this.element.ontouchmove = (cord) => {
+  var touch = cord.touches[0];
+  var mouseEvent = new MouseEvent("mousemove", {
+    clientX: touch.clientX,
+    clientY: touch.clientY
+  });
+  this.element.dispatchEvent(mouseEvent);
+  }
+
+  this.element.ontouchend = (cord) => {
+    var mouseEvent = new MouseEvent("mouseup", {});
+    this.element.dispatchEvent(mouseEvent);
+    }
+
+    document.body.ontouchstart = (cord) => {
+      if (cord.target == this.element) {
+        cord.preventDefault();
+      }
+    }
+    document.body.ontouchmove= (cord) => {
+      if (cord.target == this.element) {
+        cord.preventDefault();
+      }
+    }
+    document.body.ontouchend = (cord) => {
+      if (cord.target == this.element) {
+        cord.preventDefault();
+        //console.log('bam!')
+      }
+    }
   }
 
   getPointerPos(canvas, evt) {
@@ -57,6 +99,8 @@ export class DrawAvatarComponent implements OnInit, AfterViewInit {
       y: evt.clientY - rect.top
     };
 }
+
+
 
   changeColor(change) {
     this.context.strokeStyle = change.value;

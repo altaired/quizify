@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Game, CategoryOption } from 'src/app/models/state';
+import { Game, Option } from 'src/app/models/state';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
@@ -13,7 +13,7 @@ export class OptionsComponent implements OnInit {
   @Input() options: any[];
   @Output() selected: EventEmitter<string> = new EventEmitter();
 
-  categoryOptions$: Observable<CategoryOption[]>;
+  categoryOptions$: Observable<Option[]>;
 
   constructor() {
   }
