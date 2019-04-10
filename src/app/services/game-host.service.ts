@@ -11,6 +11,7 @@ import { History } from '../models/history';
 import { SpotifyService } from './spotify.service';
 import { maxBy } from 'lodash';
 import { CATEGORY_WHITELIST } from '../utils/whitelist';
+import { resolveTimingValue } from '@angular/animations/browser/src/util';
 
 /**
  * Takes care of the hosts state which is
@@ -31,6 +32,7 @@ export class GameHostService {
   category$ = new BehaviorSubject<string>(null);
   track$ = new BehaviorSubject<any>(null);
   timer$ = new BehaviorSubject<Observable<number>>(null);
+  result$ = new BehaviorSubject<any[]>(null);
   state$: Observable<Game>;
   private history: History;
 
@@ -45,7 +47,8 @@ export class GameHostService {
       tracks: [],
       categories: [],
       pickers: [],
-      introduced: false
+      introduced: false,
+      games: 0
     };
   }
 
@@ -130,6 +133,7 @@ export class GameHostService {
   }
 
   private initPickCategory() {
+    this.history.games += 1;
     if (!this.history.introduced) {
       // Players not introduced yet
       this.startIntro();
@@ -243,7 +247,11 @@ export class GameHostService {
         }),
         filter(track => track ? true : false),
         switchMap(t => {
-          return combineLatest(of(t), this.spotify.getRelatedArtists(t.track.artists[0].id), this.spotify.getArtist(t.track.artists[0].id));
+          return combineLatest(
+            of(t),
+            this.spotify.getRelatedArtists(t.track.artists[0].id),
+            this.spotify.getArtist(t.track.artists[0].id)
+          );
         }),
         take(1)
       ).subscribe(([t, relatedArtists, artist]) => {
@@ -279,19 +287,21 @@ export class GameHostService {
       second: 'Name the track'
     });
     this.setState('ANSWER');
+    let started = false;
     this.playback.play(t.track.uri).pipe(
       switchMap(response => interval(1000)),
       switchMap(trigger => this.playback.state()),
+      takeWhile(() => !started),
       tap((state: any) => {
         if (state.is_playing) {
           console.log('[GameHost] Track is playing');
+          started = true;
           this.timer$.next(this.questionTimer);
           this.activateQuestionObserver();
         } else {
           console.log('[GameHost] Waiting for track to play...');
         }
       }),
-      takeWhile((state: any) => !state.is_playing),
     ).subscribe();
 
   }
@@ -305,13 +315,78 @@ export class GameHostService {
 
   private activateQuestionObserver() {
     console.log('[GameHost] Activating response observation');
-    const trackID = this.track$.getValue().track.id;
-    const allPlayersDone = this.players$.pipe(
-      filter(players => players.every(p => {
+
+    const end = merge(this.allPlayersDone, this.timesUP);
+
+    end.pipe(
+      delay(2500),
+      take(1),
+      switchMap(() => combineLatest(this.players$, this.track$)),
+      switchMap(([players, track]) => {
+        return combineLatest(
+          of(players),
+          of(track),
+          this.searchValidator(
+            players.filter(p => p.response.second ? true : false).map(p => p.response.second),
+            track.track.id
+          )
+        );
+      })
+    ).subscribe(([players, track, queries]) => {
+      console.log('[GameHost] Checking answers...');
+
+      this.result$.next(players.map(player => {
+        const response = player.response;
+        const result: PlayerResult = {
+          id: player.uid,
+          first: false,
+          second: false
+        };
+        if (response.done) {
+          if (response.first === track.track.artists[0].id) {
+            result.first = true;
+          }
+          if (queries.find(q => q === response.second)) {
+            result.second = true;
+          }
+        } else {
+          console.log('[GameHost] Player did not finish in time ' + player.uid);
+        }
+        return result;
+      }));
+      console.log('[GameHost] Results calculated');
+      this.nextSequence();
+    });
+
+    end.pipe(
+      take(1),
+      tap(() => console.log('[GameHost] Times up or all done')),
+      switchMap(() => this.playback.pause())).subscribe(done => {
+        this.setState('RESULT');
+      });
+  }
+
+  searchValidator(q: string[], track: string): Observable<string[]> {
+    return combineLatest(
+      q.map(query => combineLatest(of(query), this.spotify.searchTrack(query)))
+    ).pipe(
+      map(res => {
+        console.log(res);
+        const filtered = res.filter(pq => {
+          const trackResult: any[] = pq[1].tracks.items;
+          return trackResult.some(t => t.id === track);
+        });
+        return filtered.map(f => f[0]);
+      })
+    );
+  }
+
+  get allPlayersDone(): Observable<Player[]> {
+    return combineLatest(this.track$, this.players$).pipe(
+      filter(([track, players]) => players.every(p => {
         if (p.response ? true : false) {
-          console.log('[GameHost] Checking response for track ' + trackID, p);
-          if (p.response.done && p.response.question === trackID) {
-            console.log('[GameHost] All players responded');
+          if (p.response.done && p.response.question === track.track.id) {
+            console.log('[GameHost] Player responded');
             return true;
           }
         }
@@ -319,23 +394,14 @@ export class GameHostService {
       })),
       take(1)
     );
-    const timesUP = this.timer$.pipe(
+  }
+
+  get timesUP(): Observable<number> {
+    return this.timer$.pipe(
       take(1),
       switchMap(t => t),
       filter(time => time === QUESTION_MAX_TIMER)
     );
-
-    this.players$.pipe(takeUntil(merge(allPlayersDone, timesUP.pipe(delay(2500)))))
-      .subscribe(players =>
-        console.log('[GameHost] Checking answers...')
-      );
-
-    merge(allPlayersDone, timesUP).pipe(
-      take(1),
-      tap(() => console.log('[GameHost] Times up or all done')),
-      switchMap(() => this.playback.pause())).subscribe(done => {
-        this.setState('RESULT');
-      });
   }
 
   private setState(state: GameState) {
@@ -344,4 +410,19 @@ export class GameHostService {
     });
   }
 
+  private nextSequence() {
+    if (this.history.games < 4) {
+      timer(1000, 1000).pipe(
+        takeWhile(n => n < 15),
+        filter(n => n === 14)
+      ).subscribe(() => this.initPickCategory());
+    }
+  }
+
+}
+
+export interface PlayerResult {
+  id: string;
+  first: Boolean;
+  second: Boolean;
 }

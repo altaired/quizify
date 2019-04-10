@@ -77,4 +77,18 @@ export class SpotifyService {
     }));
   }
 
+  searchTrack(query: string): Observable<any> {
+    const url = this.SPOTIFY_BASE_URL + '/search';
+    return this.auth.authentication.pipe(switchMap(headers => {
+      return this.http.get<any>(url, {
+        headers: headers,
+        params: {
+          q: query,
+          type: 'track',
+          limit: '5'
+        }
+      });
+    }));
+  }
+
 }
