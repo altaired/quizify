@@ -24,7 +24,7 @@ export class CategoryHostService {
   ) { }
 
   start() {
-
+    this.log('Starting category picking...');
     combineLatest(this.spotify.listCategories().pipe(
       map(res => {
         const categories = res.categories.items;
@@ -37,12 +37,12 @@ export class CategoryHostService {
       this.state.players$
     ).pipe(take(1))
       .subscribe(([categories, players]) => {
-        console.log('[GameHost] Initializing category picking...');
-        this.startPickCategory(categories, players);
+        this.log('Category picking started');
+        this.distribute(categories, players);
       });
   }
 
-  private startPickCategory(categories, players: Player[]) {
+  private distribute(categories, players: Player[]) {
     const code = this.state.code$.getValue();
     const options = categories.map(category => {
       const categoryObj: Option = {
@@ -65,19 +65,19 @@ export class CategoryHostService {
     };
     this.db.object('games/' + code + '/playerDisplay/category').set(categoryState);
     this.state.changeState('PICK_CATEGORY');
-    this.activateCategoryObserver();
-    console.log('[GameHost] Waiting for player to pick a category');
+    this.observe();
+    this.log('Waiting for player to pick a category');
   }
 
 
-  private activateCategoryObserver() {
+  private observe() {
     const subscription = this.state.state$.pipe(
       takeUntil(this.complete$),
       map(state => state.playerDisplay.category)
     ).subscribe(categoryState => {
       if (categoryState.done) {
         // Player picked a category
-        console.log('[GameHost] Player picked category: ' + categoryState.playerResponse);
+        this.log('Player picked category: ' + categoryState.playerResponse);
         // Updates the history
         this.history.addPicker(categoryState.playerUID);
         this.history.addCategory(categoryState.playerResponse);
@@ -91,5 +91,9 @@ export class CategoryHostService {
 
   private complete(category: string) {
     this.complete$.next(category);
+  }
+
+  private log(msg: string) {
+    console.log('[Host][Category] ' + msg);
   }
 }

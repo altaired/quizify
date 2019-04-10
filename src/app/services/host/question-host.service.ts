@@ -22,7 +22,7 @@ export class QuestionHostService {
   timer$ = new BehaviorSubject<Observable<number>>(null);
   result$ = new BehaviorSubject<any[]>(null);
 
-  TRACK_POPULARITY_THRESHOLD = 75;
+  TRACK_POPULARITY_THRESHOLD = 50;
 
 
   constructor(
@@ -34,98 +34,97 @@ export class QuestionHostService {
   ) { }
 
   start(category: string) {
+    this.log('Starting question...');
 
     this.spotify.getCategoryPlaylists(category)
       .pipe(
         takeUntil(this.complete$),
-        switchMap(res => {
-          // Pick a random playlist from the provided category
-          const playlists: any[] = res.playlists.items;
-          // const playlist = playlists[Math.floor(Math.random() * playlists.length)];
-          const playlist = playlists[0];
-          console.log('[GameHost] Picked a random playlist ' + playlist.id);
-          return this.spotify.getPlaylitsTracks(playlist.id);
-        }),
-        map(res => {
-          if (res.items) {
-            const tracks: any[] = res.items;
-            const newTracks: any[] = tracks.filter(t => this.history.validateTrack(t.track.id));
-            const allowedTracks = newTracks.filter(t => t.track.popularity >= this.TRACK_POPULARITY_THRESHOLD);
-            if (allowedTracks.length > 0) {
-              // Get a random track within the populatity threshold
-              const selectedTrack = allowedTracks[Math.floor(Math.random() * allowedTracks.length)];
-              console.log(`[GameHost] Picked a track (Rand L${allowedTracks.length}) ${selectedTrack.track.name}`);
-              return selectedTrack;
-            } else {
-              // No tracks fullfilled the threshold, get the most popular one
-              const selectedTrack = maxBy(tracks, t => t.track.popularity);
-              console.log('[GameHost] Picked a track (HighP) ' + selectedTrack.track.name);
-              return selectedTrack;
-            }
-          } else {
-            console.log('[GameHost] Could not fetch tracks');
-            return null;
-          }
-        }),
+        switchMap(res => this.pickRandomPlaylist(res)),
+        map(res => this.pickRandomTrack(res)),
         filter(track => track ? true : false),
         switchMap(t => {
-          return combineLatest(
-            of(t),
-            this.spotify.getRelatedArtists(t.track.artists[0].id),
-            this.spotify.getArtist(t.track.artists[0].id)
-          );
+          return combineLatest(of(t), this.spotify.getRelatedArtists(t.track.artists[0].id), this.spotify.getArtist(t.track.artists[0].id));
         }),
         take(1)
-      ).subscribe(([t, relatedArtists, artist]) => {
-        // Add the track to history
-        const artists: any[] = relatedArtists.artists;
-        const trackArtists: any[] = t.track.artists;
-        const filteredArtists = artists.filter(rArtist => trackArtists.every(tArtist => rArtist.id !== tArtist.id));
-        const options = filteredArtists.slice(0, 3);
-        options.push(artist);
-        this.history.addTrack(t.track.id);
-        this.sendQuestion(t, options);
+      ).subscribe(([track, relatedArtists, selectedTrackArtist]) => {
+        const options = relatedArtists.artists.filter(relatedArtist =>
+          track.track.artists.every(trackArtist => relatedArtist.id !== trackArtist.id)
+        ).slice(0, 3);
+        options.push(selectedTrackArtist);
+        this.history.addTrack(track.track.id);
+        this.distribute(track, options);
       });
   }
 
-  private sendQuestion(t: any, options: any[]) {
+  private pickRandomPlaylist(playlistsResponse: any): Observable<any> {
+    const playlists: any[] = playlistsResponse.playlists.items;
+    // const playlist = playlists[Math.floor(Math.random() * playlists.length)];
+    const playlist = playlists[0];
+    this.log('Picked a random playlist ' + playlist.id);
+    return this.spotify.getPlaylitsTracks(playlist.id);
+  }
+
+  private pickRandomTrack(playlist: any) {
+    if (playlist.items) {
+      const tracks: any[] = playlist.items;
+      const newTracks: any[] = tracks.filter(t => this.history.validateTrack(t.track.id));
+      const allowedTracks = newTracks.filter(t => t.track.popularity >= this.TRACK_POPULARITY_THRESHOLD);
+      if (allowedTracks.length > 0) {
+        // Get a random track within the populatity threshold
+        const selectedTrack = allowedTracks[Math.floor(Math.random() * allowedTracks.length)];
+        this.log(`Picked a track (Rand L${allowedTracks.length}) ${selectedTrack.track.name}`);
+        return selectedTrack;
+      } else {
+        // No tracks fullfilled the threshold, get the most popular one
+        const selectedTrack = maxBy(tracks, t => t.track.popularity);
+        this.log('Picked a track (HighP) ' + selectedTrack.track.name);
+        return selectedTrack;
+      }
+    } else {
+      this.log('Could not fetch tracks');
+      return null;
+    }
+  }
+
+  private distribute(t: any, options: any[]) {
     this.track$.next(t);
-    const code = this.state.code$.getValue();
-    console.log('[GameHost] Received track', t.track);
-    this.db.object('games/' + code + '/playerDisplay/question').set({
-      id: t.track.id,
-      first: {
-        title: 'Name the artist',
-        options: options.map(option => {
-          return {
-            id: option.id,
-            image: option.images[0],
-            value: option.name
-          };
-        })
-      },
-      secondEnabled: true,
-      second: 'Name the track'
+    this.state.code$.pipe(take(1)).subscribe(code => {
+      this.log('Track received' + t.track.name);
+      this.db.object('games/' + code + '/playerDisplay/question').set({
+        id: t.track.id,
+        first: {
+          title: 'Name the artist',
+          options: options.map(option => {
+            return { id: option.id, image: option.images[0], value: option.name };
+          })
+        },
+        secondEnabled: true,
+        second: 'Name the track'
+      });
+      this.state.changeState('ANSWER');
+      this.play(t.track.uri);
     });
-    this.state.changeState('ANSWER');
+  }
+
+  private play(uri: string) {
     let started = false;
-    this.playback.play(t.track.uri).pipe(
+    this.playback.play(uri).pipe(
       switchMap(response => interval(1000)),
       switchMap(trigger => this.playback.state()),
       takeWhile(() => !started),
       takeUntil(this.complete$),
       tap((state: any) => {
         if (state.is_playing) {
-          console.log('[GameHost] Track is playing');
+          this.log('Track is playing');
           started = true;
           this.timer$.next(this.questionTimer);
-          this.activateQuestionObserver();
+          this.log('Timer started');
+          this.observe();
         } else {
-          console.log('[GameHost] Waiting for track to play...');
+          this.log('Waiting for track to play...');
         }
       }),
     ).subscribe();
-
   }
 
   private get questionTimer(): Observable<number> {
@@ -135,28 +134,11 @@ export class QuestionHostService {
     );
   }
 
-  private activateQuestionObserver() {
-    console.log('[GameHost] Activating response observation');
+  private observe() {
+    this.log('Activated response observation');
 
-    const end = merge(this.allPlayersDone, this.timesUP);
-
-    end.pipe(
-      take(1),
-      delay(2500),
-      switchMap(() => combineLatest(this.state.players$, this.track$)),
-      switchMap(([players, track]) => {
-        return combineLatest(
-          of(players),
-          of(track),
-          this.searchValidator(
-            players.filter(p => has(p.response, 'second')).map(p => p.response.second),
-            track.track.id
-          )
-        );
-      })
-    ).subscribe(([players, track, queries]) => {
-      console.log('[GameHost] Checking answers...');
-
+    this.end.subscribe(([players, track, queries]) => {
+      this.log('Checking all responses...');
       this.result$.next(players.map(player => {
         const response = player.response;
         const result: PlayerResult = {
@@ -171,26 +153,39 @@ export class QuestionHostService {
           if (queries.find(q => q === response.second)) {
             result.second = true;
           }
-        } else {
-          console.log('[GameHost] Player did not finish in time ' + player.uid);
         }
         return result;
       }));
-      console.log('[GameHost] Results calculated');
+      this.log('Results complete');
       this.clear();
       this.complete();
     });
-
-    end.pipe(
-      take(1),
-      takeUntil(this.complete$),
-      tap(() => console.log('[GameHost] Times up or all done'))
-    ).subscribe(() => {
-      this.state.changeState('RESULT');
-    });
   }
 
-  searchValidator(q: string[], track: string): Observable<string[]> {
+  private get end() {
+    return merge(this.allPlayersDone, this.timesUP).pipe(
+      takeUntil(this.complete$),
+      take(1),
+      tap(() => this.log('Game ended (times up or all players responded)')),
+      tap(() => this.state.changeState('RESULT')),
+      delay(2500),
+      switchMap(() => combineLatest(this.state.players$, this.track$).pipe(take(1))),
+      switchMap(([players, track]) => {
+        return combineLatest(
+          of(players),
+          of(track),
+          this.autocomplete(
+            players.filter(p => has(p.response, 'second')).map(p => p.response.second),
+            track.track.id
+          )
+        ).pipe(take(1));
+      }),
+      tap(() => this.log('Autocompleted track responses ready for validation')),
+    );
+  }
+
+  autocomplete(q: string[], track: string): Observable<string[]> {
+    this.log('Autocompleting track responses...');
     return combineLatest(
       q.map(query => combineLatest(of(query), this.spotify.searchTrack(query)))
     ).pipe(
@@ -201,18 +196,20 @@ export class QuestionHostService {
           return trackResult.some(t => t.id === track);
         });
         return filtered.map(f => f[0]);
-      })
+      }),
+      tap(() => this.log('Autocompletion of track responses completed'))
     );
   }
 
   clear() {
+    this.log('Clearing response data...');
     this.state.code$.pipe(take(1)).subscribe(code => {
       this.db.object(`games/${code}/playerDisplay`).remove();
-      this.db.list('games/' + code + '/players').snapshotChanges()
+      this.db.list('games/' + code + '/players').snapshotChanges().pipe(take(1))
         .subscribe(res => {
-          res.forEach(player => {
+          Promise.all(res.map(player => {
             this.db.object(`games/${code}/players/${player.key}/response`).remove();
-          });
+          })).then(() => this.log('Response data cleared'));
         });
     });
   }
@@ -222,19 +219,21 @@ export class QuestionHostService {
       filter(([track, players]) => players.every(p => {
         if (p.response ? true : false) {
           if (p.response.done && p.response.question === track.track.id) {
-            console.log('[GameHost] Player responded');
             return true;
           }
         }
         return false;
-      })),
+      }),
+        tap(() => this.log('All players reponded'))
+      ),
     );
   }
 
   get timesUP(): Observable<number> {
     return this.timer$.pipe(
       switchMap(t => t),
-      filter(time => time === QUESTION_MAX_TIMER)
+      filter(time => time === QUESTION_MAX_TIMER),
+      tap(() => this.log('Times up'))
     );
   }
 
@@ -243,6 +242,10 @@ export class QuestionHostService {
       takeWhile(n => n < 15),
       filter(n => n === 14)
     ).subscribe(() => this.complete$.next(''));
+  }
+
+  log(msg: string) {
+    console.log('[Host][Question] ' + msg);
   }
 }
 
