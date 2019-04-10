@@ -40,6 +40,7 @@ import { QuickJoinComponent } from './core/quick-join/quick-join.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { OptionsComponent } from './player/options/options.component';
 import { IntroComponent } from './host/intro/intro.component';
+import { ResultsComponent } from './host/results/results.component';
 
 
 @NgModule({
@@ -60,6 +61,7 @@ import { IntroComponent } from './host/intro/intro.component';
     QuickJoinComponent,
     OptionsComponent,
     IntroComponent,
+    ResultsComponent,
 
   ],
   imports: [

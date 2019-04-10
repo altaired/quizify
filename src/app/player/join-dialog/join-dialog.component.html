@@ -9,7 +9,7 @@
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>Game Code</mat-label>
-    <input matInput placeholder="XXXXXXXX" formControlName="gameCode">
+    <input matInput placeholder="XXXXXXXX" formControlName="gameCode" pattern="[A-Z0-9-]+">
     <mat-hint>Enter the game code on screen</mat-hint>
   </mat-form-field>
 

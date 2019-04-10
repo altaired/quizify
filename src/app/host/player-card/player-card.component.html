@@ -1,4 +1,5 @@
-<mat-card class="player-card">
+<div [class.active]="isDone" class="outer-margin">
+<mat-card class="player-card " >
     <mat-card-header>
     <div mat-card-avatar >
         <mat-icon *ngIf="isAdmin" aria-hidden="false" aria-label="admin icon">star</mat-icon>
@@ -7,3 +8,4 @@
     </mat-card-header>
   <img *ngIf="player.avatar" mat-card-image-lg src="{{player.avatar}}" alt="Players Avatar" width="200px" height="200px"> 
 </mat-card>
+</div>
