@@ -6,6 +6,8 @@
     </div>
     <mat-card-title>{{player.displayName}}</mat-card-title>
     </mat-card-header>
-  <img *ngIf="player.avatar" mat-card-image-lg src="{{player.avatar}}" alt="Players Avatar" width="200px" height="200px"> 
+    <div class="avatar-size">
+      <img *ngIf="player.avatar" mat-card-image-lg src="{{player.avatar}}" alt="Players Avatar" width="200px" height="200px"> 
+    </div>
 </mat-card>
 </div>

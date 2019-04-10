@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { GameHostService } from 'src/app/services/game-host.service';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Player } from 'src/app/models/state';
+import { StateHostService } from 'src/app/services/host/state-host.service';
+import { QuestionHostService } from 'src/app/services/host/question-host.service';
 
 @Component({
   selector: 'app-results',
@@ -14,12 +15,15 @@ export class ResultsComponent implements OnInit {
   players$: Observable<Player[]>;
   results: Observable<any>;
 
-  constructor(private game: GameHostService){ }
+  constructor(
+    private state: StateHostService,
+    private question: QuestionHostService
+    ){ }
 
   ngOnInit() {
-    this.track$ = this.game.track$.pipe(filter(t => t))
-    this.players$ = this.game.state$.pipe(
-      filter(state => state.players ? true : false),
+    this.track$ = this.question.track$.pipe(filter(t => t))
+    this.players$ = this.state.state$.pipe(
+      filter(state => state.state ? true : false),
       map(state => Object.values(state.players))
     );
 

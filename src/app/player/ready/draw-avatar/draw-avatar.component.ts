@@ -75,17 +75,19 @@ export class DrawAvatarComponent implements OnInit, AfterViewInit {
     document.body.ontouchstart = (cord) => {
       if (cord.target == this.element) {
         cord.preventDefault();
+        
       }
     }
     document.body.ontouchmove= (cord) => {
       if (cord.target == this.element) {
         cord.preventDefault();
+        
       }
     }
     document.body.ontouchend = (cord) => {
       if (cord.target == this.element) {
         cord.preventDefault();
-        //console.log('bam!')
+        
       }
     }
   }
