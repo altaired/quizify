@@ -4,6 +4,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { take, map } from 'rxjs/operators';
 import { SpotifyService } from '../services/spotify.service';
 import { PlaybackService } from '../services/playback.service';
+import { MatSliderChange } from '@angular/material';
 
 
 @Component({
@@ -39,6 +40,10 @@ export class PlaybackComponent implements OnInit {
       this.playerState$.next(state);
     });
 
+  }
+
+  changeVolume(change: MatSliderChange) {
+    this.player.setVolume(change.value);
   }
 
 

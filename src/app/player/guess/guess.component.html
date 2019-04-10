@@ -7,15 +7,39 @@
     </div>
   </mat-step>
   <mat-step>
-    <form [formGroup]="formGroup">
-      <ng-template matStepLabel>Track</ng-template>
-      <mat-form-field>
-        <input matInput placeholder="Track" formControlName="answer">
-      </mat-form-field>
-      <div>
-        <button mat-button (click)="send()" type="submit">Send answers</button>
+    <ng-template matStepLabel>Track</ng-template>
+    <div class="row">
+      <div class="col-12">
+        <mat-card class="margin-bottom">
+          <mat-card-header>
+            <mat-card-title>Name the track</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <form [formGroup]="formGroup">
+              <mat-form-field appearance="outline" class="max-width">
+                <input matInput placeholder="Track" formControlName="answer">
+              </mat-form-field>
+            </form>
+          </mat-card-content>
+        </mat-card>
       </div>
-    </form>
+      <div class="col-12">
+        <mat-card class="margin-bottom">
+          <mat-card-content>
+            <button mat-button (click)="send()">SEND ANSWERS</button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+
   </mat-step>
 </mat-horizontal-stepper>
-<ng-template #waiting>Waiting for other players</ng-template>
+<ng-template #waiting>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Were you too quick?</mat-card-title>
+      <mat-card-subtitle>Your friends are not done yet</mat-card-subtitle>
+    </mat-card-header>
+  </mat-card>
+</ng-template>

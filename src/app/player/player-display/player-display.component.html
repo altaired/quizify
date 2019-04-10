@@ -14,10 +14,41 @@
       <app-options *ngIf="isCategoryPicker$ | async; else waiting" [options]="convertCategories(state)"
         (selected)="selectCategory($event)">
       </app-options>
-      <ng-template #waiting>Please wait for user to pick a category</ng-template>
+      <ng-template #waiting>
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Please wait</mat-card-title>
+            <mat-card-subtitle>Someone is currently picking a category</mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </ng-template>
     </div>
     <div *ngSwitchCase="'ANSWER'">
       <app-guess [state]="state" (answered)="respond($event)"></app-guess>
+    </div>
+    <div *ngSwitchCase="'RESULT'">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Are you a winner?</mat-card-title>
+          <mat-card-subtitle>The results are shown on the big screen</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+    </div>
+    <div *ngSwitchCase="'END'">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Game ended</mat-card-title>
+          <mat-card-subtitle>Thank you for playing</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+    </div>
+    <div *ngSwitchCase="'LOADING'">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>We are working on it</mat-card-title>
+          <mat-card-subtitle>Soon...</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
     </div>
     <div *ngSwitchDefault>Hejsan</div>
   </div>

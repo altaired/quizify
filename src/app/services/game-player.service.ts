@@ -40,11 +40,11 @@ export class GamePlayerService {
 
           if (!game.players) {
             // First player to join
-            this.initGame({ displayName: name, uid: uid }, gameCode);
+            this.addPlayer({ displayName: name, uid: uid }, gameCode);
             resolve(true);
           } else if (Object.values(game.players).every(player => player.uid !== uid)) {
             // There are players in game, check for duplicates
-            this.initGame({ displayName: name, uid: uid }, gameCode);
+            this.initGame(gameCode);
             resolve(true);
           } else {
             console.error('Player already in game');
@@ -58,9 +58,12 @@ export class GamePlayerService {
     });
   }
 
-  private initGame(player: Player, gameCode: string) {
-    // Officially adding the player to the game
+  private addPlayer(player: Player, gameCode: string) {
     this.db.list('games/' + gameCode + '/players').push(player);
+    this.initGame(gameCode);
+  }
+
+  private initGame(gameCode: string) {
     this.gameCode$.next(gameCode);
     this.state$ = this.gameCode$
       .pipe(

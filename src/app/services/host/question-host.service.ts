@@ -140,21 +140,31 @@ export class QuestionHostService {
     this.end.subscribe(([players, track, queries]) => {
       this.log('Checking all responses...');
       this.result$.next(players.map(player => {
-        const response = player.response;
-        const result: PlayerResult = {
-          id: player.uid,
-          first: false,
-          second: false
-        };
-        if (response.done) {
-          if (response.first === track.track.artists[0].id) {
-            result.first = true;
+        if (has(player, 'response')) {
+          const response = player.response;
+          const result: PlayerResult = {
+            id: player.uid,
+            first: false,
+            second: false
+          };
+          if (response.done) {
+            if (response.first === track.track.artists[0].id) {
+              result.first = true;
+            }
+            if (queries.find(q => q === response.second)) {
+              result.second = true;
+            }
           }
-          if (queries.find(q => q === response.second)) {
-            result.second = true;
-          }
+          return result;
+        } else {
+          const result: PlayerResult = {
+            id: player.uid,
+            first: false,
+            second: false
+          };
+          return result;
         }
-        return result;
+
       }));
       this.log('Results complete');
       this.clear();
@@ -186,19 +196,25 @@ export class QuestionHostService {
 
   autocomplete(q: string[], track: string): Observable<string[]> {
     this.log('Autocompleting track responses...');
-    return combineLatest(
-      q.map(query => combineLatest(of(query), this.spotify.searchTrack(query)))
-    ).pipe(
-      takeUntil(this.complete$),
-      map(res => {
-        const filtered = res.filter(pq => {
-          const trackResult: any[] = pq[1].tracks.items;
-          return trackResult.some(t => t.id === track);
-        });
-        return filtered.map(f => f[0]);
-      }),
-      tap(() => this.log('Autocompletion of track responses completed'))
-    );
+    if (q.length > 0) {
+      return combineLatest(
+        q.map(query => combineLatest(of(query), this.spotify.searchTrack(query)))
+      ).pipe(
+        takeUntil(this.complete$),
+        map(res => {
+          const filtered = res.filter(pq => {
+            const trackResult: any[] = pq[1].tracks.items;
+            return trackResult.some(t => t.id === track);
+          });
+          return filtered.map(f => f[0]);
+        }),
+        tap(() => this.log('Autocompletion of track responses completed'))
+      );
+    } else {
+      this.log('No tracks checked');
+      return of([]);
+    }
+
   }
 
   clear() {

@@ -60,7 +60,6 @@ export class GameHostService {
       };
       this.db.object('games/' + gameCode).set(game);
       this.state.setCode(gameCode);
-      console.log(this.history.introduced);
       this.start();
     });
   }

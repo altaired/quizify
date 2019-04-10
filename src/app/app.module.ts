@@ -14,7 +14,8 @@ import {
   MatListModule,
   MatGridListModule,
   MatButtonToggleModule,
-  MatStepperModule
+  MatStepperModule,
+  MatSliderModule
 } from '@angular/material';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -90,6 +91,7 @@ import { HistoryHostService } from './services/host/history-host.service';
     MatButtonModule,
     MatListModule,
     MatGridListModule,
+    MatSliderModule,
     MatButtonToggleModule,
     QRCodeModule,
   ],
