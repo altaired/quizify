@@ -17,11 +17,7 @@
       <ng-template #waiting>Please wait for user to pick a category</ng-template>
     </div>
     <div *ngSwitchCase="'ANSWER'">
-      <div *ngIf="state$ | async as state">
-        <app-options [options]="convertOptions(state)"
-        (selected)="selectFirstAnswer($event)">
-      </app-options>
-      </div>
+      <app-guess [state]="state" (answered)="respond($event)"></app-guess>
     </div>
     <div *ngSwitchDefault>Hejsan</div>
   </div>

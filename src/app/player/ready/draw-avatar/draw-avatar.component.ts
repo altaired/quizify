@@ -7,7 +7,7 @@ import { GamePlayerService } from 'src/app/services/game-player.service';
 })
 export class DrawAvatarComponent implements OnInit, AfterViewInit {
   @ViewChild('canvas') canvas: ElementRef;
-  private mouseIsDown: boolean = false;
+  private mouseIsDown = false;
   private context: CanvasRenderingContext2D;
   element: HTMLCanvasElement
 
@@ -37,9 +37,7 @@ export class DrawAvatarComponent implements OnInit, AfterViewInit {
         this.context.stroke();
         //console.log('move');
       }
-    }
-
-    
+    };
 
     this.element.onmouseup = (cord) => {
       //console.log('mouseup');
@@ -93,12 +91,12 @@ export class DrawAvatarComponent implements OnInit, AfterViewInit {
   }
 
   getPointerPos(canvas, evt) {
-    var rect = canvas.getBoundingClientRect();
+    const rect = canvas.getBoundingClientRect();
     return {
       x: evt.clientX - rect.left,
       y: evt.clientY - rect.top
     };
-}
+  }
 
 
 

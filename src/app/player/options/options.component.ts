@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Game, Option } from 'src/app/models/state';
+import { Option } from 'src/app/models/state';
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-options',
@@ -12,13 +11,15 @@ export class OptionsComponent implements OnInit {
 
   @Input() options: any[];
   @Output() selected: EventEmitter<string> = new EventEmitter();
-
-  categoryOptions$: Observable<Option[]>;
+  randomizedOptions: any[];
 
   constructor() {
+
   }
 
   ngOnInit() {
+    console.log(this.options);
+    this.randomizedOptions = this.options.sort((a, b) => .5 - Math.random());
   }
 
 

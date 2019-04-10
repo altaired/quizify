@@ -1,22 +1,22 @@
 <div class="row" *ngIf="options; else loading">
-    <div class="col-12 margin-bottom">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>
-            Please pick a category
-          </mat-card-title>
-        </mat-card-header>
-      </mat-card>
-    </div>
-    <div class="col-sm-12 col-md-6" *ngFor="let option of options">
-      <mat-card (click)="select(option.id)">
-        <mat-card-header>
-          <mat-card-title>{{option.value}}</mat-card-title>
-        </mat-card-header>
-      </mat-card>
-    </div>
+  <div class="col-12 margin-bottom">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          Please pick a category
+        </mat-card-title>
+      </mat-card-header>
+    </mat-card>
   </div>
-  
-  <ng-template #loading>
-    Loading options...
-  </ng-template>
+  <div class="col-sm-12 col-md-6" *ngFor="let option of randomizedOptions">
+    <mat-card (click)="select(option.id)">
+      <mat-card-header>
+        <mat-card-title>{{option.value}}</mat-card-title>
+      </mat-card-header>
+    </mat-card>
+  </div>
+</div>
+
+<ng-template #loading>
+  Loading options...
+</ng-template>

@@ -39,7 +39,12 @@ export class SpotifyService {
   getCategory(id: string): Observable<any> {
     const url = this.SPOTIFY_BASE_URL + '/browse/categories/' + id;
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<any>(url, { headers: headers });
+      return this.http.get<any>(url, {
+        headers: headers, params: {
+          country: 'SE',
+          locale: 'sv_SE'
+        }
+      });
     }));
   }
 
@@ -66,7 +71,9 @@ export class SpotifyService {
   getPlaylitsTracks(playlist: string) {
     const url = this.SPOTIFY_BASE_URL + '/playlists/' + playlist + '/tracks';
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<any>(url, { headers: headers });
+      return this.http.get<any>(url, {
+        headers: headers
+      });
     }));
   }
 
