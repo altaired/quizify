@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { GameHostService, QUESTION_MAX_TIMER } from '../../services/game-host.service';
+import { GameHostService, QUESTION_MAX_TIMER } from '../../services/host/game-host.service';
 import { Observable } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { Game, Player, GameState } from '../../models/state';
+import { StateHostService } from 'src/app/services/host/state-host.service';
+import { QuestionHostService } from 'src/app/services/host/question-host.service';
 
 @Component({
   selector: 'app-host-display',
@@ -19,18 +21,22 @@ export class HostDisplayComponent implements OnInit {
 
   QUESTION_MAX_TIMER = QUESTION_MAX_TIMER;
 
-  constructor(private game: GameHostService) { }
+  constructor(
+    private state: StateHostService,
+    private game: GameHostService,
+    private question: QuestionHostService
+  ) { }
 
   ngOnInit() {
-    this.state$ = this.game.state$;
+    this.state$ = this.state.state$;
     this.players$ = this.state$.pipe(
       filter(state => state.players ? true : false),
       map(state => Object.values(state.players))
     );
-    this.gameCode$ = this.game.gameCode$;
+    this.gameCode$ = this.state.code$;
     this.gameState$ = this.state$.pipe(map(state => state.state));
     this.adminUID$ = this.state$.pipe(filter(state => state.admin ? true : false), map(state => state.admin.playerUID));
-    this.timer$ = this.game.timer$.pipe(
+    this.timer$ = this.question.timer$.pipe(
       filter(t => t ? true : false),
       switchMap(t => t),
       map(val => 100 - (val / QUESTION_MAX_TIMER) * 100)

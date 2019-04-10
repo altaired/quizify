@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { GameHostService } from 'src/app/services/game-host.service';
+import { GameHostService } from 'src/app/services/host/game-host.service';
 import { Router } from '@angular/router';
 import { Hash } from 'src/app/utils/hash';
 import { GameMode } from 'src/app/models/state';

@@ -41,6 +41,11 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { OptionsComponent } from './player/options/options.component';
 import { IntroComponent } from './host/intro/intro.component';
 import { ResultsComponent } from './host/results/results.component';
+import { GameHostService } from './services/host/game-host.service';
+import { StateHostService } from './services/host/state-host.service';
+import { WelcomeHostService } from './services/host/welcome-host.service';
+import { CategoryHostService } from './services/host/category-host.service';
+import { HistoryHostService } from './services/host/history-host.service';
 
 
 @NgModule({
@@ -90,7 +95,14 @@ import { ResultsComponent } from './host/results/results.component';
     MatButtonToggleModule,
     QRCodeModule,
   ],
-  providers: [AngularFireModule, AngularFireAuthModule, AngularFireDatabaseModule],
+  providers: [
+    AngularFireModule,
+    AngularFireAuthModule,
+    AngularFireDatabaseModule,
+    GameHostService,
+    StateHostService,
+    HistoryHostService
+  ],
   bootstrap: [AppComponent],
   entryComponents: [JoinDialogComponent],
   exports: [ReactiveFormsModule, MatFormFieldModule]
