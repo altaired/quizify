@@ -47,8 +47,7 @@ export class PlaybackService {
         headers: headers, params: {
           device_id: id
         }
-      })),
-      tap(console.log)
+      }))
     );
   }
 

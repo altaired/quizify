@@ -18,7 +18,6 @@ export class OptionsComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.options);
     this.randomizedOptions = this.options.sort((a, b) => .5 - Math.random());
   }
 

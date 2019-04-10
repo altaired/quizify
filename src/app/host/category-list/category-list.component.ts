@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { SpotifyService } from 'src/app/services/spotify.service';
-import { GameHostService } from 'src/app/services/game-host.service';
+import { GameHostService } from 'src/app/services/host/game-host.service';
 import { Observable } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { CategoryObj } from 'src/app/models/spotify';
 import { CategoryState, Option } from 'src/app/models/state';
+import { StateHostService } from 'src/app/services/host/state-host.service';
 
 @Component({
   selector: 'app-category-list',
@@ -16,13 +17,12 @@ export class CategoryListComponent implements OnInit {
   categoryState$: Observable<CategoryState>;
   options$: Observable<Option[]>;
 
-  constructor(private game: GameHostService) { }
+  constructor(private state: StateHostService) { }
 
   ngOnInit() {
-    this.categoryState$ = this.game.state$.pipe(
+    this.categoryState$ = this.state.state$.pipe(
       filter(state => state.playerDisplay ? true : false),
-      map(state => state.playerDisplay.category),
-      tap(console.log)
+      map(state => state.playerDisplay.category)
     );
     this.options$ = this.categoryState$.pipe(map(state => Object.values(state.options)));
 
