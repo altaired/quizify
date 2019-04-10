@@ -1,11 +1,14 @@
-<mat-card class="player-card">
-  <mat-card-header>
-    <div mat-card-avatar>
-      <mat-icon *ngIf="isAdmin" aria-hidden="false" aria-label="admin icon">star</mat-icon>
-      <mat-icon *ngIf="isDone" aria-hidden="false" aria-label="done icon">menu</mat-icon>
+<div [class.active]="isDone" class="outer-margin">
+  <mat-card class="player-card ">
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon *ngIf="isAdmin" aria-hidden="false" aria-label="admin icon">star</mat-icon>
+      </div>
+      <mat-card-title>{{player.displayName}}</mat-card-title>
+    </mat-card-header>
+    <div class="avatar-size">
+      <img *ngIf="player.avatar" mat-card-image-lg src="{{player.avatar}}" alt="Players Avatar" width="200px"
+        height="200px">
     </div>
-    <mat-card-title>{{player.displayName}}</mat-card-title>
-  </mat-card-header>
-  <img *ngIf="player.avatar" mat-card-image-lg src="{{player.avatar}}" alt="Players Avatar" width="200px"
-    height="200px">
-</mat-card>
+  </mat-card>
+</div>

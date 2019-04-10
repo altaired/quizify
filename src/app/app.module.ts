@@ -41,6 +41,7 @@ import { QuickJoinComponent } from './core/quick-join/quick-join.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { OptionsComponent } from './player/options/options.component';
 import { IntroComponent } from './host/intro/intro.component';
+import { ResultsComponent } from './host/results/results.component';
 import { GameHostService } from './services/host/game-host.service';
 import { StateHostService } from './services/host/state-host.service';
 import { WelcomeHostService } from './services/host/welcome-host.service';
@@ -66,6 +67,7 @@ import { HistoryHostService } from './services/host/history-host.service';
     QuickJoinComponent,
     OptionsComponent,
     IntroComponent,
+    ResultsComponent,
 
   ],
   imports: [
