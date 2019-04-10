@@ -106,7 +106,8 @@ export class GamePlayerService {
             'games/' + code + '/players',
             ref => ref.orderByChild('uid').equalTo(user.uid)).snapshotChanges()
         );
-      })
+      }),
+      take(1)
     ).subscribe(([code, snapshot]) => {
       if (snapshot.length > 0) {
         const key = snapshot[0].key;

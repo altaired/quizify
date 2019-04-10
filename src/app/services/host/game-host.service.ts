@@ -17,8 +17,6 @@ import { StateHostService } from './state-host.service';
  * observed by the players.
  */
 
-export const QUESTION_MAX_TIMER = 120;
-
 @Injectable({
   providedIn: 'root'
 })

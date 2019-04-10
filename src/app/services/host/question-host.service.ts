@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { QUESTION_MAX_TIMER } from './game-host.service';
 import { SpotifyService } from '../spotify.service';
 import { Observable, combineLatest, of, merge, interval, timer, BehaviorSubject, Subject } from 'rxjs';
 import { switchMap, map, filter, take, delay, tap, takeWhile, share, takeUntil } from 'rxjs/operators';
@@ -9,6 +8,8 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { PlaybackService } from '../playback.service';
 import { Player, Game, GameState } from 'src/app/models/state';
 import { StateHostService } from './state-host.service';
+
+export const QUESTION_MAX_TIMER = 120;
 
 @Injectable({
   providedIn: 'root'
@@ -140,7 +141,7 @@ export class QuestionHostService {
     const end = merge(this.allPlayersDone, this.timesUP);
 
     end.pipe(
-      takeUntil(this.complete$),
+      take(1),
       delay(2500),
       switchMap(() => combineLatest(this.state.players$, this.track$)),
       switchMap(([players, track]) => {
@@ -152,8 +153,7 @@ export class QuestionHostService {
             track.track.id
           )
         );
-      }),
-      take(1),
+      })
     ).subscribe(([players, track, queries]) => {
       console.log('[GameHost] Checking answers...');
 
@@ -177,16 +177,17 @@ export class QuestionHostService {
         return result;
       }));
       console.log('[GameHost] Results calculated');
+      this.clear();
       this.complete();
     });
 
     end.pipe(
-      takeUntil(this.complete$),
       take(1),
-      tap(() => console.log('[GameHost] Times up or all done')),
-      switchMap(() => this.playback.pause())).subscribe(done => {
-        this.state.changeState('RESULT');
-      });
+      takeUntil(this.complete$),
+      tap(() => console.log('[GameHost] Times up or all done'))
+    ).subscribe(() => {
+      this.state.changeState('RESULT');
+    });
   }
 
   searchValidator(q: string[], track: string): Observable<string[]> {
@@ -204,9 +205,20 @@ export class QuestionHostService {
     );
   }
 
+  clear() {
+    this.state.code$.pipe(take(1)).subscribe(code => {
+      this.db.object(`games/${code}/playerDisplay`).remove();
+      this.db.list('games/' + code + '/players').snapshotChanges()
+        .subscribe(res => {
+          res.forEach(player => {
+            this.db.object(`games/${code}/players/${player.key}/response`).remove();
+          });
+        });
+    });
+  }
+
   get allPlayersDone(): Observable<Player[]> {
     return combineLatest(this.track$, this.state.players$).pipe(
-      takeUntil(this.complete$),
       filter(([track, players]) => players.every(p => {
         if (p.response ? true : false) {
           if (p.response.done && p.response.question === track.track.id) {
@@ -216,13 +228,11 @@ export class QuestionHostService {
         }
         return false;
       })),
-      take(1)
     );
   }
 
   get timesUP(): Observable<number> {
     return this.timer$.pipe(
-      take(1),
       switchMap(t => t),
       filter(time => time === QUESTION_MAX_TIMER)
     );

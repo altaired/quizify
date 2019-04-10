@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { GameHostService, QUESTION_MAX_TIMER } from '../../services/host/game-host.service';
+import { QUESTION_MAX_TIMER } from '../../services/host/question-host.service';
 import { Observable } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { Game, Player, GameState } from '../../models/state';
 import { StateHostService } from 'src/app/services/host/state-host.service';
 import { QuestionHostService } from 'src/app/services/host/question-host.service';
+import { GameHostService } from 'src/app/services/host/game-host.service';
 
 @Component({
   selector: 'app-host-display',
