@@ -12,22 +12,10 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 The project is hosted on firebase on the following [domain](https://quizify-pro.firebaseapp.com). To deploy the project use `firebase deploy --only hosting`. 
 
 ## TODO
-* Implement saving of player avatar
-* Implement Category picking for players
-* Implement Guessing for players
-* Fill the host display with relevant information
-* Correct the players answers
 * Add abbillity to add game tracks as a playlist
-* Implement the Spotify service API calls in respective quiz questions
-* Create a game logic/flow for the passive mode so an alternative for display component
-## Done
-* Implemented login flow with Spotify and Firebase
-* Created services for keeping track of players and hosts state
-* Initialized Playback SDK
-* Created service for communicating with Spotifys WEB API
-* Support for creation and joining of games
-* One player joining is set to admin and can start game
-* Shows 6 random categories when starting game
+* Final fixes to layout
+* Comment code
+* Play again?
 
 ## Development server
 

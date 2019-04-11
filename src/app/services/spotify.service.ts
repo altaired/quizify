@@ -136,6 +136,11 @@ export class SpotifyService {
     }));
   }
 
+  createPlaylist(tracks: string[]) {
+    console.log('TO BE IMPLEMENTED');
+    // TODO Implement creating a playlist
+  }
+
   /**
    * Fetches search results based on a query using the provided headers
    * @param id The search query

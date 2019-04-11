@@ -1,13 +1,8 @@
 <div class="example-container">
   <h2>Played Tracks</h2>
 
-  <div
-    cdkDropList
-    #trackHistoryList="cdkDropList"
-    [cdkDropListData]="trackHistory"
-    [cdkDropListConnectedTo]="[newPlaylistList]"
-    class="example-list"
-    (cdkDropListDropped)="drop($event)">
+  <div cdkDropList #trackHistoryList="cdkDropList" [cdkDropListData]="trackHistory"
+    [cdkDropListConnectedTo]="[newPlaylistList]" class="example-list" (cdkDropListDropped)="drop($event)">
     <div class="example-box" *ngFor="let item of trackHistory" cdkDrag>{{item.track.name}}</div>
   </div>
 </div>
@@ -15,13 +10,8 @@
 <div class="example-container">
   <h2>New Playlist</h2>
 
-  <div
-    cdkDropList
-    #newPlaylistList="cdkDropList"
-    [cdkDropListData]="NewPlaylist"
-    [cdkDropListConnectedTo]="[trackHistoryList]"
-    class="example-list"
-    (cdkDropListDropped)="drop($event)">
-    <div class="example-box" *ngFor="let item of NewPlaylist" cdkDrag>{{item.track.name}}</div>
+  <div cdkDropList #newPlaylistList="cdkDropList" [cdkDropListData]="newPlaylist"
+    [cdkDropListConnectedTo]="[trackHistoryList]" class="example-list" (cdkDropListDropped)="drop($event)">
+    <div class="example-box" *ngFor="let item of newPlaylist" cdkDrag>{{item.track.name}}</div>
   </div>
 </div>
