@@ -64,7 +64,7 @@ export class GameHostService {
     });
   }
 
-  private start() {
+   start() {
     this.router.navigate(['display']);
     this.welcome.start();
   }

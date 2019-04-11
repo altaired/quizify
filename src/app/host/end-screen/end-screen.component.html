@@ -1,17 +1,44 @@
-<div class="example-container">
-  <h2>Played Tracks</h2>
-
-  <div cdkDropList #trackHistoryList="cdkDropList" [cdkDropListData]="trackHistory"
-    [cdkDropListConnectedTo]="[newPlaylistList]" class="example-list" (cdkDropListDropped)="drop($event)">
-    <div class="example-box" *ngFor="let item of trackHistory" cdkDrag>{{item.track.name}}</div>
+<div class="row">
+    <div class="col-md-6 col-12">
+      <mat-card (click)="playMore()" matRipple>
+        <mat-card-header>
+          <mat-card-title>Continue Playing</mat-card-title>
+          <mat-card-subtitle>Keep playing with the same players</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+    </div>
+<div class="col-md-6 col-12">
+    <mat-card (click)="restartGame()" matRipple>
+      <mat-card-header>
+        <mat-card-title>Restart</mat-card-title>
+        <mat-card-subtitle>Create a completely fresh game</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
   </div>
 </div>
 
-<div class="example-container">
-  <h2>New Playlist</h2>
+<div class="row">
+  <div class="list-container col-md-6 col-12">
+    <h2>Played Tracks</h2>
 
-  <div cdkDropList #newPlaylistList="cdkDropList" [cdkDropListData]="newPlaylist"
-    [cdkDropListConnectedTo]="[trackHistoryList]" class="example-list" (cdkDropListDropped)="drop($event)">
-    <div class="example-box" *ngFor="let item of newPlaylist" cdkDrag>{{item.track.name}}</div>
+    <div cdkDropList #trackHistoryList="cdkDropList" [cdkDropListData]="trackHistory"
+      [cdkDropListConnectedTo]="[newPlaylistList]" class="track-list" (cdkDropListDropped)="drop($event)">
+      <div class="list-box" *ngFor="let track of trackHistory" cdkDrag>{{track.track.name}} - {{track.track.artists[0].name}} </div>
+    </div>
+  </div>
+
+  <div class="list-container col-md-6 col-12">
+    <h2>New Playlist</h2>
+
+    <div cdkDropList #newPlaylistList="cdkDropList" [cdkDropListData]="newPlaylist"
+      [cdkDropListConnectedTo]="[trackHistoryList]" class="track-list" (cdkDropListDropped)="drop($event)">
+      <div class="list-box" *ngFor="let track of newPlaylist" cdkDrag>{{track.track.name}} - {{track.track.artists[0].name}}</div>
+    </div>
+    <mat-card (click)="makePlaylist()" matRipple>
+      <mat-card-header>
+        <mat-card-title>Create Playlist</mat-card-title>
+        <mat-card-subtitle>Save the selected tracks as a new Spotify playlist</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
   </div>
 </div>

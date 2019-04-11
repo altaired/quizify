@@ -19,6 +19,17 @@ export class HistoryHostService {
     this.games = 0;
   }
 
+  resetRounds(){
+    this.games = 0;
+  }
+  resetGame(){
+    this.tracks = [];
+    this.categories = [];
+    this.pickers = [];
+    this.introduced = false;
+    this.games = 0;
+  }
+
   get playedTracks(){
     return this.tracks;
   }
