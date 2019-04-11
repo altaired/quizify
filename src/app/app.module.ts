@@ -50,8 +50,8 @@ import { CategoryHostService } from './services/host/category-host.service';
 import { HistoryHostService } from './services/host/history-host.service';
 import { AnswerComponent } from './host/answer/answer.component';
 import { EndScreenComponent } from './host/end-screen/end-screen.component';
-import {CdkDropList} from '@angular/cdk/drag-drop';
 import { ErrorService } from './services/error.service';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -75,7 +75,7 @@ import { ErrorService } from './services/error.service';
     ResultsComponent,
     AnswerComponent,
     EndScreenComponent,
-    CdkDropList,
+    
 
   ],
   imports: [
@@ -105,6 +105,7 @@ import { ErrorService } from './services/error.service';
     MatSliderModule,
     MatButtonToggleModule,
     QRCodeModule,
+    DragDropModule,
     
   ],
   providers: [

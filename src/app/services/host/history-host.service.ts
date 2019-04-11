@@ -52,6 +52,6 @@ export class HistoryHostService {
   }
 
   get finished(): boolean {
-    return this.games >= 2;
+    return this.games >= 1;
   }
 }
