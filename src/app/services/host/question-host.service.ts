@@ -188,6 +188,7 @@ export class QuestionHostService {
         } else {
           const result: PlayerResult = {
             id: player.uid,
+            question: '',
             first: false,
             firstValue: '',
             second: false,

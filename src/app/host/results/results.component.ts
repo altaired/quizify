@@ -18,16 +18,21 @@ export class ResultsComponent implements OnInit {
   constructor(
     private state: StateHostService,
     private question: QuestionHostService
-    ){ 
-      this.results$ = this.question.result$;
-    }
+  ) {
+    this.track$ = this.question.track$.pipe(filter(t => t));
+    this.results$ = this.question.result$.pipe(
+      filter(res => res ? true : false),
+      filter(res => {
+        return (res.length > 0 && res[0].question === this.question.track$.getValue().track.id);
+      }));
+    this.players$ = this.state.state$.pipe(
+      filter(st => st.state ? true : false),
+      map(st => Object.values(st.players))
+    );
+  }
 
   ngOnInit() {
-    this.track$ = this.question.track$.pipe(filter(t => t))
-    this.players$ = this.state.state$.pipe(
-      filter(state => state.state ? true : false),
-      map(state => Object.values(state.players))
-    );
+
   }
 
   getPlayerResult(player: Player, results: any[]) {
