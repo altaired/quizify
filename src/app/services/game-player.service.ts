@@ -61,6 +61,16 @@ export class GamePlayerService {
     });
   }
 
+  reconnect(): boolean {
+    const code = window.localStorage.getItem('game_code');
+    if (code !== '') {
+      this.initGame(code);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   private addPlayer(player: Player, gameCode: string) {
     this.log('Adding player to game with code ' + gameCode);
     this.db.list('games/' + gameCode + '/players').push(player);
@@ -68,6 +78,7 @@ export class GamePlayerService {
   }
 
   private initGame(gameCode: string) {
+    window.localStorage.setItem('game_code', gameCode);
     this.gameCode$.next(gameCode);
     this.state$ = this.gameCode$
       .pipe(
@@ -171,6 +182,10 @@ export class GamePlayerService {
     });
   }
 
+  /**
+   * Logs to the console, prepending a file specific prefix
+   * @param msg The message to log
+   */
   private log(msg: string) {
     console.log('[Player][Game] ' + msg);
   }

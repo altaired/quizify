@@ -51,6 +51,7 @@ import { HistoryHostService } from './services/host/history-host.service';
 import { AnswerComponent } from './host/answer/answer.component';
 import { EndScreenComponent } from './host/end-screen/end-screen.component';
 import {CdkDropList} from '@angular/cdk/drag-drop';
+import { ErrorService } from './services/error.service';
 
 
 @NgModule({
@@ -112,7 +113,8 @@ import {CdkDropList} from '@angular/cdk/drag-drop';
     AngularFireDatabaseModule,
     GameHostService,
     StateHostService,
-    HistoryHostService
+    HistoryHostService,
+    ErrorService
   ],
   bootstrap: [AppComponent],
   entryComponents: [JoinDialogComponent],

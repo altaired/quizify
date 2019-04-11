@@ -1,12 +1,31 @@
 import { Injectable } from '@angular/core';
 import { SpotifyService } from '../spotify.service';
-import { Observable, combineLatest, of, merge, interval, timer, BehaviorSubject, Subject } from 'rxjs';
-import { switchMap, map, filter, take, delay, tap, takeWhile, share, takeUntil } from 'rxjs/operators';
+import {
+  Observable,
+  combineLatest,
+  of,
+  merge,
+  interval,
+  timer,
+  BehaviorSubject,
+  Subject
+} from 'rxjs';
+import {
+  switchMap,
+  map,
+  filter,
+  take,
+  delay,
+  tap,
+  takeWhile,
+  share,
+  takeUntil
+} from 'rxjs/operators';
 import { maxBy, has } from 'lodash';
 import { HistoryHostService } from './history-host.service';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { PlaybackService } from '../playback.service';
-import { Player, Game, GameState } from 'src/app/models/state';
+import { Player } from 'src/app/models/state';
 import { StateHostService } from './state-host.service';
 
 export const QUESTION_MAX_TIMER = 120;
@@ -43,9 +62,9 @@ export class QuestionHostService {
         switchMap(res => this.pickRandomPlaylist(res)),
         map(res => this.pickRandomTrack(res)),
         filter(track => track ? true : false),
-        switchMap(t => {
-          return combineLatest(of(t), this.spotify.getRelatedArtists(t.track.artists[0].id), this.spotify.getArtist(t.track.artists[0].id));
-        }),
+        switchMap(t =>
+          combineLatest(of(t), this.spotify.getRelatedArtists(t.track.artists[0].id), this.spotify.getArtist(t.track.artists[0].id))
+        ),
         take(1)
       ).subscribe(([track, relatedArtists, selectedTrackArtist]) => {
         const options = relatedArtists.artists.filter(relatedArtist =>
@@ -116,7 +135,7 @@ export class QuestionHostService {
       takeWhile(() => !started),
       takeUntil(this.complete$),
       tap((state: any) => {
-        if (state.is_playing) {
+        if (has(state, 'is_playing') && state.is_playing) {
           this.log('Track is playing');
           started = true;
           this.timer$.next(this.questionTimer);
@@ -146,6 +165,7 @@ export class QuestionHostService {
           const response = player.response;
           const result: PlayerResult = {
             id: player.uid,
+            question: track.track.id,
             first: false,
             firstValue: '',
             second: false,
@@ -211,7 +231,7 @@ export class QuestionHostService {
     );
   }
 
-  autocomplete(q: string[], track: string): Observable<string[]> {
+  private autocomplete(q: string[], track: string): Observable<string[]> {
     this.log('Autocompleting track responses...');
     const filtered = q.filter(st => st !== '');
     if (filtered.length > 0) {
@@ -235,7 +255,7 @@ export class QuestionHostService {
 
   }
 
-  clear() {
+  private clear() {
     this.log('Clearing response data...');
     this.state.code$.pipe(take(1)).subscribe(code => {
       this.db.object(`games/${code}/playerDisplay`).remove();
@@ -248,7 +268,7 @@ export class QuestionHostService {
     });
   }
 
-  get allPlayersDone(): Observable<Player[]> {
+  private get allPlayersDone(): Observable<Player[]> {
     return combineLatest(this.track$, this.state.players$).pipe(
       filter(([track, players]) => players.every(p => {
         if (p.response ? true : false) {
@@ -263,7 +283,7 @@ export class QuestionHostService {
     );
   }
 
-  get timesUP(): Observable<number> {
+  private get timesUP(): Observable<number> {
     return this.timer$.pipe(
       switchMap(t => t),
       filter(time => time === QUESTION_MAX_TIMER),
@@ -272,21 +292,26 @@ export class QuestionHostService {
   }
 
   private complete() {
-    this.log('Starting result timer')
-    const resultTime = 20;
+    const resultTime = 25;
+    this.log('Starting result timer for ' + resultTime + ' seconds');
     timer(1000, 1000).pipe(
       takeWhile(n => n < resultTime),
       filter(n => n === resultTime - 1)
     ).subscribe(() => this.complete$.next(''));
   }
 
-  log(msg: string) {
+  /**
+   * Logs to the console, prepending a file specific prefix
+   * @param msg The message to log
+   */
+  private log(msg: string) {
     console.log('[Host][Question] ' + msg);
   }
 }
 
 export interface PlayerResult {
   id: string;
+  question: string;
   first: Boolean;
   firstValue: string;
   second: Boolean;
