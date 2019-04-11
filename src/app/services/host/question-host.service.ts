@@ -19,6 +19,7 @@ export class QuestionHostService {
   complete$ = new Subject<string>();
 
   track$ = new BehaviorSubject<any>(null);
+  artists$ = new BehaviorSubject<any[]>(null);
   timer$ = new BehaviorSubject<Observable<number>>(null);
   result$ = new BehaviorSubject<any[]>(null);
 
@@ -88,6 +89,7 @@ export class QuestionHostService {
 
   private distribute(t: any, options: any[]) {
     this.track$.next(t);
+    this.artists$.next(options);
     this.state.code$.pipe(take(1)).subscribe(code => {
       this.log('Track received' + t.track.name);
       this.db.object('games/' + code + '/playerDisplay/question').set({
@@ -137,7 +139,7 @@ export class QuestionHostService {
   private observe() {
     this.log('Activated response observation');
 
-    this.end.subscribe(([players, track, queries]) => {
+    this.end.subscribe(([players, track, artists, queries]) => {
       this.log('Checking all responses...');
       this.result$.next(players.map(player => {
         if (has(player, 'response')) {
@@ -145,9 +147,13 @@ export class QuestionHostService {
           const result: PlayerResult = {
             id: player.uid,
             first: false,
-            second: false
+            firstValue: '',
+            second: false,
+            secondValue: '',
           };
           if (response.done) {
+            result.firstValue = has(response, 'first') ? artists.map(a => a.id).find(a => a.id === response.first) : '';
+            result.secondValue = has(response, 'second') ? response.second : '';
             if (response.first === track.track.artists[0].id) {
               result.first = true;
             }
@@ -160,7 +166,9 @@ export class QuestionHostService {
           const result: PlayerResult = {
             id: player.uid,
             first: false,
-            second: false
+            firstValue: '',
+            second: false,
+            secondValue: ''
           };
           return result;
         }
@@ -179,11 +187,17 @@ export class QuestionHostService {
       tap(() => this.log('Game ended (times up or all players responded)')),
       tap(() => this.state.changeState('RESULT')),
       delay(2500),
-      switchMap(() => combineLatest(this.state.players$, this.track$).pipe(take(1))),
-      switchMap(([players, track]) => {
+      switchMap(() => combineLatest(
+        this.state.players$,
+        this.track$,
+        this.artists$
+      ).pipe(take(1))
+      ),
+      switchMap(([players, track, artists]) => {
         return combineLatest(
           of(players),
           of(track),
+          of(artists),
           this.autocomplete(
             players.filter(p => has(p.response, 'second')).map(p => p.response.second),
             track.track.id
@@ -271,5 +285,7 @@ export class QuestionHostService {
 export interface PlayerResult {
   id: string;
   first: Boolean;
+  firstValue: string;
   second: Boolean;
+  secondValue: string;
 }

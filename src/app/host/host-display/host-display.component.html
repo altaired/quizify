@@ -1,9 +1,11 @@
+<div class="container-fluid">
+  <div class="col-12 margin-bottom margin-top">
+    <app-playback></app-playback>
+  </div>
+</div>
+
 <div class="container-fluid" [ngSwitch]="gameState$ | async">
   <div class="row">
-    <div class="col-12 margin-bottom margin-top">
-      <app-playback></app-playback>
-    </div>
-
     <div class="col-12">
       <app-welcome *ngSwitchCase="'WELCOME'" [adminUID$]="adminUID$" [gameCode$]="gameCode$" [players$]="players$">
       </app-welcome>
