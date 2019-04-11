@@ -52,7 +52,7 @@ export class QuestionHostService {
           track.track.artists.every(trackArtist => relatedArtist.id !== trackArtist.id)
         ).slice(0, 3);
         options.push(selectedTrackArtist);
-        this.history.addTrack(track.track.id);
+        this.history.addTrack(track);
         this.distribute(track, options);
       });
   }
@@ -273,7 +273,7 @@ export class QuestionHostService {
 
   private complete() {
     this.log('Starting result timer')
-    const resultTime = 1000;
+    const resultTime = 20;
     timer(1000, 1000).pipe(
       takeWhile(n => n < resultTime),
       filter(n => n === resultTime - 1)

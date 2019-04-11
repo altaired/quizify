@@ -49,6 +49,8 @@ import { WelcomeHostService } from './services/host/welcome-host.service';
 import { CategoryHostService } from './services/host/category-host.service';
 import { HistoryHostService } from './services/host/history-host.service';
 import { AnswerComponent } from './host/answer/answer.component';
+import { EndScreenComponent } from './host/end-screen/end-screen.component';
+import {CdkDropList} from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -71,6 +73,8 @@ import { AnswerComponent } from './host/answer/answer.component';
     IntroComponent,
     ResultsComponent,
     AnswerComponent,
+    EndScreenComponent,
+    CdkDropList,
 
   ],
   imports: [
@@ -100,6 +104,7 @@ import { AnswerComponent } from './host/answer/answer.component';
     MatSliderModule,
     MatButtonToggleModule,
     QRCodeModule,
+    
   ],
   providers: [
     AngularFireModule,

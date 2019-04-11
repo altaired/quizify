@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class HistoryHostService {
 
-  private tracks: string[];
+  private tracks: any[];
   private categories: string[];
   private pickers: string[];
   introduced: boolean;
@@ -19,12 +19,16 @@ export class HistoryHostService {
     this.games = 0;
   }
 
-  addTrack(id: string) {
-    this.tracks.push(id);
+  get playedTracks(){
+    return this.tracks;
+  }
+
+  addTrack(track: any) {
+    this.tracks.push(track);
   }
 
   validateTrack(id: string) {
-    return !this.tracks.some(t => t === id);
+    return !this.tracks.some(t => t.track.id === id);
   }
 
   addCategory(id: string) {
@@ -48,6 +52,6 @@ export class HistoryHostService {
   }
 
   get finished(): boolean {
-    return this.games >= 3;
+    return this.games >= 2;
   }
 }
