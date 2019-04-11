@@ -254,9 +254,11 @@ export class QuestionHostService {
   }
 
   private complete() {
+    this.log('Starting result timer')
+    const resultTime = 1000;
     timer(1000, 1000).pipe(
-      takeWhile(n => n < 15),
-      filter(n => n === 14)
+      takeWhile(n => n < resultTime),
+      filter(n => n === resultTime - 1)
     ).subscribe(() => this.complete$.next(''));
   }
 

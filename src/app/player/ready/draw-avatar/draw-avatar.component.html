@@ -1,10 +1,11 @@
-<div class="justify-content-center">
+
   <div class="row canvas-div justify-content-center">
     <canvas class="canvas" #canvas height="300px" width="300px">
     </canvas>
   </div>
-
-  <div class="row col-12 toggles-div justify-content-center  margin-top">
+<div class="row margin-top margin-bottom">
+  <div class=" col-12 toggles-div">
+      <div class='row justify-content-center'>
     <mat-button-toggle-group #groupColor="matButtonToggleGroup" (change)="changeColor($event)" >
       <mat-button-toggle value="black">
         <mat-icon>color_lens</mat-icon>
@@ -19,8 +20,10 @@
         <mat-icon class="blue">color_lens</mat-icon>
       </mat-button-toggle>
     </mat-button-toggle-group>
+      </div>
   </div>
-  <div class="row col-12 toggles-div justify-content-center">
+  <div class="col-12 toggles-div">
+    <div class='row justify-content-center'>
     <mat-button-toggle-group #groupSize="matButtonToggleGroup" (change)="changeSize($event)">
     <mat-button-toggle value=2>
       <mat-icon class="size-2">lens</mat-icon>
@@ -35,9 +38,12 @@
       <mat-icon>lens</mat-icon>
     </mat-button-toggle>
   </mat-button-toggle-group >
+    </div>
 </div>
 
-<div class="row col-12 toggles-div justify-content-center  margin-bottom">
+<div class="col-12 toggles-div">
+    <div class='row justify-content-center'>
       <button mat-stroked-button  (click) = "clearCanvas()">Clear</button>
   </div>
+</div>
 </div>

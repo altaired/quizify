@@ -13,12 +13,14 @@ import { QuestionHostService } from 'src/app/services/host/question-host.service
 export class ResultsComponent implements OnInit {
   track$: Observable<any>
   players$: Observable<Player[]>;
-  results: Observable<any>;
+  results$: Observable<any>;
 
   constructor(
     private state: StateHostService,
     private question: QuestionHostService
-    ){ }
+    ){ 
+      this.results$ = this.question.result$;
+    }
 
   ngOnInit() {
     this.track$ = this.question.track$.pipe(filter(t => t))
@@ -26,8 +28,10 @@ export class ResultsComponent implements OnInit {
       filter(state => state.state ? true : false),
       map(state => Object.values(state.players))
     );
+  }
 
-
+  getPlayerResult(player: Player, results: any[]) {
+    return results.find(r => r.id === player.uid);
   }
 
 }
