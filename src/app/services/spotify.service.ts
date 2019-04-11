@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { switchMap } from 'rxjs/operators';
 import { CategoriesR } from '../models/spotify';
 
 /**
