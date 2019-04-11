@@ -3,7 +3,6 @@ import { SpotifyService } from 'src/app/services/spotify.service';
 import { GameHostService } from 'src/app/services/host/game-host.service';
 import { Observable } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
-import { CategoryObj } from 'src/app/models/spotify';
 import { CategoryState, Option } from 'src/app/models/state';
 import { StateHostService } from 'src/app/services/host/state-host.service';
 

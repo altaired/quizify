@@ -135,7 +135,7 @@ export class QuestionHostService {
       takeWhile(() => !started),
       takeUntil(this.complete$),
       tap((state: any) => {
-        if (state.is_playing) {
+        if (has(state, 'is_playing') && state.is_playing) {
           this.log('Track is playing');
           started = true;
           this.timer$.next(this.questionTimer);
@@ -165,6 +165,7 @@ export class QuestionHostService {
           const response = player.response;
           const result: PlayerResult = {
             id: player.uid,
+            question: track.track.id,
             first: false,
             firstValue: '',
             second: false,
@@ -310,6 +311,7 @@ export class QuestionHostService {
 
 export interface PlayerResult {
   id: string;
+  question: string;
   first: Boolean;
   firstValue: string;
   second: Boolean;

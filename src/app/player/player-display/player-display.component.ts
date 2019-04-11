@@ -5,6 +5,7 @@ import { Observable, combineLatest } from 'rxjs';
 import { map, filter, take } from 'rxjs/operators';
 import { Game } from '../../models/state';
 import { AuthService } from 'src/app/services/auth.service';
+import { has } from 'lodash';
 
 @Component({
   selector: 'app-player-display',
@@ -17,6 +18,8 @@ export class PlayerDisplayComponent implements OnInit {
   adminUID$: Observable<string>;
   state$: Observable<Game>;
 
+  private retries = 0;
+
   isCategoryPicker$: Observable<boolean>;
 
   constructor(
@@ -26,13 +29,27 @@ export class PlayerDisplayComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.state$ = this.game.state$;
-    this.displayName$ = this.game.displayName$;
-    this.adminUID$ = this.state$.pipe(
-      filter(state => state.admin ? true : false),
-      map(state => state.admin.playerUID)
-    );
-    this.isCategoryPicker$ = this.game.isCategoryPicker$;
+    this.init();
+  }
+
+  private init() {
+    if (this.retries < 2) {
+      if (has(this.game, 'state$')) {
+        this.state$ = this.game.state$;
+        this.displayName$ = this.game.displayName$;
+        this.adminUID$ = this.state$.pipe(
+          filter(state => state.admin ? true : false),
+          map(state => state.admin.playerUID)
+        );
+        this.isCategoryPicker$ = this.game.isCategoryPicker$;
+      } else {
+        this.game.reconnect();
+        this.retries += 1;
+        this.init();
+      }
+    } else {
+      console.error('Could not reconnect');
+    }
   }
 
   startGame() {

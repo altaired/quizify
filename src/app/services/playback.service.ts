@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
-import { switchMap, take, tap } from 'rxjs/operators';
+import { Observable, BehaviorSubject, combineLatest, of } from 'rxjs';
+import { switchMap, take, retry, catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { ErrorService } from './error.service';
 
 /**
  * Takes care of playing at the Playback SDK instance
@@ -20,7 +21,8 @@ export class PlaybackService {
 
   constructor(
     private auth: AuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    private error: ErrorService
   ) { }
 
   /**
@@ -31,7 +33,11 @@ export class PlaybackService {
     const url = this.SPOTIFY_BASE_URL + '/me/player/devices';
     return this.auth.authentication.pipe(
       switchMap(headers => {
-        return this.http.get(url, { headers: headers });
+        return this.http.get(url, { headers: headers })
+          .pipe(
+            retry(1),
+            catchError(this.handleError)
+          );
       })
     );
   }
@@ -53,7 +59,11 @@ export class PlaybackService {
   state(): Observable<any> {
     const url = this.SPOTIFY_BASE_URL + '/me/player';
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get(url, { headers: headers });
+      return this.http.get(url, { headers: headers })
+        .pipe(
+          retry(1),
+          catchError(this.handleError)
+        );
     }));
   }
 
@@ -70,7 +80,12 @@ export class PlaybackService {
         headers: headers, params: {
           device_id: id
         }
-      }))
+      })
+        .pipe(
+          retry(1),
+          catchError(this.handleError)
+        )
+      )
     );
   }
 
@@ -81,7 +96,11 @@ export class PlaybackService {
   pause(): Observable<any> {
     const url = this.SPOTIFY_BASE_URL + '/me/player/pause';
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.put(url, undefined, { headers: headers });
+      return this.http.put(url, undefined, { headers: headers })
+        .pipe(
+          retry(1),
+          catchError(this.handleError)
+        );
     }));
   }
 
@@ -93,7 +112,11 @@ export class PlaybackService {
     return this.deviceID.pipe(take(1), switchMap(id => {
       const url = this.SPOTIFY_BASE_URL + '/me/player';
       return this.auth.authentication.pipe(switchMap(headers => {
-        return this.http.put(url, { 'device_ids': [id] }, { headers: headers });
+        return this.http.put(url, { 'device_ids': [id] }, { headers: headers })
+          .pipe(
+            retry(1),
+            catchError(this.handleError)
+          );
       }));
     }));
   }
@@ -105,6 +128,11 @@ export class PlaybackService {
    */
   private log(msg: string) {
     console.log('[Host][Spotify] ' + msg);
+  }
+
+  private handleError(error: HttpErrorResponse): Observable<any> {
+    this.error.http(error);
+    return of(null);
   }
 
 }

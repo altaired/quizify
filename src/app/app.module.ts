@@ -49,6 +49,7 @@ import { WelcomeHostService } from './services/host/welcome-host.service';
 import { CategoryHostService } from './services/host/category-host.service';
 import { HistoryHostService } from './services/host/history-host.service';
 import { AnswerComponent } from './host/answer/answer.component';
+import { ErrorService } from './services/error.service';
 
 
 @NgModule({
@@ -107,7 +108,8 @@ import { AnswerComponent } from './host/answer/answer.component';
     AngularFireDatabaseModule,
     GameHostService,
     StateHostService,
-    HistoryHostService
+    HistoryHostService,
+    ErrorService
   ],
   bootstrap: [AppComponent],
   entryComponents: [JoinDialogComponent],

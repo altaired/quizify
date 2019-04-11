@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { AuthService } from './auth.service';
-import { HttpClient } from '@angular/common/http';
-import { switchMap } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { switchMap, catchError, retry } from 'rxjs/operators';
 import { CategoriesR } from '../models/spotify';
+import { ErrorService } from './error.service';
 
 /**
  * Communicates with Spotifys WEB API
@@ -20,7 +21,8 @@ export class SpotifyService {
 
   constructor(
     private auth: AuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    private error: ErrorService
   ) { }
 
   /**
@@ -31,7 +33,11 @@ export class SpotifyService {
   getTrack(id: string): Observable<any> {
     const url = `${this.SPOTIFY_BASE_URL}/tracks/${id}`;
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<any>(url, { headers: headers });
+      return this.http.get<any>(url, { headers: headers })
+        .pipe(
+          retry(1),
+          catchError(this.handleError)
+        );
     }));
   }
 
@@ -43,7 +49,11 @@ export class SpotifyService {
     const url = `${this.SPOTIFY_BASE_URL}/browse/categories/`;
     return this.auth.authentication.pipe(switchMap(headers => {
       console.log('[SpotifyService] Fetching categories...');
-      return this.http.get<CategoriesR>(url, { headers: headers });
+      return this.http.get<CategoriesR>(url, { headers: headers })
+        .pipe(
+          retry(1),
+          catchError(this.handleError)
+        );
     }));
   }
 
@@ -60,7 +70,7 @@ export class SpotifyService {
           country: 'SE',
           locale: 'sv_SE'
         }
-      });
+      }).pipe(retry(1), catchError(this.handleError));
     }));
   }
 
@@ -72,7 +82,11 @@ export class SpotifyService {
   getCategoryPlaylists(id: string): Observable<any> {
     const url = `${this.SPOTIFY_BASE_URL}/browse/categories/${id}/playlists`;
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<any>(url, { headers: headers });
+      return this.http.get<any>(url, { headers: headers })
+        .pipe(
+          retry(1),
+          catchError(this.handleError)
+        );
     }));
   }
 
@@ -84,7 +98,11 @@ export class SpotifyService {
   getArtist(id: string): Observable<any> {
     const url = `${this.SPOTIFY_BASE_URL}/artists/${id}`;
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<any>(url, { headers: headers });
+      return this.http.get<any>(url, { headers: headers })
+        .pipe(
+          retry(1),
+          catchError(this.handleError)
+        );
     }));
   }
 
@@ -96,7 +114,11 @@ export class SpotifyService {
   getRelatedArtists(id: string): Observable<any> {
     const url = `${this.SPOTIFY_BASE_URL}/artists/${id}/related-artists`;
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<any>(url, { headers: headers });
+      return this.http.get<any>(url, { headers: headers })
+        .pipe(
+          retry(1),
+          catchError(this.handleError)
+        );
     }));
   }
 
@@ -110,7 +132,7 @@ export class SpotifyService {
     return this.auth.authentication.pipe(switchMap(headers => {
       return this.http.get<any>(url, {
         headers: headers
-      });
+      }).pipe(retry(1), catchError(this.handleError));
     }));
   }
 
@@ -129,8 +151,13 @@ export class SpotifyService {
           type: 'track',
           limit: '10'
         }
-      });
+      }).pipe(retry(1), catchError(this.handleError));
     }));
+  }
+
+  private handleError(error: HttpErrorResponse): Observable<any> {
+    this.error.http(error);
+    return of(null);
   }
 
 }
