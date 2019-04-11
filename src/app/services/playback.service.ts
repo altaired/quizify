@@ -31,6 +31,7 @@ export class PlaybackService {
 
   updateDeviceID(id: string) {
     this.deviceID.next(id);
+    this.log('Updated device id to ' + id);
   }
 
   state() {
@@ -66,6 +67,10 @@ export class PlaybackService {
         return this.http.put(url, { 'device_ids': [id] }, { headers: headers });
       }));
     }));
+  }
+
+  private log(msg: string) {
+    console.log('[Host][Spotify] ' + msg);
   }
 
 }
