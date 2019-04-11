@@ -8,7 +8,7 @@
       <mat-card class="col-12" *ngSwitchCase="true">
         <button mat-raised-button (click)="avatar.saveImg(); start()">Start Game</button>
       </mat-card>
-      <mat-card *ngSwitchCase="false">
+      <mat-card class="col-12" *ngSwitchCase="false">
           <button mat-raised-button (click)="avatar.saveImg()">Save Avatar</button>
       </mat-card>
   </div>

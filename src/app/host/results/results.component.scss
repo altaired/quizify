@@ -1,0 +1,33 @@
+div.upper {
+
+    position: absolute;
+    top: 25%;
+    right: 0%;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid black
+  }
+  div.lower {
+
+    position: absolute;
+    top: 55%;
+    right: 0%;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid black
+  }
+
+  div.relative{
+      position: relative;
+      display: inline-flex;
+  }
+
+  div.right{
+      background-color: green;
+  }
+
+  div.wrong{
+      background-color: red;
+  }
