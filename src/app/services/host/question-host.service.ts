@@ -1,12 +1,31 @@
 import { Injectable } from '@angular/core';
 import { SpotifyService } from '../spotify.service';
-import { Observable, combineLatest, of, merge, interval, timer, BehaviorSubject, Subject } from 'rxjs';
-import { switchMap, map, filter, take, delay, tap, takeWhile, share, takeUntil } from 'rxjs/operators';
+import {
+  Observable,
+  combineLatest,
+  of,
+  merge,
+  interval,
+  timer,
+  BehaviorSubject,
+  Subject
+} from 'rxjs';
+import {
+  switchMap,
+  map,
+  filter,
+  take,
+  delay,
+  tap,
+  takeWhile,
+  share,
+  takeUntil
+} from 'rxjs/operators';
 import { maxBy, has } from 'lodash';
 import { HistoryHostService } from './history-host.service';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { PlaybackService } from '../playback.service';
-import { Player, Game, GameState } from 'src/app/models/state';
+import { Player } from 'src/app/models/state';
 import { StateHostService } from './state-host.service';
 
 export const QUESTION_MAX_TIMER = 120;
