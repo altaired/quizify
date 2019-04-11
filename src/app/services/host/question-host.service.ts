@@ -152,7 +152,10 @@ export class QuestionHostService {
             secondValue: '',
           };
           if (response.done) {
-            result.firstValue = has(response, 'first') ? artists.map(a => a.id).find(a => a.id === response.first) : '';
+            if (has(response, 'first')) {
+              const artist = artists.find(a => a.id === response.first);
+              result.firstValue = artist ? artist.name : '';
+            }
             result.secondValue = has(response, 'second') ? response.second : '';
             if (response.first === track.track.artists[0].id) {
               result.first = true;
