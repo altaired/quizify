@@ -1,30 +1,25 @@
-<app-playback></app-playback>
-
-<div class=container-fluid [ngSwitch]="gameState$ | async">
-  <app-welcome *ngSwitchCase="'WELCOME'" [adminUID$]="adminUID$" [gameCode$]="gameCode$" [players$]="players$">
-  </app-welcome>
-  <app-intro *ngSwitchCase="'INTRO'" (completed)="introCallback()"></app-intro>
-  <app-category-list *ngSwitchCase="'PICK_CATEGORY'"></app-category-list>
-  <div *ngSwitchCase="'ANSWER'">
-    <div class="col-12 margin-bottom">
-      <mat-card>
-        <mat-progress-bar *ngIf="timer$ | async as timer" mode="determinate" [value]="timer">
-        </mat-progress-bar>
-      </mat-card>
+<div class="container-fluid" [ngSwitch]="gameState$ | async">
+  <div class="row">
+    <div class="col-12 margin-bottom margin-top">
+      <app-playback></app-playback>
     </div>
 
     <div class="col-12">
-      <mat-card>
-        <div *ngIf="players$ | async as players" class="row">
-          <div class="col-12">
-            <h3 mat-subheader>Current Players</h3>
-          </div>
-          <div *ngFor="let p of players" class="p-2">
-            <app-player-card [player]="p" [isDone]="p.response?.done"></app-player-card>
-          </div>
-        </div>
-      </mat-card>
+      <app-welcome *ngSwitchCase="'WELCOME'" [adminUID$]="adminUID$" [gameCode$]="gameCode$" [players$]="players$">
+      </app-welcome>
+    </div>
+    <div class="col-12">
+      <app-intro *ngSwitchCase="'INTRO'" (completed)="introCallback()"></app-intro>
+    </div>
+
+    <div class="col-12">
+      <app-category-list *ngSwitchCase="'PICK_CATEGORY'"></app-category-list>
+    </div>
+    <div class="col-12">
+      <app-answer *ngSwitchCase="'ANSWER'" [timer$]="timer$" [players$]="players$"></app-answer>
+    </div>
+    <div class="col-12">
+      <app-results *ngSwitchCase="'RESULT'"></app-results>
     </div>
   </div>
-  <app-results *ngSwitchCase="'RESULT'"></app-results>
 </div>

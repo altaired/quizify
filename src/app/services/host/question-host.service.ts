@@ -196,17 +196,18 @@ export class QuestionHostService {
 
   autocomplete(q: string[], track: string): Observable<string[]> {
     this.log('Autocompleting track responses...');
-    if (q.length > 0) {
+    const filtered = q.filter(st => st !== '');
+    if (filtered.length > 0) {
       return combineLatest(
-        q.map(query => combineLatest(of(query), this.spotify.searchTrack(query)))
+        filtered.map(query => combineLatest(of(query), this.spotify.searchTrack(query)))
       ).pipe(
         takeUntil(this.complete$),
         map(res => {
-          const filtered = res.filter(pq => {
+          const filteredResult = res.filter(pq => {
             const trackResult: any[] = pq[1].tracks.items;
             return trackResult.some(t => t.id === track);
           });
-          return filtered.map(f => f[0]);
+          return filteredResult.map(f => f[0]);
         }),
         tap(() => this.log('Autocompletion of track responses completed'))
       );

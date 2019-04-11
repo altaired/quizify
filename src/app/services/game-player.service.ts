@@ -6,6 +6,7 @@ import { take, map, filter, switchMap, share, finalize, last, tap } from 'rxjs/o
 import { Player, Game, CategoryState } from '../models/state';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { MatSnackBar } from '@angular/material';
 
 /**
  * Handles the players state during the game
@@ -28,23 +29,24 @@ export class GamePlayerService {
     private storage: AngularFireStorage
   ) { }
 
-  join(gameCode: string, name: string) {
+  join(gameCode: string, name: string): Promise<Boolean> {
+    const uGameCode = gameCode.toUpperCase();
     return new Promise<Boolean>((resolve, reject) => {
       combineLatest(
         this.auth.user$.pipe(take(1), map(user => user.uid)),
-        this.db.object<Game>('games/' + gameCode).valueChanges().pipe(take(1))
+        this.db.object<Game>('games/' + uGameCode).valueChanges().pipe(take(1))
       ).pipe(take(1)).subscribe(([uid, game]) => {
         if (game && game.state === 'WELCOME') {
           // Game is still in WELCOME mode => Players can join the game
-          console.log(game.players);
-
           if (!game.players) {
+            this.log('First player joined the game');
             // First player to join
-            this.addPlayer({ displayName: name, uid: uid }, gameCode);
+            this.addPlayer({ displayName: name, uid: uid }, uGameCode);
             resolve(true);
           } else if (Object.values(game.players).every(player => player.uid !== uid)) {
             // There are players in game, check for duplicates
-            this.initGame(gameCode);
+            this.log('Joining game');
+            this.addPlayer({ displayName: name, uid: uid }, uGameCode);
             resolve(true);
           } else {
             console.error('Player already in game');
@@ -52,6 +54,7 @@ export class GamePlayerService {
           }
         } else {
           console.error('Game not available');
+
           reject('Game not available');
         }
       });
@@ -59,6 +62,7 @@ export class GamePlayerService {
   }
 
   private addPlayer(player: Player, gameCode: string) {
+    this.log('Adding player to game with code ' + gameCode);
     this.db.list('games/' + gameCode + '/players').push(player);
     this.initGame(gameCode);
   }
@@ -165,6 +169,10 @@ export class GamePlayerService {
         console.log('Updated avatar');
       }
     });
+  }
+
+  private log(msg: string) {
+    console.log('[Player][Game] ' + msg);
   }
 
 }

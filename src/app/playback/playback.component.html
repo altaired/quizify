@@ -1,7 +1,8 @@
-<div class="col-12">
-  <div [ngSwitch]="playing$ | async">
-    <mat-icon *ngSwitchCase="true">volume_up</mat-icon>
-    <mat-icon *ngSwitchCase="false">volume_mute</mat-icon>
+<div class="row">
+  <div class="col-12" *ngIf="playing$ | async as playing">
+    <mat-card>
+      <mat-slider max="1" min="0" step="0.1" value="0.4" [disabled]="!playing" (change)="changeVolume($event)">
+      </mat-slider>
+    </mat-card>
   </div>
-  <mat-slider max="1" min="0" step="0.1" (change)="changeVolume($event)"></mat-slider>
 </div>

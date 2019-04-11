@@ -5,7 +5,7 @@ import { filter, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { User } from 'firebase';
 import { GamePlayerService } from '../../services/game-player.service';
-import { MatDialog, MatDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogConfig, MatSnackBar } from '@angular/material';
 import { JoinDialogComponent } from '../../player/join-dialog/join-dialog.component';
 
 @Component({
@@ -21,7 +21,8 @@ export class LoginComponent implements OnInit {
     public dialog: MatDialog,
     private auth: AuthService,
     private router: Router,
-    private player: GamePlayerService
+    private player: GamePlayerService,
+    private snackbar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -44,7 +45,7 @@ export class LoginComponent implements OnInit {
         this.player.join(result.gameCode, result.name).then(success => {
           this.router.navigate(['/game']);
         }).catch(error => {
-          console.error(error);
+          this.snackbar.open(error);
         });
 
       }

@@ -1,12 +1,11 @@
-<mat-grid-list cols="3" rowHeight="350px" *ngIf="options$ | async as options">
+<mat-grid-list cols="3" rowHeight="375" *ngIf="options$ | async as options">
   <mat-grid-tile *ngFor="let category of options">
     <div class="margin-bottom">
       <mat-card>
         <mat-card-header>
-          <div mat-card-avatar></div>
           <mat-card-title>{{category.value}}</mat-card-title>
         </mat-card-header>
-        <img mat-card-image src={{category.image.url}} alt="Category picture">
+        <img mat-card-image [src]=category.image.url alt="Category picture">
       </mat-card>
     </div>
   </mat-grid-tile>

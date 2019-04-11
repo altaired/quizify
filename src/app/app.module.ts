@@ -15,7 +15,8 @@ import {
   MatGridListModule,
   MatButtonToggleModule,
   MatStepperModule,
-  MatSliderModule
+  MatSliderModule,
+  MatSnackBarModule
 } from '@angular/material';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -47,6 +48,7 @@ import { StateHostService } from './services/host/state-host.service';
 import { WelcomeHostService } from './services/host/welcome-host.service';
 import { CategoryHostService } from './services/host/category-host.service';
 import { HistoryHostService } from './services/host/history-host.service';
+import { AnswerComponent } from './host/answer/answer.component';
 
 
 @NgModule({
@@ -68,6 +70,7 @@ import { HistoryHostService } from './services/host/history-host.service';
     OptionsComponent,
     IntroComponent,
     ResultsComponent,
+    AnswerComponent,
 
   ],
   imports: [
@@ -90,6 +93,7 @@ import { HistoryHostService } from './services/host/history-host.service';
     MatFormFieldModule,
     MatInputModule,
     MatCardModule,
+    MatSnackBarModule,
     MatButtonModule,
     MatListModule,
     MatGridListModule,

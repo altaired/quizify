@@ -10,21 +10,21 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class JoinDialogComponent implements OnInit {
 
   form: FormGroup;
-  code : string;
+  code: string;
 
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<JoinDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data :any
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     console.log(this.data);
-    if (this.data){
+    if (this.data) {
       this.code = this.data;
-      
-    }else{
+
+    } else {
       this.code = '';
     }
-   }
+  }
 
   ngOnInit() {
 
@@ -41,6 +41,7 @@ export class JoinDialogComponent implements OnInit {
       this.dialogRef.close(this.form.value);
     }
   }
+
   close() {
     this.dialogRef.close();
   }
