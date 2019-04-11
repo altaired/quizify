@@ -18,13 +18,16 @@
     min-width: 65px;
 }
 .size-2{
-    transform:scale(0.2)
-}
-.size-4{
     transform:scale(0.4)
 }
-.size-7{
+.size-4{
     transform:scale(0.7)
+}
+.size-7{
+    transform:scale(1.0)
+}
+.size-10{
+    transform:scale(1.2)
 }
 
 mat-button-toggle-group {

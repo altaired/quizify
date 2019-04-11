@@ -23,7 +23,7 @@ export class DrawAvatarComponent implements OnInit, AfterViewInit {
     this.element = this.canvas.nativeElement;
     this.context = this.element.getContext('2d');
     this.context.strokeStyle = 'black';
-    this.context.lineWidth = 2;
+    this.context.lineWidth = 4;
     this.element.onmousedown = (cord) => {
       //console.log('mousedown');
       this.mouseIsDown = true;

@@ -1,4 +1,6 @@
-
+<div class="row justify-content-center">
+  <div>Draw your avatar for the game! <mat-icon>brush</mat-icon></div>
+</div>
   <div class="row canvas-div justify-content-center">
     <canvas class="canvas" #canvas height="300px" width="300px">
     </canvas>
@@ -13,7 +15,7 @@
       <mat-button-toggle value="red">
         <mat-icon class="red">color_lens</mat-icon>
       </mat-button-toggle>
-      <mat-button-toggle value="green">
+      <mat-button-toggle value="rgb(0,255,0)">
         <mat-icon class="green">color_lens</mat-icon>
       </mat-button-toggle>
       <mat-button-toggle value="blue">
@@ -25,16 +27,16 @@
   <div class="col-12 toggles-div">
     <div class='row justify-content-center'>
     <mat-button-toggle-group #groupSize="matButtonToggleGroup" (change)="changeSize($event)">
-    <mat-button-toggle value=2>
+    <mat-button-toggle value=4>
       <mat-icon class="size-2">lens</mat-icon>
     </mat-button-toggle>
-    <mat-button-toggle value=4>
+    <mat-button-toggle value=7>
       <mat-icon class="size-4">lens</mat-icon>
     </mat-button-toggle>
-    <mat-button-toggle value=7>
+    <mat-button-toggle value=10>
       <mat-icon class="size-7">lens</mat-icon>
     </mat-button-toggle>
-    <mat-button-toggle class="size-10" value=10>
+    <mat-button-toggle class="size-12" value=10>
       <mat-icon>lens</mat-icon>
     </mat-button-toggle>
   </mat-button-toggle-group >
