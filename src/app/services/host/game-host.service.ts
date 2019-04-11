@@ -92,10 +92,15 @@ export class GameHostService {
       this.log('Stating a new game sequence...');
       this.category.start();
     } else {
+      this.state.changeState('END');
       this.log('Game finished');
     }
   }
 
+  /**
+   * Logs to the console, prepending a file specific prefix
+   * @param msg The message to log
+   */
   private log(msg: string) {
     console.log('[Host][Game] ' + msg);
   }

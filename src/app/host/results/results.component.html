@@ -1,25 +1,33 @@
-
-
 <div *ngIf="track$ | async as track">
- The Right answer was {{track.track.name}} by {{track.track.artists[0].name}}
+  The Right answer was {{track.track.name}} by {{track.track.artists[0].name}}
 </div>
 <div *ngIf="players$ | async as players">
   <div *ngIf="results$ | async as results; else waiting" class="row">
     <div *ngFor="let player of players" class="col-sm-12 col-md-6 col-lg-4">
-        <div *ngIf="getPlayerResult(player, results) as result">
-          
-            <mat-card>
-              <app-player-card [player]="player"></app-player-card>
-              <mat-grid-list cols="2" rowHeight="5:1">
-                <mat-grid-tile><mat-icon class="icon" [color]="result.first ? 'primary' : 'warn'">group</mat-icon> {{result.firstValue}} </mat-grid-tile>
-                <mat-grid-tile><mat-icon class="icon" [color]="result.second ? 'primary' : 'warn'">audiotrack</mat-icon>  {{result.secondValue}} </mat-grid-tile>
-              </mat-grid-list>
-            <!--  <div class="absolute upper row justify-content-center" [ngClass]="{'right': result.first , 'wrong': !result.first}"> <mat-icon class="align-middle ">audiotrack</mat-icon></div> 
+      <div *ngIf="getPlayerResult(player, results) as result">
+
+        <mat-card>
+          <app-player-card [player]="player"></app-player-card>
+          <mat-list>
+            <mat-list-item>
+              <mat-icon mat-list-icon>group</mat-icon>
+              <h4 mat-line>{{result.firstValue}}</h4>
+              <mat-icon *ngIf="result.first">check</mat-icon>
+              <mat-icon color="warn" *ngIf="!result.first">close</mat-icon>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>audiotrack</mat-icon>
+              <h4 mat-line>{{result.secondValue}}</h4>
+              <mat-icon *ngIf="result.second">check</mat-icon>
+              <mat-icon color="warn" *ngIf="!result.second">close</mat-icon>
+            </mat-list-item>
+          </mat-list>
+          <!--  <div class="absolute upper row justify-content-center" [ngClass]="{'right': result.first , 'wrong': !result.first}"> <mat-icon class="align-middle ">audiotrack</mat-icon></div>
               <div class="absolute lower row justify-content-center" [ngClass]="{'right': result.second , 'wrong': !result.second}"><mat-icon>group</mat-icon></div>  -->
-          </mat-card>
+        </mat-card>
+      </div>
     </div>
+    <ng-template #waiting>
+      Waiting for results
+    </ng-template>
   </div>
-  <ng-template #waiting>
-    Waiting for results
-  </ng-template>
-</div>

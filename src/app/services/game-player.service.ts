@@ -171,6 +171,10 @@ export class GamePlayerService {
     });
   }
 
+  /**
+   * Logs to the console, prepending a file specific prefix
+   * @param msg The message to log
+   */
   private log(msg: string) {
     console.log('[Player][Game] ' + msg);
   }

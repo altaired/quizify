@@ -13,7 +13,7 @@ export class IntroComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    timer(5000).subscribe(() => this.complete());
+    timer(15000).subscribe(() => this.complete());
   }
 
   complete() {

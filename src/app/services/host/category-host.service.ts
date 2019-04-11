@@ -93,6 +93,10 @@ export class CategoryHostService {
     this.complete$.next(category);
   }
 
+  /**
+   * Logs to the console, prepending a file specific prefix
+   * @param msg The message to log
+   */
   private log(msg: string) {
     console.log('[Host][Category] ' + msg);
   }
