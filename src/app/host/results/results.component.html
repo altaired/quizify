@@ -11,8 +11,8 @@
             <mat-card>
               <app-player-card [player]="player"></app-player-card>
               <mat-grid-list cols="2" rowHeight="5:1">
-                <mat-grid-tile><mat-icon [ngClass]="{'right': result.first , 'wrong': !result.first}">audiotrack</mat-icon> {{result.first? "Right": "Wrong"}} Song </mat-grid-tile>
-                <mat-grid-tile><mat-icon [ngClass]="{'right': result.second , 'wrong': !result.second}">group</mat-icon>  {{result.second? "Right": "Wrong"}} Artist </mat-grid-tile>
+                <mat-grid-tile><mat-icon class="icon" [color]="result.first ? 'primary' : 'warn'">group</mat-icon> {{result.firstValue}} </mat-grid-tile>
+                <mat-grid-tile><mat-icon class="icon" [color]="result.second ? 'primary' : 'warn'">audiotrack</mat-icon>  {{result.secondValue}} </mat-grid-tile>
               </mat-grid-list>
             <!--  <div class="absolute upper row justify-content-center" [ngClass]="{'right': result.first , 'wrong': !result.first}"> <mat-icon class="align-middle ">audiotrack</mat-icon></div> 
               <div class="absolute lower row justify-content-center" [ngClass]="{'right': result.second , 'wrong': !result.second}"><mat-icon>group</mat-icon></div>  -->
