@@ -64,7 +64,21 @@ export class GameHostService {
     });
   }
 
-   start() {
+  restart() {
+    this.state.code$.pipe(take(1)).subscribe(code => {
+      this.db.object(`games/${code}/admin`).update({ ready: false });
+      this.history.resetGame();
+      this.state.changeState('WELCOME');
+      this.start();
+    });
+  }
+
+  continue() {
+    this.history.resetRounds();
+    this.category.start();
+  }
+
+  private start() {
     this.router.navigate(['display']);
     this.welcome.start();
   }

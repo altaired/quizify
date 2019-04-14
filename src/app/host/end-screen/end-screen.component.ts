@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { HistoryHostService } from 'src/app/services/host/history-host.service';
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { SpotifyService } from 'src/app/services/spotify.service';
 import { CategoryHostService } from 'src/app/services/host/category-host.service';
 import { GameHostService } from 'src/app/services/host/game-host.service';
 import { GameState } from 'src/app/models/state';
 import { StateHostService } from 'src/app/services/host/state-host.service';
-
 
 
 @Component({
@@ -16,47 +15,41 @@ import { StateHostService } from 'src/app/services/host/state-host.service';
 })
 export class EndScreenComponent implements OnInit {
 
-  trackHistory: any[];
-  newPlaylist = [];
+  playedTracks: any[];
+  savedTracks = [];
 
 
   constructor(
     private history: HistoryHostService,
     private spotify: SpotifyService,
-    private category: CategoryHostService,
     private game: GameHostService,
-    private state: StateHostService,
-    ) { }
+  ) { }
 
   ngOnInit() {
-    this.trackHistory = this.history.playedTracks;
+    this.playedTracks = this.history.playedTracks;
   }
 
-  makePlaylist(){
+  makePlaylist() {
     console.log('Making Spotify Playlist')
-    this.spotify.createPlaylist(this.newPlaylist.map(t=> t.track.id))
+    this.spotify.createPlaylist();
   }
-  playMore(){
-    this.history.resetRounds();
-    this.category.start()
+  playMore() {
+    this.game.continue();
   }
-  restartGame(){
-    this.history.resetGame();
-    this.state.changeState('WELCOME');
-    this.game.start();
-
+  restartGame() {
+    this.game.restart();
   }
 
- 
+
 
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       transferArrayItem(event.previousContainer.data,
-                        event.container.data,
-                        event.previousIndex,
-                        event.currentIndex);
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
     }
   }
 }

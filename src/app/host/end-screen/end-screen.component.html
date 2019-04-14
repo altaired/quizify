@@ -1,13 +1,13 @@
 <div class="row">
-    <div class="col-md-6 col-12 bot-mar">
-      <mat-card (click)="playMore()" matRipple>
-        <mat-card-header>
-          <mat-card-title>Continue Playing</mat-card-title>
-          <mat-card-subtitle>Keep playing with the same players</mat-card-subtitle>
-        </mat-card-header>
-      </mat-card>
-    </div>
-<div class="col-md-6 col-12 bot-mar">
+  <div class="col-md-6 col-12 bot-mar">
+    <mat-card (click)="playMore()" matRipple>
+      <mat-card-header>
+        <mat-card-title>Continue Playing</mat-card-title>
+        <mat-card-subtitle>Keep playing with the same players</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </div>
+  <div class="col-md-6 col-12 bot-mar">
     <mat-card (click)="restartGame()" matRipple>
       <mat-card-header>
         <mat-card-title>Restart</mat-card-title>
@@ -23,7 +23,8 @@
 
     <div cdkDropList class="bot-mar" #trackHistoryList="cdkDropList" [cdkDropListData]="trackHistory"
       [cdkDropListConnectedTo]="[newPlaylistList]" class="track-list" (cdkDropListDropped)="drop($event)">
-      <div class="list-box" *ngFor="let track of trackHistory" cdkDrag>{{track.track.name}} - {{track.track.artists[0].name}} </div>
+      <div class="list-box" *ngFor="let track of playedTracks" cdkDrag>{{track.track.name}} -
+        {{track.track.artists[0].name}} </div>
     </div>
   </div>
 
@@ -32,7 +33,8 @@
 
     <div cdkDropList class="bot-mar" #newPlaylistList="cdkDropList" [cdkDropListData]="newPlaylist"
       [cdkDropListConnectedTo]="[trackHistoryList]" class="track-list" (cdkDropListDropped)="drop($event)">
-      <div class="list-box" *ngFor="let track of newPlaylist" cdkDrag>{{track.track.name}} - {{track.track.artists[0].name}}</div>
+      <div class="list-box" *ngFor="let track of savedTracks" cdkDrag>{{track.track.name}} -
+        {{track.track.artists[0].name}}</div>
     </div>
     <mat-card class="top-mar" (click)="makePlaylist()" matRipple>
       <mat-card-header>

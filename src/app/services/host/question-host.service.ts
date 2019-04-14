@@ -67,7 +67,7 @@ export class QuestionHostService {
         ),
         take(1)
       ).subscribe(([track, relatedArtists, selectedTrackArtist]) => {
-        const options = relatedArtists.artists.filter(relatedArtist =>
+        const options = relatedArtists.filter(relatedArtist =>
           track.track.artists.every(trackArtist => relatedArtist.id !== trackArtist.id)
         ).slice(0, 3);
         options.push(selectedTrackArtist);
@@ -77,7 +77,7 @@ export class QuestionHostService {
   }
 
   private pickRandomPlaylist(playlistsResponse: any): Observable<any> {
-    const playlists: any[] = playlistsResponse.playlists.items;
+    const playlists: any[] = playlistsResponse.items;
     // const playlist = playlists[Math.floor(Math.random() * playlists.length)];
     const playlist = playlists[0];
     this.log('Picked a random playlist ' + playlist.id);

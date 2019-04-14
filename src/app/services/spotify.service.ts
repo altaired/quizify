@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, combineLatest } from 'rxjs';
 import { AuthService } from './auth.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { switchMap, catchError, retry } from 'rxjs/operators';
-import { CategoriesR } from '../models/spotify';
+import { switchMap, catchError, retry, map, take } from 'rxjs/operators';
 import { ErrorService } from './error.service';
 
 /**
@@ -28,9 +27,9 @@ export class SpotifyService {
   /**
    * Fetches a track using the provided headers
    * @param id The track ID
-   * @returns An `Observable` of the fetched `TrackR` object
+   * @returns An `Observable` of the fetched `TrackObject` object
    */
-  getTrack(id: string): Observable<any> {
+  getTrack(id: string): Observable<SAPI.TrackObject> {
     const url = `${this.SPOTIFY_BASE_URL}/tracks/${id}`;
     return this.auth.authentication.pipe(switchMap(headers => {
       return this.http.get<any>(url, { headers: headers })
@@ -43,16 +42,17 @@ export class SpotifyService {
 
   /**
    * Fetches all available categories from spotify using the provided headers
-   * @returns An `Observable` of the fetched `CategoriesR` object
+   * @returns An `Observable` of the fetched `PagingObject` object with type `CategoryObject`.
    */
-  listCategories(): Observable<CategoriesR> {
+  listCategories(): Observable<SAPI.PagingObject<SAPI.CategoryObject>> {
     const url = `${this.SPOTIFY_BASE_URL}/browse/categories/`;
     return this.auth.authentication.pipe(switchMap(headers => {
       console.log('[SpotifyService] Fetching categories...');
-      return this.http.get<CategoriesR>(url, { headers: headers })
+      return this.http.get<{ categories: SAPI.PagingObject<SAPI.CategoryObject> }>(url, { headers: headers })
         .pipe(
           retry(1),
-          catchError(this.handleError)
+          catchError(this.handleError),
+          map(res => res.categories)
         );
     }));
   }
@@ -60,12 +60,12 @@ export class SpotifyService {
   /**
    * Fetches a given category from Spotify using the provided headers
    * @param id The category ID
-   * @returns An `Observable` of the fetched `CategoryR` object
+   * @returns An `Observable` of the fetched `CategoryObject` object
    */
-  getCategory(id: string): Observable<any> {
+  getCategory(id: string): Observable<SAPI.CategoryObject> {
     const url = `${this.SPOTIFY_BASE_URL}/browse/categories/${id}`;
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<any>(url, {
+      return this.http.get<SAPI.CategoryObject>(url, {
         headers: headers, params: {
           country: 'SE',
           locale: 'sv_SE'
@@ -77,15 +77,16 @@ export class SpotifyService {
   /**
    * Fetches a given categories playlist using the provided headers
    * @param id The category ID
-   * @returns An `Observable` of the fetched `PlaylistsR` object
+   * @returns An `Observable` of the fetched `PagingObject` object with type `PlaylistObject`.
    */
-  getCategoryPlaylists(id: string): Observable<any> {
+  getCategoryPlaylists(id: string): Observable<SAPI.PagingObject<SAPI.PlaylistObject>> {
     const url = `${this.SPOTIFY_BASE_URL}/browse/categories/${id}/playlists`;
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<any>(url, { headers: headers })
+      return this.http.get<{ playlists: SAPI.PagingObject<SAPI.PlaylistObject> }>(url, { headers: headers })
         .pipe(
           retry(1),
-          catchError(this.handleError)
+          catchError(this.handleError),
+          map(res => res.playlists)
         );
     }));
   }
@@ -93,12 +94,12 @@ export class SpotifyService {
   /**
    * Fetches a given artist using the provided headers
    * @param id The artist ID
-   * @returns An `Observable` of the fetched `ArtistR` object
+   * @returns An `Observable` of the fetched `ArtistObject` object
    */
-  getArtist(id: string): Observable<any> {
+  getArtist(id: string): Observable<SAPI.ArtistObject> {
     const url = `${this.SPOTIFY_BASE_URL}/artists/${id}`;
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<any>(url, { headers: headers })
+      return this.http.get<SAPI.ArtistObject>(url, { headers: headers })
         .pipe(
           retry(1),
           catchError(this.handleError)
@@ -109,15 +110,16 @@ export class SpotifyService {
   /**
    * Fetches related artists for a given artist using the provided headers
    * @param id The artist ID
-   * @returns An `Observable` of the fetched `RelatedArtistsR` object
+   * @returns An `Observable` of the fetched `ArtistObject` array
    */
-  getRelatedArtists(id: string): Observable<any> {
+  getRelatedArtists(id: string): Observable<SAPI.ArtistObject[]> {
     const url = `${this.SPOTIFY_BASE_URL}/artists/${id}/related-artists`;
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<any>(url, { headers: headers })
+      return this.http.get<{ artists: SAPI.ArtistObject[] }>(url, { headers: headers })
         .pipe(
           retry(1),
-          catchError(this.handleError)
+          catchError(this.handleError),
+          map(res => res.artists)
         );
     }));
   }
@@ -125,26 +127,55 @@ export class SpotifyService {
   /**
    * Fetches a playlists tracks using the provided headers
    * @param id The playlist ID
-   * @returns An `Observable` of the fetched `PlaylistTracksR` object
+   * @returns An `Observable` of the fetched `PagingObject` object with type `PlaylistTrackObject`.
    */
-  getPlaylitsTracks(playlist: string) {
+  getPlaylitsTracks(playlist: string): Observable<SAPI.PagingObject<SAPI.TrackObject>> {
     const url = `${this.SPOTIFY_BASE_URL}/playlists/${playlist}/tracks`;
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<any>(url, {
+      return this.http.get<SAPI.PagingObject<SAPI.TrackObject>>(url, {
         headers: headers
       }).pipe(retry(1), catchError(this.handleError));
     }));
   }
 
-  createPlaylist(tracks: string[]) {
-    console.log('TO BE IMPLEMENTED');
-    // TODO Implement creating a playlist
+  /**
+   * Creates an empty playlist using the provided headers
+   * @returns An `Observable` of the created `PlaylistObject` object
+   */
+  createPlaylist(): Observable<SAPI.PlaylistObject> {
+    return combineLatest(
+      this.auth.authentication,
+      this.auth.user$.pipe(map(user => user.uid))
+    ).pipe(switchMap(([headers, uid]) => {
+      const url = `${this.SPOTIFY_BASE_URL}/users/${uid}/playlists`;
+      return this.http.put<SAPI.PlaylistObject>(url, {
+        name: 'Quizify Playlist',
+        public: false,
+        description: 'Playlist was automaticly created by Quizify on the users behalf'
+      }, {
+          headers: headers
+        }).pipe(
+          retry(1),
+          catchError(this.handleError)
+        );
+    }));
+  }
+
+  private addToPlaylist(playlist: string, tracks: string[]): Observable<any> {
+    return this.auth.authentication.pipe(
+      switchMap(headers => {
+        const url = `${this.SPOTIFY_BASE_URL}/playlists/${playlist}/tracks`;
+        return this.http.put<any>(url, {
+          uris: tracks
+        }, { headers: headers });
+      })
+    )
   }
 
   /**
    * Fetches search results based on a query using the provided headers
    * @param id The search query
-   * @returns An `Observable` of the fetched `SearchR` object
+   * @returns An `Observable` of the fetched results
    */
   searchTrack(query: string): Observable<any> {
     const url = `${this.SPOTIFY_BASE_URL}/search`;

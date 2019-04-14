@@ -27,7 +27,7 @@ export class CategoryHostService {
     this.log('Starting category picking...');
     combineLatest(this.spotify.listCategories().pipe(
       map(res => {
-        const categories = res.categories.items;
+        const categories = res.items;
         const allowed = categories.filter(c => CATEGORY_WHITELIST.some(id => c.id === id));
         const shuffled = allowed.sort(() => 0.5 - Math.random());
         const selected = shuffled.slice(0, 6);
