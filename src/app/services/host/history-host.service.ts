@@ -19,10 +19,10 @@ export class HistoryHostService {
     this.games = 0;
   }
 
-  resetRounds(){
+  resetRounds() {
     this.games = 0;
   }
-  resetGame(){
+  resetGame() {
     this.tracks = [];
     this.categories = [];
     this.pickers = [];
@@ -30,7 +30,7 @@ export class HistoryHostService {
     this.games = 0;
   }
 
-  get playedTracks(){
+  get playedTracks() {
     return this.tracks;
   }
 
@@ -63,6 +63,6 @@ export class HistoryHostService {
   }
 
   get finished(): boolean {
-    return this.games >= 3;
+    return this.games >= 1;
   }
 }

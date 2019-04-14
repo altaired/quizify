@@ -50,6 +50,14 @@
         </mat-card-header>
       </mat-card>
     </div>
-    <div *ngSwitchDefault>Hejsan</div>
+    <div *ngSwitchCase="'INTRO'">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Instructions on the big screen</mat-card-title>
+          <mat-card-subtitle>The game instructions are shown on the big screen</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+    </div>
+    <div *ngSwitchDefault>Error</div>
   </div>
 </div>

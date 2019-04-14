@@ -3,7 +3,6 @@ import { Observable, BehaviorSubject, combineLatest, of } from 'rxjs';
 import { switchMap, take, retry, catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ErrorService } from './error.service';
 
 /**
  * Takes care of playing at the Playback SDK instance
@@ -21,8 +20,7 @@ export class PlaybackService {
 
   constructor(
     private auth: AuthService,
-    private http: HttpClient,
-    private error: ErrorService
+    private http: HttpClient
   ) { }
 
   /**
@@ -131,7 +129,7 @@ export class PlaybackService {
   }
 
   private handleError(error: HttpErrorResponse): Observable<any> {
-    this.error.http(error);
+    console.error(error);
     return of(null);
   }
 

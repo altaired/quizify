@@ -3,7 +3,6 @@ import { Observable, of, combineLatest } from 'rxjs';
 import { AuthService } from './auth.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { switchMap, catchError, retry, map, take } from 'rxjs/operators';
-import { ErrorService } from './error.service';
 
 /**
  * Communicates with Spotifys WEB API
@@ -20,8 +19,7 @@ export class SpotifyService {
 
   constructor(
     private auth: AuthService,
-    private http: HttpClient,
-    private error: ErrorService
+    private http: HttpClient
   ) { }
 
   /**
@@ -148,7 +146,7 @@ export class SpotifyService {
       this.auth.user$.pipe(map(user => user.uid))
     ).pipe(switchMap(([headers, uid]) => {
       const url = `${this.SPOTIFY_BASE_URL}/users/${uid}/playlists`;
-      return this.http.put<SAPI.PlaylistObject>(url, {
+      return this.http.post<SAPI.PlaylistObject>(url, {
         name: 'Quizify Playlist',
         public: false,
         description: 'Playlist was automaticly created by Quizify on the users behalf'
@@ -161,15 +159,20 @@ export class SpotifyService {
     }));
   }
 
-  private addToPlaylist(playlist: string, tracks: string[]): Observable<any> {
+  /**
+   * Adds tracks to a given playlist using the provided headers
+   * @param playlist The playlist ID
+   * @param tracks An array of Track URI:s
+   */
+  addToPlaylist(playlist: string, tracks: string[]): Observable<any> {
     return this.auth.authentication.pipe(
       switchMap(headers => {
         const url = `${this.SPOTIFY_BASE_URL}/playlists/${playlist}/tracks`;
-        return this.http.put<any>(url, {
+        return this.http.post<any>(url, {
           uris: tracks
         }, { headers: headers });
       })
-    )
+    );
   }
 
   /**
@@ -192,7 +195,7 @@ export class SpotifyService {
   }
 
   private handleError(error: HttpErrorResponse): Observable<any> {
-    this.error.http(error);
+    console.error(error);
     return of(null);
   }
 

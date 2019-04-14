@@ -54,7 +54,7 @@ app.get('/redirect', (req, res) => {
   });
   const redirectUri = oauth2.authorizationCode.authorizeURL({
     redirect_uri: `${req.protocol}://${req.get('host')}/auth/spotify-callback`,
-    scope: 'user-modify-playback-state user-read-currently-playing user-read-playback-state streaming user-read-private user-read-birthdate',
+    scope: 'user-modify-playback-state user-read-currently-playing user-read-playback-state streaming user-read-private user-read-birthdate playlist-modify-private playlist-modify-public',
     state: state
   });
   console.log('Redirecting to:', redirectUri);
