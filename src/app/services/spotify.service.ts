@@ -127,7 +127,7 @@ export class SpotifyService {
   /**
    * Fetches a playlists tracks using the provided headers
    * @param id The playlist ID
-   * @returns An `Observable` of the fetched `PagingObject` object with type `PlaylistTrackObject`.
+   * @returns An `Observable` of the fetched `PagingObject` object with type `TrackObject`.
    */
   getPlaylitsTracks(playlist: string): Observable<SAPI.PagingObject<SAPI.TrackObject>> {
     const url = `${this.SPOTIFY_BASE_URL}/playlists/${playlist}/tracks`;
