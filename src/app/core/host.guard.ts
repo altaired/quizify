@@ -11,6 +11,11 @@ export class HostGuard implements CanActivate {
 
   constructor(private auth: AuthService) { }
 
+  /**
+   * Checks if the user is a host, i.e that the user is not anonymous
+   * @param next The activated route
+   * @param state The current route states
+   */
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> {

@@ -1,5 +1,7 @@
 /**
  * Modified version of HashIds lib by ivanakimov
+ * @author ivanakimov
+ * @see https://github.com/ivanakimov/hashids.js?utm_source=recordnotfound.com
  */
 
 export class Hash {

@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
-import { GameHostService } from './game-host.service';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { filter, map, takeWhile } from 'rxjs/operators';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { Game } from 'src/app/models/state';
 import { StateHostService } from './state-host.service';
+
+/**
+ * Takes care of the host logic behind the welcome screen
+ * @author Simon Persson, Oskar Norinder
+ */
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +15,6 @@ import { StateHostService } from './state-host.service';
 export class WelcomeHostService {
 
   complete$ = new Subject<string>();
-
 
   constructor(
     private db: AngularFireDatabase,
@@ -24,7 +26,6 @@ export class WelcomeHostService {
   }
 
   private startWelcome() {
-
     const subscription = this.state.state$.pipe(
       filter(state => state.players ? true : false),
       map(state => Object.values(state.players)),

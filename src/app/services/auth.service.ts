@@ -2,11 +2,15 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { auth, User } from 'firebase/app';
+import { User } from 'firebase/app';
 import { environment } from '../../environments/environment';
 import { HttpHeaders } from '@angular/common/http';
-import { switchMap, map, filter, share } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { switchMap, map, filter } from 'rxjs/operators';
+
+/**
+ * Service takning care of the authentication process of hosts and players
+ * @author Simon Persson, Oskar Norinder
+ */
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +22,7 @@ export class AuthService {
 
   constructor(
     private afAuth: AngularFireAuth,
-    private db: AngularFireDatabase,
-    private router: Router
+    private db: AngularFireDatabase
   ) {
     this.user$ = afAuth.authState;
     this.token$ = this.user$
@@ -29,6 +32,10 @@ export class AuthService {
 
   }
 
+  /**
+   * Gets the accesToken for a given user
+   * @param uid The users uniqe identifier
+   */
   private getToken(uid: string): Observable<string> {
     return this.db.object<Token>('users/' + uid)
       .valueChanges()
@@ -38,12 +45,18 @@ export class AuthService {
       );
   }
 
+  /**
+   * Signs in the user using the credentials and token provided by the backend
+   */
   loginWithSpotify(): Promise<any> {
     return this.authenticate()
       .then(token => this.afAuth.auth.signInWithCustomToken(token))
       .catch(error => console.error(error));
   }
 
+  /**
+   * Starts the authentication process with Spotify and the backend
+   */
   private authenticate(): Promise<string> {
     const url = environment.authentication.authDomain;
     return new Promise((resolve, reject) => {
@@ -59,12 +72,19 @@ export class AuthService {
     });
   }
 
+  /**
+   * Signs the user in anonymously, used for the players
+   */
   loginAnonymously() {
     this.afAuth.auth.signInAnonymously().catch(function (error) {
       console.error(error);
     });
   }
 
+  /**
+   * Returns the needed authentication headers for the Spotify API
+   * @returns An `Observable` of `HttpHeaders`
+   */
   get authentication(): Observable<HttpHeaders> {
     return this.token$.pipe(map(token => {
       return new HttpHeaders({

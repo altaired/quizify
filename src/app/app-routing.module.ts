@@ -16,7 +16,7 @@ const routes: Routes = [
   { path: 'create-game', component: GameCreationComponent, canActivate: [HostGuard] },
   { path: 'welcome', component: WelcomeComponent, canActivate: [HostGuard] },
   { path: '', component: LoginComponent },
-  {path: 'join',component: QuickJoinComponent}
+  { path: 'join', component: QuickJoinComponent }
 ];
 
 @NgModule({

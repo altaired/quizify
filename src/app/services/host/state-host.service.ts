@@ -2,8 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Game, GameState, Player } from 'src/app/models/state';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { take, switchMap, share, filter, map, tap } from 'rxjs/operators';
+import { take, switchMap, filter, map } from 'rxjs/operators';
 import { has } from 'lodash';
+
+/**
+ * Service keeping track of the current games state
+ * @author Simon Persson, Oskar Norinder
+ */
 
 @Injectable({
   providedIn: 'root'

@@ -1,3 +1,7 @@
+/**
+ * Whitelisted categories from the SPOTIFY API, used to make the game a bit easier
+ */
+
 export const CATEGORY_WHITELIST = [
   'toplists',
   'pop',

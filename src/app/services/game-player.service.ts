@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material';
 /**
  * Handles the players state during the game
  * observes the total game state in firebase
+ * @author Simon Persson, Oskar Norinder
  */
 
 @Injectable({
@@ -61,6 +62,11 @@ export class GamePlayerService {
     });
   }
 
+  /**
+   * Checks if a game code is stored in local storage and tries to
+   * re-init the game, if possible
+   * @returns `true` if the initialization succeeded
+   */
   reconnect(): boolean {
     const code = window.localStorage.getItem('game_code');
     if (code !== '') {
@@ -71,12 +77,22 @@ export class GamePlayerService {
     }
   }
 
+  /**
+   * Adds a player to a given game and start initializing it
+   * @param player The player to be added
+   * @param gameCode The games code
+   */
   private addPlayer(player: Player, gameCode: string) {
     this.log('Adding player to game with code ' + gameCode);
     this.db.list('games/' + gameCode + '/players').push(player);
     this.initGame(gameCode);
   }
 
+  /**
+   * Initializes the game by saving the game code in local storage
+   * and preparing state varaibles according to the host
+   * @param gameCode The games code
+   */
   private initGame(gameCode: string) {
     window.localStorage.setItem('game_code', gameCode);
     this.gameCode$.next(gameCode);
@@ -100,12 +116,17 @@ export class GamePlayerService {
       }));
   }
 
-  pickCategory(option: string) {
+
+  /**
+   * Let's the user pick a category, if the person is supposed to
+   * @param option The selected category
+   */
+  pickCategory(category: string) {
     const code = this.gameCode$.getValue();
     this.isCategoryPicker$.pipe(take(1)).subscribe(picker => {
       if (picker) {
         this.db.object<CategoryState>('games/' + code + '/playerDisplay/category').update({
-          playerResponse: option,
+          playerResponse: category,
           done: true
         });
         console.log('Category set, waiting for host...');
@@ -114,7 +135,14 @@ export class GamePlayerService {
       }
     });
   }
-  respond(first: string, second: string, question: string) {
+
+  /**
+   * Sends a users response to the host
+   * @param first The given answer to the first question
+   * @param second The given answer to the second question
+   * @param question The id of the question beeing answered
+   */
+  respond(first: string, second: string, question: string): void {
     combineLatest(this.auth.user$, this.gameCode$).pipe(
       take(1),
       switchMap(([user, code]) => {
@@ -142,12 +170,21 @@ export class GamePlayerService {
     });
   }
 
+  /**
+   * Starts the game by letting the host know that we're ready
+   */
   startGame() {
-    // Starts the game by letting the host know that we're ready
-    const code = this.gameCode$.getValue();
-    this.db.object('games/' + code + '/admin').update({ ready: true });
+    // TODO: Check if the user really is the admin of the game
+    this.gameCode$.pipe(take(1))
+      .subscribe(code =>
+        this.db.object('games/' + code + '/admin').update({ ready: true })
+      );
   }
 
+  /**
+   * Sets the current users avatar
+   * @param dataURL The avatar to be uploaded
+   */
   setAvatar(dataURL: string) {
     console.log('Uploading avatar...');
     combineLatest(this.auth.user$, this.gameCode$).pipe(
