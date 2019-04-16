@@ -129,7 +129,11 @@ export class PlaybackService {
   private log(msg: string) {
     console.log('[Host][Spotify] ' + msg);
   }
-
+  /**
+   * Logs to the console, prepending a file specific prefix
+   * @param error The http error that should be handeled
+   * @returns it's always an empty Observer
+   */
   private handleError(error: HttpErrorResponse): Observable<any> {
     this.errorSnack.onError('Spotify Playback returned this error: '+error)
     console.error(error);

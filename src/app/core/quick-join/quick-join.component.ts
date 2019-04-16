@@ -4,6 +4,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material';
 import { AuthService } from 'src/app/services/auth.service';
 import { GamePlayerService } from 'src/app/services/game-player.service';
 import { JoinDialogComponent } from 'src/app/player/join-dialog/join-dialog.component';
+import { ErrorSnackService } from 'src/app/services/error-snack.service';
 /**
  * Service takning care of the authentication process of hosts and players
  * @author Simon Persson, Oskar Norinder
@@ -22,7 +23,8 @@ export class QuickJoinComponent implements OnInit {
   public dialog: MatDialog,
   private auth: AuthService,
   private router: Router,
-  private player: GamePlayerService
+  private player: GamePlayerService,
+  private errorSnack: ErrorSnackService
   ){}
   ngOnInit() {
     this.dialogConfig = new MatDialogConfig();
@@ -47,6 +49,7 @@ async loginPlayer() {
       this.player.join(result.gameCode, result.name).then(success => {
         this.router.navigate(['/game']);
       }).catch(error => {
+        this.errorSnack.onError(error)
         console.error(error);
       });
 

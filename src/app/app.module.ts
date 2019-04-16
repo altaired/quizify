@@ -16,7 +16,9 @@ import {
   MatButtonToggleModule,
   MatStepperModule,
   MatSliderModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatSelectModule,
+  MatOptionModule
 } from '@angular/material';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -51,6 +53,7 @@ import { HistoryHostService } from './services/host/history-host.service';
 import { AnswerComponent } from './host/answer/answer.component';
 import { EndScreenComponent } from './host/end-screen/end-screen.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { PickDeviceComponent } from './host/pick-device/pick-device.component';
 
 
 @NgModule({
@@ -73,7 +76,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     IntroComponent,
     ResultsComponent,
     AnswerComponent,
-    EndScreenComponent
+    EndScreenComponent,
+    PickDeviceComponent
   ],
   imports: [
     BrowserModule,
@@ -103,6 +107,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatButtonToggleModule,
     QRCodeModule,
     DragDropModule,
+    MatSelectModule,
+    MatOptionModule,
   ],
   providers: [
     AngularFireModule,
@@ -113,7 +119,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     HistoryHostService,
   ],
   bootstrap: [AppComponent],
-  entryComponents: [JoinDialogComponent],
+  entryComponents: [JoinDialogComponent, PickDeviceComponent],
   exports: [ReactiveFormsModule, MatFormFieldModule]
 })
 export class AppModule { }

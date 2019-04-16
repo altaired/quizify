@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Pick Playback Device</h2>
+<div *ngIf="devices$ | async as devices">
+<mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Device</mat-label>
+      <mat-select [(ngModel)]="selectedDevice">
+        <mat-option *ngFor="let device of devices.devices" [value]="device">
+          {{device.name}}
+        </mat-option>
+      </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+</div>
+<mat-dialog-actions>
+  <button mat-button color="warn" (click)="close()">Cancel</button>
+  <button mat-button [mat-dialog-close]="selectedDevice" cdkFocusInitial>Update</button>
+</mat-dialog-actions>

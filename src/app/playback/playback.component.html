@@ -1,8 +1,11 @@
 <div class="row">
-  <div class="col-12" *ngIf="playing$ | async as playing">
+  <div class="col-12">
     <mat-card>
+        <div class="col-3" *ngIf="playing$ | async as playing">
       <mat-slider max="1" min="0" step="0.1" value="0.4" [disabled]="!playing" (change)="changeVolume($event)">
       </mat-slider>
+        </div>
+      <button mat-button (click)="pickDevice()">Choose Output Device</button>
     </mat-card>
   </div>
 </div>

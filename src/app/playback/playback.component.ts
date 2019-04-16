@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { take, map } from 'rxjs/operators';
+import { take, map, tap, switchMap } from 'rxjs/operators';
 import { SpotifyService } from '../services/spotify.service';
 import { PlaybackService } from '../services/playback.service';
-import { MatSliderChange } from '@angular/material';
+import { MatSliderChange, MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material';
+import { PickDeviceComponent } from '../host/pick-device/pick-device.component';
+
 
 /**
  * Service takning care of the authentication process of hosts and players
@@ -20,9 +22,11 @@ export class PlaybackComponent implements OnInit {
   private player: Spotify.SpotifyPlayer;
   playerState$ = new BehaviorSubject<Spotify.PlaybackState>(null);
   playing$: Observable<boolean>;
+  devices$: Observable<any>;
 
 
   constructor(
+    public dialog: MatDialog,
     private auth: AuthService,
     private playback: PlaybackService
   ) {
@@ -44,6 +48,7 @@ export class PlaybackComponent implements OnInit {
     this.player.addListener('ready', ({ device_id }) => {
       console.log('Connected with Device ID', device_id);
       this.playback.updateDeviceID(device_id);
+      this.playback.transfer();
     });
   /**
    * listen to the playback state
@@ -73,4 +78,13 @@ export class PlaybackComponent implements OnInit {
     });
   }
 
+  pickDevice() {
+
+  const dialogRef = this.dialog.open(PickDeviceComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if(result){
+      this.playback.updateDeviceID(result.id)
+      }
+      })
+    };
 }
