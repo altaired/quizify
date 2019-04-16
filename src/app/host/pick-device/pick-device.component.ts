@@ -21,7 +21,7 @@ export class PickDeviceComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.devices$ =  this.playback.devices  
+    this.devices$ = this.playback.devices;
   }
   close(): void {
     this.dialogRef.close();
