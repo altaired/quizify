@@ -1,4 +1,4 @@
-<div class="container-fluid" *ngIf="state$ | async as state">
+<div class="container-fluid" *ngIf="state$ | async as state; else noGame">
   <div class="col-12 margin-bottom margin-top">
     <mat-card>
       <mat-card-header>
@@ -61,3 +61,7 @@
     <div *ngSwitchDefault>Error</div>
   </div>
 </div>
+<ng-template #noGame>
+  No game found!
+  go Away!
+</ng-template>

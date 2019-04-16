@@ -4,6 +4,11 @@ import { Router } from '@angular/router';
 import { Hash } from 'src/app/utils/hash';
 import { GameMode } from 'src/app/models/state';
 
+/**
+ * Service takning care of the authentication process of hosts and players
+ * @author Simon Persson, Oskar Norinder
+ */
+
 @Component({
   selector: 'app-game-creation',
   templateUrl: './game-creation.component.html',
@@ -18,6 +23,9 @@ export class GameCreationComponent implements OnInit {
 
   ngOnInit() {
   }
+    /**
+   * Begins a game in standard mode
+   */
   createStandard() {
     this.game.newGame('STANDARD');
   }

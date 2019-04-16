@@ -7,6 +7,7 @@ import { Player, Game, CategoryState } from '../models/state';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { MatSnackBar } from '@angular/material';
+import { ErrorSnackService } from './error-snack.service';
 
 /**
  * Handles the players state during the game
@@ -27,7 +28,8 @@ export class GamePlayerService {
   constructor(
     private auth: AuthService,
     private db: AngularFireDatabase,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
+    private errorSnack: ErrorSnackService,
   ) { }
 
   join(gameCode: string, name: string): Promise<Boolean> {
@@ -128,7 +130,7 @@ export class GamePlayerService {
         this.db.object<CategoryState>('games/' + code + '/playerDisplay/category').update({
           playerResponse: category,
           done: true
-        });
+        }).catch(error => this.errorSnack.onError('Firebase could not update player response'));
         console.log('Category set, waiting for host...');
       } else {
         console.error('Player not set to pick category');
@@ -164,7 +166,7 @@ export class GamePlayerService {
             second: second,
             question: question
           }
-        });
+        }).catch(error => this.errorSnack.onError('Firebase could not set send player question'));
         console.log('Answer sent');
       }
     });
@@ -177,7 +179,7 @@ export class GamePlayerService {
     // TODO: Check if the user really is the admin of the game
     this.gameCode$.pipe(take(1))
       .subscribe(code =>
-        this.db.object('games/' + code + '/admin').update({ ready: true })
+        this.db.object('games/' + code + '/admin').update({ ready: true }).catch(error => this.errorSnack.onError('Firebase could not set player to ready'))
       );
   }
 
@@ -213,7 +215,7 @@ export class GamePlayerService {
       if (snapshot.length > 0) {
         const key = snapshot[0].key;
         console.log('URL', url);
-        this.db.object('games/' + code + '/players/' + key).update({ avatar: url });
+        this.db.object('games/' + code + '/players/' + key).update({ avatar: url }).catch(error => this.errorSnack.onError('Firebase could not update the Avatar'));
         console.log('Updated avatar');
       }
     });

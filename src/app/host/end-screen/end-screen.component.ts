@@ -10,6 +10,10 @@ import { SafePropertyRead } from '@angular/compiler';
 import { MatSnackBar } from '@angular/material';
 import { switchMap, take } from 'rxjs/operators';
 
+/**
+ * Service takning care of the authentication process of hosts and players
+ * @author Simon Persson, Oskar Norinder
+ */
 
 @Component({
   selector: 'app-end-screen',
@@ -32,28 +36,38 @@ export class EndScreenComponent implements OnInit {
   ngOnInit() {
     this.playedTracks = this.history.playedTracks;
   }
-
+  /**
+   * Creates a Spotify playlist from the objects in the savedTracks array
+   */
   createPlaylist() {
     const tracks: string[] = this.savedTracks.map(track => track.track.uri);
     if (tracks.length > 0) {
       this.spotify.createPlaylist().pipe(
         switchMap(playlist => this.spotify.addToPlaylist(playlist.id, tracks)),
         take(1)
-      ).subscribe(() => this.snackbar.open('Playlist created'));
+      ).subscribe(() => this.snackbar.open('Playlist created', 'Clear',{duration:5000}));
     } else {
       this.snackbar.open('No tracks to add');
     }
 
   }
+  /**
+   * Returns the state to Pick-category
+   */
   playMore() {
     this.game.continue();
   }
+    /**
+   * Returns the game to Welcome
+   */
   restartGame() {
     this.game.restart();
   }
 
-
-
+  /**
+   * @param event The drop event by the user
+   * Implementation of the angular Cdk draganddrop to transfer items between the arrays 
+   */
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);

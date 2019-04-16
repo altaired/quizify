@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { filter, map, takeWhile } from 'rxjs/operators';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { StateHostService } from './state-host.service';
+import { ErrorSnackService } from '../error-snack.service';
 
 /**
  * Takes care of the host logic behind the welcome screen
@@ -18,7 +19,8 @@ export class WelcomeHostService {
 
   constructor(
     private db: AngularFireDatabase,
-    private state: StateHostService
+    private state: StateHostService,
+    private errorSnack: ErrorSnackService
   ) { }
 
   start() {
@@ -45,7 +47,7 @@ export class WelcomeHostService {
           playerUID: uid,
           ready: false
         }
-      });
+      }).catch(error => this.errorSnack.onError('Firebase could not set Game Admin'));
       console.log('[GameHost] Admin player updated to ' + uid);
       this.activateWelcomeObserver();
     });

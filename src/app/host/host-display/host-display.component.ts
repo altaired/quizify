@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { QUESTION_MAX_TIMER } from '../../services/host/question-host.service';
 import { Observable } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { GameHostService } from 'src/app/services/host/game-host.service';
   templateUrl: './host-display.component.html',
   styleUrls: ['./host-display.component.scss']
 })
-export class HostDisplayComponent implements OnInit {
+export class HostDisplayComponent implements OnInit, OnDestroy {
   state$: Observable<Game>;
   players$: Observable<Player[]>;
   gameCode$: Observable<string>;
@@ -43,6 +43,14 @@ export class HostDisplayComponent implements OnInit {
       map(val => 100 - (val / QUESTION_MAX_TIMER) * 100)
     );
   }
+
+    ngOnDestroy() {
+      this.game.delete();
+    }
+    @HostListener('window:beforeunload', [ '$event' ])
+    beforeUnloadHander(event) {
+      this.game.delete();
+    }
 
   introCallback() {
     this.game.introComplete();

@@ -5,6 +5,11 @@ import { Player } from 'src/app/models/state';
 import { StateHostService } from 'src/app/services/host/state-host.service';
 import { QuestionHostService } from 'src/app/services/host/question-host.service';
 
+/**
+ * Service takning care of the authentication process of hosts and players
+ * @author Simon Persson, Oskar Norinder
+ */
+
 @Component({
   selector: 'app-results',
   templateUrl: './results.component.html',
@@ -34,7 +39,12 @@ export class ResultsComponent implements OnInit {
   ngOnInit() {
 
   }
-
+  /**
+   * Gets the accesToken for a given user
+   * @param player Player in the game
+   * @param result array with all players responses on the last asked question
+   * @returns this specific players result
+   */
   getPlayerResult(player: Player, results: any[]) {
     return results.find(r => r.id === player.uid);
   }

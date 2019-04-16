@@ -11,6 +11,7 @@ import { CategoryHostService } from './category-host.service';
 import { QuestionHostService } from './question-host.service';
 import { WelcomeHostService } from './welcome-host.service';
 import { StateHostService } from './state-host.service';
+import { ErrorSnackService } from '../error-snack.service';
 
 /**
  * Takes care of the hosts state which is
@@ -33,7 +34,8 @@ export class GameHostService {
     private category: CategoryHostService,
     private question: QuestionHostService,
     private welcome: WelcomeHostService,
-    private state: StateHostService
+    private state: StateHostService,
+    private errorSnack: ErrorSnackService,
   ) {
 
     this.welcome.complete$.subscribe(res => this.welcomeComplete());
@@ -58,7 +60,7 @@ export class GameHostService {
         gameMode: gameMode,
         state: 'WELCOME'
       };
-      this.db.object('games/' + gameCode).set(game);
+      this.db.object('games/' + gameCode).set(game).catch(error => this.errorSnack.onError('Firebase could not create new Game'))
       this.state.setCode(gameCode);
       this.start();
     });
@@ -66,11 +68,17 @@ export class GameHostService {
 
   restart() {
     this.state.code$.pipe(take(1)).subscribe(code => {
-      this.db.object(`games/${code}/admin`).update({ ready: false });
+      this.db.object(`games/${code}/admin`).update({ ready: false }).catch(error => this.errorSnack.onError('Firebase could not set admin ready to false'))
       this.history.resetGame();
       this.state.changeState('WELCOME');
       this.start();
     });
+  }
+
+  delete(){
+    this.state.code$.pipe(take(1)).subscribe(code => {
+      this.db.object(`games/${code}`).remove().catch(error => this.errorSnack.onError('Firebase could not remove the Game'))
+    })
   }
 
   continue() {

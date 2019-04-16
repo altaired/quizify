@@ -6,6 +6,10 @@ import { SpotifyService } from '../services/spotify.service';
 import { PlaybackService } from '../services/playback.service';
 import { MatSliderChange } from '@angular/material';
 
+/**
+ * Service takning care of the authentication process of hosts and players
+ * @author Simon Persson, Oskar Norinder
+ */
 
 @Component({
   selector: 'app-playback',
@@ -25,23 +29,33 @@ export class PlaybackComponent implements OnInit {
     this.playing$ = this.playerState$.pipe(map(state => state && !state.paused));
   }
 
+  /**
+   * connect the spotify SDK to spotify Servers
+   */
+
   private connectPlayer() {
     this.player.connect().then(success => {
       console.log('Player connected!');
 
     });
-
+  /**
+   * connect Spotify servers to this the spotify SDK vi the SDKs device_id
+   */
     this.player.addListener('ready', ({ device_id }) => {
       console.log('Connected with Device ID', device_id);
       this.playback.updateDeviceID(device_id);
     });
-
+  /**
+   * listen to the playback state
+   */
     this.player.addListener('player_state_changed', state => {
       this.playerState$.next(state);
     });
 
   }
-
+  /**
+   * change Spotify SDK volume
+   */
   changeVolume(change: MatSliderChange) {
     this.player.setVolume(change.value);
   }

@@ -8,6 +8,7 @@ import { Player, Option, CategoryState, Game, GameState } from '../../models/sta
 import { HistoryHostService } from './history-host.service';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { StateHostService } from './state-host.service';
+import { ErrorSnackService } from '../error-snack.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,8 @@ export class CategoryHostService {
     private spotify: SpotifyService,
     private history: HistoryHostService,
     private db: AngularFireDatabase,
-    private state: StateHostService
+    private state: StateHostService,
+    private errorSnack: ErrorSnackService,
   ) { }
 
   start() {
@@ -63,7 +65,7 @@ export class CategoryHostService {
       done: false,
       options: options
     };
-    this.db.object('games/' + code + '/playerDisplay/category').set(categoryState);
+    this.db.object('games/' + code + '/playerDisplay/category').set(categoryState).catch(error => this.errorSnack.onError('Firebase could not set category and returned this: '+ error) );
     this.state.changeState('PICK_CATEGORY');
     this.observe();
     this.log('Waiting for player to pick a category');
@@ -100,4 +102,5 @@ export class CategoryHostService {
   private log(msg: string) {
     console.log('[Host][Category] ' + msg);
   }
+  
 }

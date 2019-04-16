@@ -1,7 +1,7 @@
 <div [class.active]="isDone" class="outer-margin">
   <mat-card>
     <mat-card-header>
-      <img mat-card-avatar *ngIf="player.avatar" [src]="player.avatar">
+      <img mat-card-avatar *ngIf="player.avatar" [src]="player.avatar" alt="Player avatar">
       <mat-card-title>{{player.displayName}}</mat-card-title>
       <mat-card-subtitle *ngIf="isAdmin">Admin</mat-card-subtitle>
     </mat-card-header>

@@ -3,8 +3,8 @@
     <mat-card>
       <mat-card-header>
         <mat-card-title>{{gameCode$ | async}}</mat-card-title>
-        <mat-card-subtitle>Use this code to join game</mat-card-subtitle>
-        <div *ngIf="joinPath$ | async as joinPath">
+        <mat-card-subtitle>Use this code on another device or browser to join a game as a player or scan this QR-code </mat-card-subtitle>
+        <div class="float-right" *ngIf="joinPath$ | async as joinPath">
           <qrcode [qrdata]="joinPath" size="124" level="M"></qrcode>
         </div>
       </mat-card-header>

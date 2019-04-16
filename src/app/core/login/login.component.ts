@@ -7,6 +7,12 @@ import { User } from 'firebase';
 import { GamePlayerService } from '../../services/game-player.service';
 import { MatDialog, MatDialogConfig, MatSnackBar } from '@angular/material';
 import { JoinDialogComponent } from '../../player/join-dialog/join-dialog.component';
+import { ErrorSnackService } from 'src/app/services/error-snack.service';
+
+/**
+ * Service takning care of the authentication process of hosts and players
+ * @author Simon Persson, Oskar Norinder
+ */
 
 @Component({
   selector: 'app-login',
@@ -22,18 +28,24 @@ export class LoginComponent implements OnInit {
     private auth: AuthService,
     private router: Router,
     private player: GamePlayerService,
-    private snackbar: MatSnackBar
+    private errorSnack: ErrorSnackService
   ) { }
 
   ngOnInit() {
     this.user$ = this.auth.user$;
   }
-
+ /**
+   * Runs the AuthSerice spotify log in
+   * Routes the game on successful login
+   */
   async loginHost() {
     await this.auth.loginWithSpotify();
     this.router.navigate(['/create-game']);
   }
-
+ /**
+   * Runs the AuthSerice anonymous log in
+   * Opens a dialog for the gamecode and if the game exists navigates to it
+   */
   async loginPlayer() {
     await this.auth.loginAnonymously();
     const dialogConfig = new MatDialogConfig();
@@ -45,7 +57,7 @@ export class LoginComponent implements OnInit {
         this.player.join(result.gameCode, result.name).then(success => {
           this.router.navigate(['/game']);
         }).catch(error => {
-          this.snackbar.open(error);
+          this.errorSnack.onError(error);
         });
 
       }

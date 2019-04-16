@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable, of, combineLatest } from 'rxjs';
 import { AuthService } from './auth.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { switchMap, catchError, retry, map, take } from 'rxjs/operators';
+import { switchMap, catchError, retry, map, take, tap } from 'rxjs/operators';
+import { ErrorSnackService } from './error-snack.service';
 
 /**
  * Communicates with Spotifys WEB API
@@ -19,7 +20,8 @@ export class SpotifyService {
 
   constructor(
     private auth: AuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    private errorSnack: ErrorSnackService
   ) { }
 
   /**
@@ -194,8 +196,10 @@ export class SpotifyService {
     }));
   }
 
+
   private handleError(error: HttpErrorResponse): Observable<any> {
     console.error(error);
+    this.errorSnack.onError('Spotify returned this: '+ error);
     return of(null);
   }
 

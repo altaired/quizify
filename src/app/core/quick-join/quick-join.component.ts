@@ -4,6 +4,10 @@ import { MatDialog, MatDialogConfig } from '@angular/material';
 import { AuthService } from 'src/app/services/auth.service';
 import { GamePlayerService } from 'src/app/services/game-player.service';
 import { JoinDialogComponent } from 'src/app/player/join-dialog/join-dialog.component';
+/**
+ * Service takning care of the authentication process of hosts and players
+ * @author Simon Persson, Oskar Norinder
+ */
 
 @Component({
   selector: 'app-quick-join',
@@ -29,6 +33,10 @@ export class QuickJoinComponent implements OnInit {
       }
     });
 }
+ /**
+   * Runs the AuthSerice anonymous log in
+   * Opens a dialog for the gamecode already given and if the game exists navigates to it
+   */
 async loginPlayer() {
   await this.auth.loginAnonymously();
   this.dialogConfig.autoFocus = true;

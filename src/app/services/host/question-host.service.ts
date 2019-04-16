@@ -27,6 +27,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { PlaybackService } from '../playback.service';
 import { Player } from 'src/app/models/state';
 import { StateHostService } from './state-host.service';
+import { ErrorSnackService } from '../error-snack.service';
 
 export const QUESTION_MAX_TIMER = 120;
 
@@ -50,7 +51,8 @@ export class QuestionHostService {
     private history: HistoryHostService,
     private db: AngularFireDatabase,
     private playback: PlaybackService,
-    private state: StateHostService
+    private state: StateHostService,
+    private errorSnack: ErrorSnackService,
   ) { }
 
   start(category: string) {
@@ -116,12 +118,15 @@ export class QuestionHostService {
         first: {
           title: 'Name the artist',
           options: options.map(option => {
+            if (!(option.images[0])){
+              option.images[0] = {url:"assets/error.png"}
+            }
             return { id: option.id, image: option.images[0], value: option.name };
           })
         },
         secondEnabled: true,
         second: 'Name the track'
-      });
+      }).catch(error => this.errorSnack.onError('Firebase could not set the new question'))
       this.state.changeState('ANSWER');
       this.play(t.track.uri);
     });
@@ -259,7 +264,7 @@ export class QuestionHostService {
   private clear() {
     this.log('Clearing response data...');
     this.state.code$.pipe(take(1)).subscribe(code => {
-      this.db.object(`games/${code}/playerDisplay`).remove();
+      this.db.object(`games/${code}/playerDisplay`).remove().catch(error => this.errorSnack.onError('Firebase could not remove previous questions data'));
       this.db.list('games/' + code + '/players').snapshotChanges().pipe(take(1))
         .subscribe(res => {
           Promise.all(res.map(player => {

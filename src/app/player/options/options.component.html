@@ -2,7 +2,7 @@
   <div class="col-sm-12 col-md-6" *ngFor="let option of randomizedOptions">
     <mat-card (click)="select(option.id)" class="margin-bottom" matRipple>
       <mat-card-header>
-        <img mat-card-avatar [src]="option.image.url">
+        <img mat-card-avatar [src]="option.image.url" alt="Artist picture">
         <mat-card-title>{{option.value}}</mat-card-title>
       </mat-card-header>
     </mat-card>

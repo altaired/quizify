@@ -12,7 +12,6 @@ export const CATEGORY_WHITELIST = [
   'decades',
   'edm_dance',
   'rnb',
-  'kids',
   'rock',
   'indie_alt',
   'jazz',
