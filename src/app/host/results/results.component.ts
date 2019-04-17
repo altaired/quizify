@@ -24,7 +24,7 @@ export class ResultsComponent implements OnInit {
     private state: StateHostService,
     private question: QuestionHostService
   ) {
-    this.track$ = this.question.track$.pipe(filter(t => t));
+    this.track$ = this.question.track$.pipe(filter(t => t ? true : false));
     this.results$ = this.question.result$.pipe(
       filter(res => res ? true : false),
       filter(res => {
