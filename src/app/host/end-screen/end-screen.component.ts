@@ -65,8 +65,8 @@ export class EndScreenComponent implements OnInit {
   }
 
   /**
-   * @param event The drop event by the user
    * Implementation of the angular Cdk draganddrop to transfer items between the arrays 
+   * @param event The drop event by the user
    */
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {

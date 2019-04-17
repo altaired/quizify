@@ -5,7 +5,7 @@ import { Hash } from 'src/app/utils/hash';
 import { GameMode } from 'src/app/models/state';
 
 /**
- * Service takning care of the authentication process of hosts and players
+ * Component giving options for gamemode and creating the game
  * @author Simon Persson, Oskar Norinder
  */
 
@@ -29,6 +29,9 @@ export class GameCreationComponent implements OnInit {
   createStandard() {
     this.game.newGame('STANDARD');
   }
+  /**
+   * For future expansion
+   */
   createPassive() {
     console.log("sorry not done yet")
   }

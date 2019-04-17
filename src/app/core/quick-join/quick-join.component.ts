@@ -6,7 +6,7 @@ import { GamePlayerService } from 'src/app/services/game-player.service';
 import { JoinDialogComponent } from 'src/app/player/join-dialog/join-dialog.component';
 import { ErrorSnackService } from 'src/app/services/error-snack.service';
 /**
- * Service takning care of the authentication process of hosts and players
+ * Component showing login dialog for players coming from a QR-code
  * @author Simon Persson, Oskar Norinder
  */
 
@@ -36,7 +36,6 @@ export class QuickJoinComponent implements OnInit {
     });
 }
  /**
-   * Runs the AuthSerice anonymous log in
    * Opens a dialog for the gamecode already given and if the game exists navigates to it
    */
 async loginPlayer() {

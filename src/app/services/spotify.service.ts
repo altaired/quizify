@@ -196,7 +196,11 @@ export class SpotifyService {
     }));
   }
 
-
+  /**
+   * Displays error messages via as snackbar items via ErrorSnackService
+   * @param error The spotify error to handle
+   * @returns An `Observable` of always null
+   */
   private handleError(error: HttpErrorResponse): Observable<any> {
     console.error(error);
     this.errorSnack.onError('Spotify returned this: '+ error.message ? error.message: '','Clear',10000);

@@ -10,7 +10,7 @@ import { JoinDialogComponent } from '../../player/join-dialog/join-dialog.compon
 import { ErrorSnackService } from 'src/app/services/error-snack.service';
 
 /**
- * Service takning care of the authentication process of hosts and players
+ * Component showing the of the login options of hosts and players
  * @author Simon Persson, Oskar Norinder
  */
 
@@ -35,7 +35,6 @@ export class LoginComponent implements OnInit {
     this.user$ = this.auth.user$;
   }
  /**
-   * Runs the AuthSerice spotify log in
    * Routes the game on successful login
    */
   async loginHost() {
@@ -43,7 +42,6 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/create-game']);
   }
  /**
-   * Runs the AuthSerice anonymous log in
    * Opens a dialog for the gamecode and if the game exists navigates to it
    */
   async loginPlayer() {

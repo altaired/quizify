@@ -2,6 +2,11 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Game } from 'src/app/models/state';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
+/**
+ * Service takning care of the authentication process of hosts and players
+ * @author Simon Persson, Oskar Norinder
+ */
+
 @Component({
   selector: 'app-guess',
   templateUrl: './guess.component.html',
@@ -24,10 +29,20 @@ export class GuessComponent implements OnInit {
     });
   }
 
+  /**
+   * Gets the accesToken for a given user
+   * @param ans The users answer to the first question
+   */
+
   selectFirstAnswer(ans) {
     console.log(ans);
     this.first = ans;
   }
+
+    /**
+   * Gets the accesToken for a given user
+   *  The users answer to the first question
+   */
 
   send() {
     this.done = true;
