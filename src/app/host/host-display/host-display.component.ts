@@ -6,7 +6,10 @@ import { Game, Player, GameState } from '../../models/state';
 import { StateHostService } from 'src/app/services/host/state-host.service';
 import { QuestionHostService } from 'src/app/services/host/question-host.service';
 import { GameHostService } from 'src/app/services/host/game-host.service';
-
+/**
+ * Top component for the host in a game switching between different sub-components on different stages of the game
+ * @author Simon Persson, Oskar Norinder
+ */
 @Component({
   selector: 'app-host-display',
   templateUrl: './host-display.component.html',
@@ -47,11 +50,19 @@ export class HostDisplayComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
       this.game.delete();
     }
+
+
     @HostListener('window:beforeunload', [ '$event' ])
+  /**
+   * When the host closes the window remove the game
+   * @param  event triggered by the window closing
+   */
     beforeUnloadHander(event) {
       this.game.delete();
     }
-
+  /**
+   * When the intro timer is complete continue with the game
+   */
   introCallback() {
     this.game.introComplete();
   }

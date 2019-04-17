@@ -1,5 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { GamePlayerService } from 'src/app/services/game-player.service';
+/**
+ * Component that allows the player to draw an avatar to use in the game
+ * @author Simon Persson, Oskar Norinder
+ */
 @Component({
   selector: 'app-draw-avatar',
   templateUrl: './draw-avatar.component.html',
@@ -40,12 +44,9 @@ export class DrawAvatarComponent implements OnInit, AfterViewInit {
     };
 
     this.element.onmouseup = (cord) => {
-      //console.log('mouseup');
       this.context.closePath();
       this.mouseIsDown = false;
-      //console.log('up');
     }
-    //console.log(this.canvas);
 
 
 
@@ -91,7 +92,11 @@ export class DrawAvatarComponent implements OnInit, AfterViewInit {
       }
     }
   }
-
+    /**
+   * Calculates the position of the pointer on the canvas instead of screen
+   * @param  canvas The area that can be drawn upon
+   * @param evt The touch or mouse event somewhere on the screen
+   */
   getPointerPos(canvas, evt) {
     const rect = canvas.getBoundingClientRect();
     return {
@@ -101,17 +106,30 @@ export class DrawAvatarComponent implements OnInit, AfterViewInit {
   }
 
 
-
+  /**
+   * Changes the color that is used to draw with
+   * @param  change the new color picked by the player
+   */
   changeColor(change) {
     this.context.strokeStyle = change.value;
   }
+    /**
+   * Changes the size that is used to draw with
+   * @param  change the new size picked by the player
+   */
   changeSize(change) {
     this.context.lineWidth = change.value;
   }
+  /**
+   * Save the Avatar as a picture and give it to the GamePlayerService
+   */
   saveImg() {
     const data = this.element.toDataURL();
     this.game.setAvatar(data);
   }
+  /**
+   * Remove anything currently drawn on the canvas
+   */
   clearCanvas() {
     this.context.clearRect(0, 0, this.element.width, this.element.height);
   }

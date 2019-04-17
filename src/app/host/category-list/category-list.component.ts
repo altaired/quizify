@@ -5,7 +5,10 @@ import { Observable } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { CategoryState, Option } from 'src/app/models/state';
 import { StateHostService } from 'src/app/services/host/state-host.service';
-
+/**
+ * Component showing which category options one of the players can pick between
+ * @author Simon Persson, Oskar Norinder
+ */
 @Component({
   selector: 'app-category-list',
   templateUrl: './category-list.component.html',

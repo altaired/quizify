@@ -1,7 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Player } from 'src/app/models/state';
-
+/**
+ * Component showing which people have answered and how much time they have left to answer
+ * @author Simon Persson, Oskar Norinder
+ */
 @Component({
   selector: 'app-answer',
   templateUrl: './answer.component.html',

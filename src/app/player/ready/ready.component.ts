@@ -2,7 +2,10 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
-
+/**
+ * Display component for players the save their avatar and the Admin to save their avatar and start the game
+ * @author Simon Persson, Oskar Norinder
+ */
 @Component({
   selector: 'app-ready',
   templateUrl: './ready.component.html',
@@ -22,7 +25,9 @@ export class ReadyComponent implements OnInit {
         return user.uid === admin;
       }));
   }
-
+/**
+ * If admin can trigger to start the game
+ */
   start() {
     this.ready.emit();
   }

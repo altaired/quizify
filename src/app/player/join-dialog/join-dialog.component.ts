@@ -1,7 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+/**
+ * Component showing as a dialog allowing the player to input gamecode and chosen playername to join a game
+ * @author Simon Persson, Oskar Norinder
+ */
 @Component({
   selector: 'app-join-dialog',
   templateUrl: './join-dialog.component.html',
@@ -36,6 +39,9 @@ export class JoinDialogComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
+  /**
+   * outputs the saved options input in the dialog
+   */
   save() {
     if (this.form.valid) {
       this.dialogRef.close(this.form.value);

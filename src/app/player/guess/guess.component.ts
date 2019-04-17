@@ -3,7 +3,7 @@ import { Game } from 'src/app/models/state';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 /**
- * Service takning care of the authentication process of hosts and players
+ * Component allowing the player to pick answers to the current questions and save them
  * @author Simon Persson, Oskar Norinder
  */
 
@@ -30,7 +30,7 @@ export class GuessComponent implements OnInit {
   }
 
   /**
-   * Gets the accesToken for a given user
+   * Take the answer to the first question
    * @param ans The users answer to the first question
    */
 
@@ -40,8 +40,7 @@ export class GuessComponent implements OnInit {
   }
 
     /**
-   * Gets the accesToken for a given user
-   *  The users answer to the first question
+   * Send the input answers to the questions and set the player to done for this question
    */
 
   send() {
@@ -49,7 +48,11 @@ export class GuessComponent implements OnInit {
     this.second = this.formGroup.value.answer;
     this.answered.next([this.first, this.second, this.state.playerDisplay.question.id]);
   }
-
+    /**
+   * Gets only the values for the options for display them from an array
+   * @param state The current game
+   * @returns Array with the chosen options values
+   */
   convertOptions(state: Game) {
     return Object.values(state.playerDisplay.question.first.options);
   }
