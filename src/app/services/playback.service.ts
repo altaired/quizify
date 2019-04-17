@@ -36,7 +36,7 @@ export class PlaybackService {
         return this.http.get(url, { headers: headers })
           .pipe(
             retry(1),
-            catchError(this.handleError)
+            catchError(err => this.handleError(err))
           );
       })
     );
@@ -62,7 +62,7 @@ export class PlaybackService {
       return this.http.get(url, { headers: headers })
         .pipe(
           retry(1),
-          catchError(this.handleError)
+          catchError(err => this.handleError(err))
         );
     }));
   }
@@ -83,7 +83,7 @@ export class PlaybackService {
       })
         .pipe(
           retry(1),
-          catchError(this.handleError)
+          catchError(err => this.handleError(err))
         )
       )
     );
@@ -99,7 +99,7 @@ export class PlaybackService {
       return this.http.put(url, undefined, { headers: headers })
         .pipe(
           retry(1),
-          catchError(this.handleError)
+          catchError(err => this.handleError(err))
         );
     }));
   }
@@ -115,7 +115,7 @@ export class PlaybackService {
         return this.http.put(url, { 'device_ids': [id] }, { headers: headers })
           .pipe(
             retry(1),
-            catchError(this.handleError)
+            catchError(err => this.handleError(err))
           );
       }));
     }));

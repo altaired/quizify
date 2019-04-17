@@ -6,6 +6,7 @@ import { User } from 'firebase/app';
 import { environment } from '../../environments/environment';
 import { HttpHeaders } from '@angular/common/http';
 import { switchMap, map, filter } from 'rxjs/operators';
+import { ErrorSnackService } from './error-snack.service';
 
 /**
  * Service takning care of the authentication process of hosts and players
@@ -22,7 +23,8 @@ export class AuthService {
 
   constructor(
     private afAuth: AngularFireAuth,
-    private db: AngularFireDatabase
+    private db: AngularFireDatabase,
+    private errorSnack: ErrorSnackService,
   ) {
     this.user$ = afAuth.authState;
     this.token$ = this.user$
@@ -51,7 +53,11 @@ export class AuthService {
   loginWithSpotify(): Promise<any> {
     return this.authenticate()
       .then(token => this.afAuth.auth.signInWithCustomToken(token))
-      .catch(error => console.error(error));
+      .catch(error => {
+        this.errorSnack.onError('Log in failed '+ error.message )
+        console.error(error);
+
+      });
   }
 
   /**
@@ -78,6 +84,7 @@ export class AuthService {
   loginAnonymously() {
     this.afAuth.auth.signInAnonymously().catch(function (error) {
       console.error(error);
+      this
     });
   }
 

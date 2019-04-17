@@ -35,7 +35,7 @@ export class SpotifyService {
       return this.http.get<any>(url, { headers: headers })
         .pipe(
           retry(1),
-          catchError(this.handleError)
+          catchError(err => this.handleError(err))
         );
     }));
   }
@@ -51,7 +51,7 @@ export class SpotifyService {
       return this.http.get<{ categories: SAPI.PagingObject<SAPI.CategoryObject> }>(url, { headers: headers })
         .pipe(
           retry(1),
-          catchError(this.handleError),
+          catchError(err => this.handleError(err)),
           map(res => res.categories)
         );
     }));
@@ -70,7 +70,7 @@ export class SpotifyService {
           country: 'SE',
           locale: 'sv_SE'
         }
-      }).pipe(retry(1), catchError(this.handleError));
+      }).pipe(retry(1), catchError(err => this.handleError(err)));
     }));
   }
 
@@ -85,7 +85,7 @@ export class SpotifyService {
       return this.http.get<{ playlists: SAPI.PagingObject<SAPI.PlaylistObject> }>(url, { headers: headers })
         .pipe(
           retry(1),
-          catchError(this.handleError),
+          catchError(err => this.handleError(err)),
           map(res => res.playlists)
         );
     }));
@@ -102,7 +102,7 @@ export class SpotifyService {
       return this.http.get<SAPI.ArtistObject>(url, { headers: headers })
         .pipe(
           retry(1),
-          catchError(this.handleError)
+          catchError(err => this.handleError(err))
         );
     }));
   }
@@ -118,7 +118,7 @@ export class SpotifyService {
       return this.http.get<{ artists: SAPI.ArtistObject[] }>(url, { headers: headers })
         .pipe(
           retry(1),
-          catchError(this.handleError),
+          catchError(err => this.handleError(err)),
           map(res => res.artists)
         );
     }));
@@ -134,7 +134,7 @@ export class SpotifyService {
     return this.auth.authentication.pipe(switchMap(headers => {
       return this.http.get<SAPI.PagingObject<SAPI.TrackObject>>(url, {
         headers: headers
-      }).pipe(retry(1), catchError(this.handleError));
+      }).pipe(retry(1), catchError(err => this.handleError(err)));
     }));
   }
 
@@ -156,7 +156,7 @@ export class SpotifyService {
           headers: headers
         }).pipe(
           retry(1),
-          catchError(this.handleError)
+          catchError(err => this.handleError(err))
         );
     }));
   }
@@ -192,14 +192,14 @@ export class SpotifyService {
           type: 'track',
           limit: '10'
         }
-      }).pipe(retry(1), catchError(this.handleError));
+      }).pipe(retry(1), catchError(err => this.handleError(err)));
     }));
   }
 
 
   private handleError(error: HttpErrorResponse): Observable<any> {
     console.error(error);
-    this.errorSnack.onError('Spotify returned this: '+ error);
+    this.errorSnack.onError('Spotify returned this: '+ error.message ? error.message: '','Clear',10000);
     return of(null);
   }
 
