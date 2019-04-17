@@ -54,7 +54,7 @@ export class AuthService {
     return this.authenticate()
       .then(token => this.afAuth.auth.signInWithCustomToken(token))
       .catch(error => {
-        this.errorSnack.onError('Log in failed '+ error.message )
+        this.errorSnack.onError('Log in failed: '+ error.message )
         console.error(error);
 
       });
@@ -83,7 +83,7 @@ export class AuthService {
    */
   loginAnonymously() {
     this.afAuth.auth.signInAnonymously().catch(function (error) {
-      this.errorSnack.onError('Log in failed '+ error.message )
+      this.errorSnack.onError('Log in: failed '+ error.message )
       console.error(error);
     });
   }

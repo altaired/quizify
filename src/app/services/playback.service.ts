@@ -135,7 +135,7 @@ export class PlaybackService {
    * @returns it's always an empty Observer
    */
   private handleError(error: HttpErrorResponse): Observable<any> {
-    this.errorSnack.onError('Spotify Playback returned this: '+ error.message ? error.message: '','Clear',10000);
+    this.errorSnack.onError('Error! Spotify Playback returned this: '+ error.statusText ? error.statusText: '','Clear',10000);
     console.error(error);
     return of(null);
   }
