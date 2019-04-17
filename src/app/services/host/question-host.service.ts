@@ -29,6 +29,11 @@ import { Player } from 'src/app/models/state';
 import { StateHostService } from './state-host.service';
 import { ErrorSnackService } from '../error-snack.service';
 
+/**
+ * Service taking care of everything related to the questions beeing asked
+ * @author Simon Persson, Oskar Norinder
+ */
+
 export const QUESTION_MAX_TIMER = 120;
 
 @Injectable({
@@ -38,10 +43,11 @@ export class QuestionHostService {
 
   complete$ = new Subject<string>();
 
-  track$ = new BehaviorSubject<any>(null);
-  artists$ = new BehaviorSubject<any[]>(null);
+  track$ = new BehaviorSubject<SAPI.PlaylistTrackObject>(null);
+  artists$ = new BehaviorSubject<SAPI.ArtistObject[]>(null);
   timer$ = new BehaviorSubject<Observable<number>>(null);
-  result$ = new BehaviorSubject<any[]>(null);
+  result$ = new BehaviorSubject<PlayerResult[]>(null);
+
 
   TRACK_POPULARITY_THRESHOLD = 50;
 
@@ -55,6 +61,12 @@ export class QuestionHostService {
     private errorSnack: ErrorSnackService,
   ) { }
 
+
+  /**
+   * Starts the question screen by fetching a track based on a given category.
+   * It then distributes the track to firebase and adds it to the history
+   * @param category The category to find a track by
+   */
   start(category: string) {
     this.log('Starting question...');
 
@@ -78,7 +90,14 @@ export class QuestionHostService {
       });
   }
 
-  private pickRandomPlaylist(playlistsResponse: any): Observable<any> {
+  /**
+   * Picks a random playlist from a list of playlists
+   * EDIT: Currently taking the first playlist, to make the game easier
+   * @param playlistsResponse
+   * @returns An `Observable` of the playlists tracks
+   */
+  private pickRandomPlaylist(playlistsResponse: SAPI.PagingObject<SAPI.PlaylistObject>):
+    Observable<SAPI.PagingObject<SAPI.PlaylistTrackObject>> {
     const playlists: any[] = playlistsResponse.items;
     // const playlist = playlists[Math.floor(Math.random() * playlists.length)];
     const playlist = playlists[0];
@@ -86,10 +105,16 @@ export class QuestionHostService {
     return this.spotify.getPlaylitsTracks(playlist.id);
   }
 
-  private pickRandomTrack(playlist: any) {
+
+  /**
+   * Picks a random track from a given playlist
+   * @param playlist The playlist
+   * @returns An `PlaylistTrackObject` with the random track
+   */
+  private pickRandomTrack(playlist: SAPI.PagingObject<SAPI.PlaylistTrackObject>): SAPI.PlaylistTrackObject {
     if (playlist.items) {
-      const tracks: any[] = playlist.items;
-      const newTracks: any[] = tracks.filter(t => this.history.validateTrack(t.track.id));
+      const tracks: SAPI.PlaylistTrackObject[] = playlist.items;
+      const newTracks: SAPI.PlaylistTrackObject[] = tracks.filter(t => this.history.validateTrack(t.track.id));
       const allowedTracks = newTracks.filter(t => t.track.popularity >= this.TRACK_POPULARITY_THRESHOLD);
       if (allowedTracks.length > 0) {
         // Get a random track within the populatity threshold
@@ -108,20 +133,25 @@ export class QuestionHostService {
     }
   }
 
-  private distribute(t: any, options: any[]) {
+  /**
+   * Sends the track and options to firebase in order to let the user guess.
+   * When the data is sent the track is played and the state is changed
+   * @param t The correct track
+   * @param options The artist options provided to the user
+   */
+  private distribute(t: SAPI.PlaylistTrackObject, options: SAPI.ArtistObject[]) {
     this.track$.next(t);
     this.artists$.next(options);
     this.state.code$.pipe(take(1)).subscribe(code => {
-      this.log('Track received' + t.track.name);
+      this.log('Track received ' + t.track.name);
       this.db.object('games/' + code + '/playerDisplay/question').set({
         id: t.track.id,
         first: {
           title: 'Name the artist',
           options: options.map(option => {
-            if (!(option.images[0])){
-              option.images[0] = {url:"assets/error.png"}
-            }
-            return { id: option.id, image: option.images[0], value: option.name };
+            // Checks if the image is available, else using a default error image
+            const img = (option.images[0]) ? option.images[0] : { url: 'assets/error.png' };
+            return { id: option.id, image: img, value: option.name };
           })
         },
         secondEnabled: true,
@@ -132,6 +162,10 @@ export class QuestionHostService {
     });
   }
 
+  /**
+   * Starts to play a given track, when it starts playing the timer is started
+   * @param uri The track to play
+   */
   private play(uri: string) {
     let started = false;
     this.playback.play(uri).pipe(
@@ -153,6 +187,11 @@ export class QuestionHostService {
     ).subscribe();
   }
 
+  /**
+   * Creates a timer based on the timer constant
+   * @returns An `Observable` with type `number` emitting
+   * how many seconds has pased
+   */
   private get questionTimer(): Observable<number> {
     return timer(1000, 1000).pipe(
       takeWhile(time => time <= QUESTION_MAX_TIMER),
@@ -160,6 +199,11 @@ export class QuestionHostService {
     );
   }
 
+
+  /**
+   * Observes the user responses and when everybodys done or the times up
+   * it sends the results and clears it from firebase, then completes the screen
+   */
   private observe() {
     this.log('Activated response observation');
 
@@ -209,6 +253,12 @@ export class QuestionHostService {
     });
   }
 
+
+  /**
+   * Observes when all players are done or the times up.
+   * Adds an delay of 2.5 seconds to let the users responses get into firebase.
+   * @returns An `Observable` emitting when one of the actions above occur.
+   */
   private get end() {
     return merge(this.allPlayersDone, this.timesUP).pipe(
       takeUntil(this.complete$),
@@ -237,6 +287,13 @@ export class QuestionHostService {
     );
   }
 
+
+  /**
+   * Autocompletes the players responses to ignore simple spelling mistakes
+   * @param q The players guesses for track names
+   * @param track The correct track
+   * @returns An `Observable` of the allowed responses
+   */
   private autocomplete(q: string[], track: string): Observable<string[]> {
     this.log('Autocompleting track responses...');
     const filtered = q.filter(st => st !== '');
@@ -258,13 +315,16 @@ export class QuestionHostService {
       this.log('No tracks checked');
       return of([]);
     }
-
   }
 
+  /**
+   * Clears the users responses to avoid answers beeing left for the next question
+   */
   private clear() {
     this.log('Clearing response data...');
     this.state.code$.pipe(take(1)).subscribe(code => {
-      this.db.object(`games/${code}/playerDisplay`).remove().catch(error => this.errorSnack.onError('Firebase could not remove previous questions data'));
+      this.db.object(`games/${code}/playerDisplay`).remove()
+        .catch(error => this.errorSnack.onError('Firebase could not remove previous questions data'));
       this.db.list('games/' + code + '/players').snapshotChanges().pipe(take(1))
         .subscribe(res => {
           Promise.all(res.map(player => {
@@ -274,6 +334,10 @@ export class QuestionHostService {
     });
   }
 
+  /**
+   * Returns an array of players when all the players are ready
+   * @returns An `Observable` of the players
+   */
   private get allPlayersDone(): Observable<Player[]> {
     return combineLatest(this.track$, this.state.players$).pipe(
       filter(([track, players]) => players.every(p => {
@@ -286,9 +350,14 @@ export class QuestionHostService {
       }),
         tap(() => this.log('All players reponded'))
       ),
+      map(([_, players]) => players)
     );
   }
 
+  /**
+   * Emitts when the times up on the timer
+   * @returns An `Observable` with the amount of seconds passed
+   */
   private get timesUP(): Observable<number> {
     return this.timer$.pipe(
       switchMap(t => t),
@@ -297,6 +366,9 @@ export class QuestionHostService {
     );
   }
 
+  /**
+   * When the questions are finished the results a shown for 25 seconds, then the screen is complete.
+   */
   private complete() {
     const resultTime = 25;
     this.log('Starting result timer for ' + resultTime + ' seconds');

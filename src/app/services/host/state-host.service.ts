@@ -38,10 +38,18 @@ export class StateHostService {
     );
   }
 
+  /**
+   * Updates the game code of the current game
+   * @param code The updated code
+   */
   setCode(code: string) {
     this.code$.next(code);
   }
 
+  /**
+   * Changes the current game state
+   * @param state The new game state
+   */
   changeState(state: GameState) {
     this.code$.pipe(take(1)).subscribe(code => {
       this.db.object('games/' + code).update({ state: state });

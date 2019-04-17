@@ -10,6 +10,11 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { StateHostService } from './state-host.service';
 import { ErrorSnackService } from '../error-snack.service';
 
+/**
+ * Service taking care of everything related to the category picking
+ * @author Simon Persson, Oskar Norinder
+ */
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,6 +30,9 @@ export class CategoryHostService {
     private errorSnack: ErrorSnackService,
   ) { }
 
+  /**
+   * Starts the category picking by getting 6 random categories to pick from
+   */
   start() {
     this.log('Starting category picking...');
     combineLatest(this.spotify.listCategories().pipe(
@@ -44,6 +52,11 @@ export class CategoryHostService {
       });
   }
 
+  /**
+   * Distributes the categories to the players using firebase
+   * @param categories The random categories
+   * @param players The players in the game
+   */
   private distribute(categories, players: Player[]) {
     const code = this.state.code$.getValue();
     const options = categories.map(category => {
@@ -65,13 +78,18 @@ export class CategoryHostService {
       done: false,
       options: options
     };
-    this.db.object('games/' + code + '/playerDisplay/category').set(categoryState).catch(error => this.errorSnack.onError('Firebase could not set category and returned this: '+ error) );
+    this.db.object('games/' + code + '/playerDisplay/category')
+      .set(categoryState)
+      .catch(error => this.errorSnack.onError('Firebase could not set category and returned this: ' + error));
     this.state.changeState('PICK_CATEGORY');
     this.observe();
     this.log('Waiting for player to pick a category');
   }
 
 
+  /**
+   * Observes the players waiting for a category to be picked
+   */
   private observe() {
     const subscription = this.state.state$.pipe(
       takeUntil(this.complete$),
@@ -91,6 +109,10 @@ export class CategoryHostService {
     });
   }
 
+  /**
+   * Completes the category picking screen with the chosen category as a parameter
+   * @param category The chosen category
+   */
   private complete(category: string) {
     this.complete$.next(category);
   }
@@ -102,5 +124,5 @@ export class CategoryHostService {
   private log(msg: string) {
     console.log('[Host][Category] ' + msg);
   }
-  
+
 }
