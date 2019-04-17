@@ -4,6 +4,7 @@ import { Game, GameState, Player } from 'src/app/models/state';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { take, switchMap, filter, map } from 'rxjs/operators';
 import { has } from 'lodash';
+import { ErrorSnackService } from '../error-snack.service';
 
 /**
  * Service keeping track of the current games state
@@ -18,6 +19,7 @@ export class StateHostService {
   state$: Observable<Game>;
   players$: Observable<Player[]>;
   code$: BehaviorSubject<string> = new BehaviorSubject(null);
+  private errorSnack: ErrorSnackService;
 
   constructor(
     private db: AngularFireDatabase
@@ -25,11 +27,11 @@ export class StateHostService {
     this.state$ = this.code$.pipe(
       switchMap(code => this.db.object<Game>('games/' + code).valueChanges()),
       filter(state => {
-        if (state.state) {
-          return true;
-        } else {
-          return false;
-        }
+          if (state.state) {
+            return true;
+          } else {
+            return false;
+          }
       })
     );
     this.players$ = this.state$.pipe(

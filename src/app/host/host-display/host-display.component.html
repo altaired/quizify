@@ -27,4 +27,8 @@
         <app-end-screen *ngSwitchCase="'END'"></app-end-screen>
       </div>
   </div>
+      <div *ngSwitchDefault>
+        <p> Game disconnected </p>
+        <button mat-button-raised (click)="returnHome()" > Return to start</button>
+      </div>
 </div>

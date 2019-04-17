@@ -84,6 +84,7 @@ export class PlaybackComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if(result){
       this.playback.updateDeviceID(result.id)
+      this.playback.transfer().pipe(take(1)).subscribe();
       }
       })
     };

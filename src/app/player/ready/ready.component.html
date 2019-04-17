@@ -1,15 +1,16 @@
 <div class="container-fluid">
-  <div class="row margin-bottom">
-      <mat-card class="col-12">
-      <app-draw-avatar #avatar></app-draw-avatar>
-      </mat-card>
-    </div>
-    <div class="row" [ngSwitch]="isAdmin$ | async">
+
+    <div class="row margin-bottom" [ngSwitch]="isAdmin$ | async">
       <mat-card class="col-12" *ngSwitchCase="true">
         <button mat-raised-button (click)="avatar.saveImg(); start()">Start Game</button>
       </mat-card>
       <mat-card class="col-12" *ngSwitchCase="false">
           <button mat-raised-button (click)="avatar.saveImg()">Save Avatar</button>
       </mat-card>
-  </div>
+    </div>
+    <div class="row">
+        <mat-card class="col-12">
+        <app-draw-avatar #avatar></app-draw-avatar>
+        </mat-card>
+      </div>
 </div>

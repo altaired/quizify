@@ -6,6 +6,7 @@ import { Game, Player, GameState } from '../../models/state';
 import { StateHostService } from 'src/app/services/host/state-host.service';
 import { QuestionHostService } from 'src/app/services/host/question-host.service';
 import { GameHostService } from 'src/app/services/host/game-host.service';
+import { Router } from '@angular/router';
 /**
  * Top component for the host in a game switching between different sub-components on different stages of the game
  * @author Simon Persson, Oskar Norinder
@@ -28,7 +29,8 @@ export class HostDisplayComponent implements OnInit, OnDestroy {
   constructor(
     private state: StateHostService,
     private game: GameHostService,
-    private question: QuestionHostService
+    private question: QuestionHostService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -65,6 +67,10 @@ export class HostDisplayComponent implements OnInit, OnDestroy {
    */
   introCallback() {
     this.game.introComplete();
+  }
+
+  returnHome(){
+    this.router.navigate([''])
   }
 
 }
