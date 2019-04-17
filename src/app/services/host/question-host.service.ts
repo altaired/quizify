@@ -98,7 +98,7 @@ export class QuestionHostService {
    */
   private pickRandomPlaylist(playlistsResponse: SAPI.PagingObject<SAPI.PlaylistObject>):
     Observable<SAPI.PagingObject<SAPI.PlaylistTrackObject>> {
-    const playlists: any[] = playlistsResponse.items;
+    const playlists: SAPI.PlaylistObject[] = playlistsResponse.items;
     // const playlist = playlists[Math.floor(Math.random() * playlists.length)];
     const playlist = playlists[0];
     this.log('Picked a random playlist ' + playlist.id);

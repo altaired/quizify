@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Player } from 'src/app/models/state';
 import { StateHostService } from 'src/app/services/host/state-host.service';
-import { QuestionHostService } from 'src/app/services/host/question-host.service';
+import { QuestionHostService, PlayerResult } from 'src/app/services/host/question-host.service';
 
 /**
  * Service takning care of the authentication process of hosts and players
@@ -16,9 +16,9 @@ import { QuestionHostService } from 'src/app/services/host/question-host.service
   styleUrls: ['./results.component.scss']
 })
 export class ResultsComponent implements OnInit {
-  track$: Observable<any>
+  track$: Observable<SAPI.PlaylistTrackObject>;
   players$: Observable<Player[]>;
-  results$: Observable<any>;
+  results$: Observable<PlayerResult[]>;
 
   constructor(
     private state: StateHostService,
