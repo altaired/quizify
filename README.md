@@ -1,9 +1,11 @@
 # Quizify
-A quiz app for spotify API, With a main device connecting to the API getting
+A quiz app for the Spotify API, With a main device connecting to the API getting
 songs and such from the spotify API that it will play and display questions about. The players
-will use their mobile devices (or at least a different browser to the Host otherwise it breaks :/) to answers the questions. The main game mode has a category picked before each song, then a song plays from the Spotify SDK but controlled by the API so we pick the song. A question with a answer or answers generated from the spotify API is presented and scored.
+will use their mobile devices (or at least a different browser to the Host otherwise the authentication will not work) to answers the questions. The main game mode has a category picked before each song, then a song plays from the Spotify SDK but controlled by the API so we pick the song. The answers will then be presented to the players, together with their responses. When the game is over the players can choose to save the played tracks as a playlist and/or continute the game. 
 
-Warning, requires a Spotify Premium account to use! However it's safe to use it, authentication is done by Spotify over OAuth2. 
+Warning, requires one Spotify Premium account to use! However it's safe to use it, authentication is done by Spotify over OAuth2. (Only the host need a premium subscription). 
+
+The application is hosted on [https://quizify-pro.firebaseapp.com/](https://quizify-pro.firebaseapp.com/)
 
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
@@ -11,11 +13,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## Hosting
 The project is hosted on firebase on the following [domain](https://quizify-pro.firebaseapp.com). To deploy the project use `firebase deploy --only hosting`. 
 
-## TODO
-* Add abbillity to add game tracks as a playlist
-* Final fixes to layout
-* Comment code
-* Play again?
+## Setup
+
+To setup run `npm install`  to install all dependencies. Then follow the instructions for angular on how to setup the dev server below. For more information check out the [Angular CLI](https://cli.angular.io/) 
 
 ## Development server
 
@@ -36,41 +36,6 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 ## Running end-to-end tests
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## File structure
-The file structure is following the Angular Style Guide and more information about it can be found [here](https://angular.io/guide/file-structure)
-
-### Components
-| Component | Path | Description |
-| --- |:---:| ---:|
-| LoginComponent | [Component](./src/app/core/login) | Handles login of players and hosts by calling on the AuthServiceComponent and operates the JoinDialogComponent|
-| CategoryListComponent | [Component](./src/app/host/category-list) | Shows the categories on the host display on gameState 'PICK_CATEGORY' decided by the gameflow |
-| GameCreationComponent | [Component](./src/app/host/game-creation) | Creates a game with a desired game mode |
-| HostDisplayComponent | [Component](./src/app/host/host-display) | Displays the hosts state and Host Components for a running games |
-| WelcomeComponent | [Component](./src/app/host/welcome) | Shows game code and joined users on host on 'WELCOME' |
-| PlaybackComponent | [Component](./src/app/playback) | Plays the music from the Spotify SDK |
-| CategoryPickComponent | [Component](./src/app/player/category-pick) | Handles players picking a category |
-| GuessOptionComponent | [Component](./src/app/player/guess-option) | Handles players picking an option (TODO) |
-| GuessTextComponent | [Component](./src/app/player/guess-text) | Handles players entering a text ans (TODO) |
-| JoinDialogComponent | [Component](./src/app/player/join-dialog) | Dialog for letting a player join a game |
-| ReadyComponent | [Component](./src/app/player/ready) | Shown while in lobby on gamestate 'WAITING' for the players, enabling one player to start the game |
-| DrawAvatarComponent | [Component](./src/app/player/ready/draw-avatar) | Lets the user draw an avatar |
-
-### Services
-| Service | Path | Description |
-| --- |:---:| ---:|
-| AuthService | [Component](./src/app/services/auth.service.ts) | Takes care of the authentication of users |
-| GameHostService | [Component](./src/app/services/game-host.service.ts) | Handles everything regarding the hosts/the game session itself's state |
-| GamePlayerService | [Component](./src/app/services/game-player.service.ts) | Handles everything regaring the players state within the game session |
-| PlaybackService | [Component](./src/app/services/playback.service.ts) | Controls the spotify playback through API calls to the spotify API |
-| SpotifyService | [Component](./src/app/services/spotify.service.ts) | Communicates with the Spotify API in everything that isn't playback |
-
-### Guards
-| Service | Path | Description |
-| --- |:---:| ---:|
-| HostGuard | [Component](./src/app/core/host.guard.ts) | Protects components only available to hosts |
-| PlayerGuard | [Component](./src/app/core/player.guard.ts) | Protects components only available to players |
-
 
 ## Cloud Functions
 

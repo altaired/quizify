@@ -104,7 +104,7 @@ export class CategoryHostService {
         subscription.unsubscribe();
         this.complete(categoryState.playerResponse);
       } else {
-        // Player have not picked a category yet
+        // Player has not picked a category yet
       }
     });
   }
