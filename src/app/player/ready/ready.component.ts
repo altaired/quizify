@@ -26,10 +26,9 @@ export class ReadyComponent implements OnInit {
       }));
   }
 /**
- * If admin can trigger to start the game
+ * If the player is Admin they can trigger to start the game
  */
   start() {
     this.ready.emit();
   }
-
 }

@@ -83,8 +83,8 @@ export class AuthService {
    */
   loginAnonymously() {
     this.afAuth.auth.signInAnonymously().catch(function (error) {
+      this.errorSnack.onError('Log in failed '+ error.message )
       console.error(error);
-      this
     });
   }
 
