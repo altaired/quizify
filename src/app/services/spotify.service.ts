@@ -129,10 +129,10 @@ export class SpotifyService {
    * @param id The playlist ID
    * @returns An `Observable` of the fetched `PagingObject` object with type `TrackObject`.
    */
-  getPlaylitsTracks(playlist: string): Observable<SAPI.PagingObject<SAPI.TrackObject>> {
+  getPlaylitsTracks(playlist: string): Observable<SAPI.PagingObject<SAPI.PlaylistTrackObject>> {
     const url = `${this.SPOTIFY_BASE_URL}/playlists/${playlist}/tracks`;
     return this.auth.authentication.pipe(switchMap(headers => {
-      return this.http.get<SAPI.PagingObject<SAPI.TrackObject>>(url, {
+      return this.http.get<SAPI.PagingObject<SAPI.PlaylistTrackObject>>(url, {
         headers: headers
       }).pipe(retry(1), catchError(err => this.handleError(err)));
     }));

@@ -14,8 +14,8 @@ import { StateHostService } from './state-host.service';
 import { ErrorSnackService } from '../error-snack.service';
 
 /**
- * Takes care of the hosts state which is
- * observed by the players.
+ * Takes care of the general game for the host, deciding which screen to show a.s.o
+ * @author Simon Persson, Oskar Norinder
  */
 
 @Injectable({
@@ -37,12 +37,18 @@ export class GameHostService {
     private state: StateHostService,
     private errorSnack: ErrorSnackService,
   ) {
-
+    // Listens for the screens completion emitters
     this.welcome.complete$.subscribe(res => this.welcomeComplete());
     this.category.complete$.subscribe(res => this.categoryComplete(res));
     this.question.complete$.subscribe(res => this.questionComplete());
   }
 
+  /**
+   * Generates a hash to be used as a game code.
+   * Needs improvement with a more unique hash, since it's
+   * currently based on the timestamp
+   * @returns An `Observable` of the hashed string
+   */
   private get hash(): Observable<string> {
     return this.auth.user$.pipe(
       take(1),
@@ -53,6 +59,10 @@ export class GameHostService {
     );
   }
 
+  /**
+   * Creates a new game and sets the state to `WELCOME`
+   * @param gameMode The game mode beeing played, currently only 'STANDARD' is supported
+   */
   newGame(gameMode: GameMode) {
     this.hash.pipe(take(1)).subscribe(gameCode => {
       this.log('Game created with code ' + gameCode);
@@ -66,47 +76,78 @@ export class GameHostService {
     });
   }
 
+  /**
+   * Restarts the game
+   */
   restart() {
     this.state.code$.pipe(take(1)).subscribe(code => {
-      this.db.object(`games/${code}/admin`).update({ ready: false }).catch(error => this.errorSnack.onError('Firebase could not set admin ready to false'))
+      this.db.object(`games/${code}/admin`)
+        .update({ ready: false })
+        .catch(error => this.errorSnack.onError('Firebase could not set admin ready to false'));
       this.history.resetGame();
       this.state.changeState('WELCOME');
       this.start();
     });
   }
 
-  delete(){
+  /**
+   * Removes the current game from firestore
+   */
+  delete() {
     this.state.code$.pipe(take(1)).subscribe(code => {
-      this.db.object(`games/${code}`).remove().catch(error => this.errorSnack.onError('Firebase could not remove the Game'))
+      this.db.object(`games/${code}`).remove().catch(error => this.errorSnack.onError('Firebase could not remove the Game'));
     })
   }
 
+  /**
+   * Clears the history and restarts the game,
+   * this to let the players continue the game
+   */
   continue() {
     this.history.resetRounds();
     this.category.start();
   }
 
+  /**
+   * Starts the game
+   */
   private start() {
     this.router.navigate(['display']);
     this.welcome.start();
   }
 
+  /**
+   * Triggerd when the welcome screen is complete
+   * Changes the state to intro
+   */
   private welcomeComplete() {
     this.log('Starting intro...');
     this.state.changeState('INTRO');
   }
 
+  /**
+   * Triggerd when the intro screen is complete
+   * Starts the category picking
+   */
   introComplete() {
     this.log('Intro complete');
     this.history.introduced = true;
     this.category.start();
   }
 
+  /**
+   * Triggerd when the category screen is complete
+   * Starts the question
+   */
   private categoryComplete(category: string) {
     this.log('Category picking complete');
     this.question.start(category);
   }
 
+  /**
+   * Triggerd when the question and result screen is complete
+   * Starts the next question or ends the game if it's finished
+   */
   private questionComplete() {
     this.log('Question complete');
     this.history.addGame();

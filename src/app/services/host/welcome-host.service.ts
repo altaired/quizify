@@ -23,11 +23,10 @@ export class WelcomeHostService {
     private errorSnack: ErrorSnackService
   ) { }
 
-  start() {
-    this.startWelcome();
-  }
-
-  private startWelcome() {
+  /**
+   * Starts the welcome screen and sets the admin as the first player to join
+   */
+  start(): void {
     const subscription = this.state.state$.pipe(
       filter(state => state.players ? true : false),
       map(state => Object.values(state.players)),
@@ -40,6 +39,10 @@ export class WelcomeHostService {
     });
   }
 
+  /**
+   * Updates the game admin in firebase, shows error if failed
+   * @param uid The UID of the admin
+   */
   private setGameAdmin(uid: string) {
     this.state.code$.subscribe(code => {
       this.db.object('games/' + code).update({
@@ -53,6 +56,10 @@ export class WelcomeHostService {
     });
   }
 
+  /**
+   * Starts listening for when the admin is ready to start the game, when ready
+   * it completes the welcome screen.
+   */
   private activateWelcomeObserver() {
     this.state.state$.pipe(
       takeWhile(s => s.state === 'WELCOME'),
@@ -65,6 +72,9 @@ export class WelcomeHostService {
     });
   }
 
+  /**
+   * Tells the game host that the welcome screen state is finished
+   */
   private complete() {
     this.complete$.next('');
   }
