@@ -76,19 +76,6 @@ export class GameHostService {
     });
   }
 
-  /**
-   * Restarts the game
-   */
-  restart() {
-    this.state.code$.pipe(take(1)).subscribe(code => {
-      this.db.object(`games/${code}/admin`)
-        .update({ ready: false })
-        .catch(error => this.errorSnack.onError('Firebase could not set admin ready to false'));
-      this.history.resetGame();
-      this.state.changeState('WELCOME');
-      this.start();
-    });
-  }
 
   /**
    * Removes the current game from firestore

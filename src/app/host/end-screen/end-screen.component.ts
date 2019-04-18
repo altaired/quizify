@@ -9,6 +9,7 @@ import { StateHostService } from 'src/app/services/host/state-host.service';
 import { SafePropertyRead } from '@angular/compiler';
 import { MatSnackBar } from '@angular/material';
 import { switchMap, take } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 /**
  * Service takning care of the authentication process of hosts and players
@@ -30,7 +31,8 @@ export class EndScreenComponent implements OnInit {
     private history: HistoryHostService,
     private spotify: SpotifyService,
     private game: GameHostService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -58,10 +60,10 @@ export class EndScreenComponent implements OnInit {
     this.game.continue();
   }
     /**
-   * Returns the game to Welcome
+   * Returns the game to Start page
    */
   restartGame() {
-    this.game.restart();
+    this.router.navigate([]);
   }
 
   /**
