@@ -63,7 +63,7 @@ export class EndScreenComponent implements OnInit {
    * Returns the game to Start page
    */
   restartGame() {
-    this.router.navigate([]);
+    this.router.navigate(['']);
   }
 
   /**
