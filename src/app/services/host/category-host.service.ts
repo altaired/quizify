@@ -67,12 +67,9 @@ export class CategoryHostService {
       };
       return categoryObj;
     });
-    let selectedPlayer = players.find(player =>
-      this.history.validatePicker(player.uid)
-    );
-    if (!selectedPlayer) {
-      selectedPlayer = players[0];
-    }
+
+    const selectedPlayer = this.findPicker(players);
+
     const categoryState: CategoryState = {
       playerUID: selectedPlayer.uid,
       done: false,
@@ -84,6 +81,18 @@ export class CategoryHostService {
     this.state.changeState('PICK_CATEGORY');
     this.observe();
     this.log('Waiting for player to pick a category');
+  }
+
+  private findPicker(players: Player[]) {
+    const selectedPlayer = players.find(player =>
+      this.history.validatePicker(player.uid)
+    );
+    if (!selectedPlayer) {
+      this.history.clearPickers();
+      return players[0];
+    } else {
+      return selectedPlayer;
+    }
   }
 
 

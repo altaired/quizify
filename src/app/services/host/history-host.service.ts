@@ -94,6 +94,10 @@ export class HistoryHostService {
     this.pickers.push(id);
   }
 
+  clearPickers() {
+    this.pickers = [];
+  }
+
   /**
    * Checks if a given player have picked a category before
    * @param id The uid of the player to check
