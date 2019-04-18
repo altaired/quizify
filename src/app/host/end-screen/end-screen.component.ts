@@ -49,7 +49,7 @@ export class EndScreenComponent implements OnInit {
         take(1)
       ).subscribe(() => this.snackbar.open('Playlist created', 'Clear',{duration:5000}));
     } else {
-      this.snackbar.open('No tracks to add');
+      this.snackbar.open('No tracks to add', 'Clear',{duration:5000});
     }
 
   }
