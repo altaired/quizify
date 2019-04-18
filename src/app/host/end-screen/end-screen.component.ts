@@ -10,6 +10,7 @@ import { SafePropertyRead } from '@angular/compiler';
 import { MatSnackBar } from '@angular/material';
 import { switchMap, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { PlaybackService } from 'src/app/services/playback.service';
 
 /**
  * Service takning care of the authentication process of hosts and players
@@ -32,7 +33,8 @@ export class EndScreenComponent implements OnInit {
     private spotify: SpotifyService,
     private game: GameHostService,
     private snackbar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private playback: PlaybackService
   ) { }
 
   ngOnInit() {
@@ -47,7 +49,7 @@ export class EndScreenComponent implements OnInit {
       this.spotify.createPlaylist().pipe(
         switchMap(playlist => this.spotify.addToPlaylist(playlist.id, tracks)),
         take(1)
-      ).subscribe(() => this.snackbar.open('Playlist created', 'Clear',{duration:5000}));
+      ).subscribe(() => this.snackbar.open('Playlist created', 'Clear', { duration: 5000 }));
     } else {
       this.snackbar.open('No tracks to add');
     }
@@ -59,15 +61,15 @@ export class EndScreenComponent implements OnInit {
   playMore() {
     this.game.continue();
   }
-    /**
-   * Returns the game to Start page
-   */
+  /**
+ * Returns the game to Start page
+ */
   restartGame() {
-    this.router.navigate(['']);
+    this.playback.pause().pipe(take(1)).subscribe(() => this.router.navigate(['']));
   }
 
   /**
-   * Implementation of the angular Cdk draganddrop to transfer items between the arrays 
+   * Implementation of the angular Cdk draganddrop to transfer items between the arrays
    * @param event The drop event by the user
    */
   drop(event: CdkDragDrop<string[]>) {
