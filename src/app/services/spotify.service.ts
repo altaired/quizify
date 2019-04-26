@@ -203,7 +203,10 @@ export class SpotifyService {
    */
   private handleError(error: HttpErrorResponse): Observable<any> {
     console.error(error);
-    this.errorSnack.onError('Error! Spotify returned this: '+ error.statusText ? error.statusText: '','Clear',10000);
+    this.errorSnack.onError(
+      'Error! Spotify returned this: ' + error.statusText ? error.statusText : '',
+      'Clear', 10000
+      );
     return of(null);
   }
 

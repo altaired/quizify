@@ -169,8 +169,8 @@ export class QuestionHostService {
   private play(uri: string) {
     let started = false;
     this.playback.play(uri).pipe(
-      switchMap(response => interval(1000)),
-      switchMap(trigger => this.playback.state()),
+      switchMap(() => interval(1000)),
+      switchMap(() => this.playback.state()),
       takeWhile(() => !started),
       takeUntil(this.complete$),
       tap((state: any) => {

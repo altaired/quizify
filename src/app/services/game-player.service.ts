@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AuthService } from './auth.service';
-import { combineLatest, of, from } from 'rxjs';
-import { take, map, filter, switchMap, share, finalize, last, tap } from 'rxjs/operators';
+import { combineLatest, of } from 'rxjs';
+import { take, map, switchMap, share, last } from 'rxjs/operators';
 import { Player, Game, CategoryState } from '../models/state';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { MatSnackBar } from '@angular/material';
 import { ErrorSnackService } from './error-snack.service';
 
 /**
@@ -179,7 +178,9 @@ export class GamePlayerService {
     // TODO: Check if the user really is the admin of the game
     this.gameCode$.pipe(take(1))
       .subscribe(code =>
-        this.db.object('games/' + code + '/admin').update({ ready: true }).catch(error => this.errorSnack.onError('Firebase could not set player to ready'))
+        this.db.object('games/' + code + '/admin')
+          .update({ ready: true })
+          .catch(error => this.errorSnack.onError('Firebase could not set player to ready'))
       );
   }
 
@@ -215,7 +216,9 @@ export class GamePlayerService {
       if (snapshot.length > 0) {
         const key = snapshot[0].key;
         console.log('URL', url);
-        this.db.object('games/' + code + '/players/' + key).update({ avatar: url }).catch(error => this.errorSnack.onError('Firebase could not update the Avatar'));
+        this.db.object('games/' + code + '/players/' + key)
+          .update({ avatar: url })
+          .catch(error => this.errorSnack.onError('Firebase could not update the Avatar'));
         console.log('Updated avatar');
       }
     });
